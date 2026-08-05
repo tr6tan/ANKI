@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>原稿用紙</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500&family=Noto+Sans+JP:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FAFAF8;--surface:#FFF;--rule:#E2E5E1;--grid:#C3D3CA;
+ --ink:#16181A;--ink-muted:#5C6260;--ink-faint:#8A918E;--shu:#C8402E;--seiji:#3F6B57;
+ --s2:8px;--s3:16px;--s4:24px;--s5:32px;--s6:48px;--s7:64px;--radius:2px;--dur:140ms;--ease:cubic-bezier(.2,0,.2,1);
+ --f-serif:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;
+ --f-jp:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+ --f-lat:"IBM Plex Sans",system-ui,sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,monospace}
+[data-theme="dark"]{--paper:#131619;--surface:#1A1E22;--rule:#2A2F33;--grid:#34423C;
+ --ink:#E9E7E2;--ink-muted:#9AA19E;--ink-faint:#6B7370;--shu:#E06C58;--seiji:#7FB39C}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#0E1012;font-family:var(--f-lat);color:var(--ink);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:none;padding:0}
+#frame{width:100%;height:100dvh;background:var(--paper);display:flex;flex-direction:column;overflow:hidden}
+@media(min-width:768px){body{display:flex;align-items:center;justify-content:center;padding:24px}
+ #frame{width:420px;height:min(860px,calc(100dvh - 48px));border-radius:12px;border:1px solid var(--rule)}}
+#view{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+nav{flex:none;height:56px;display:flex;border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--ink-faint);letter-spacing:.03em}
+nav button.on{color:var(--ink)}
+nav .ic{font-family:var(--f-jp);font-size:17px;line-height:1}
+nav.hide{display:none}
+.pad{padding:0 var(--s3)}
+.label{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);font-weight:500}
+.rule{height:1px;background:var(--rule);border:0;margin:var(--s4) 0}
+.sq{border:1px solid var(--grid);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;aspect-ratio:1}
+.btn{height:56px;width:100%;background:var(--ink);color:var(--paper);border-radius:var(--radius);font-size:16px;display:flex;align-items:center;justify-content:center}
+.btn.ghost{background:none;border:1px solid var(--rule);color:var(--ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-muted)}.faint{color:var(--ink-faint)}
+.row{display:flex;align-items:center;justify-content:space-between;min-height:52px;border-bottom:1px solid var(--rule);gap:12px}
+.tally{display:flex;gap:10px;font-size:13px}
+.tally span{min-width:26px;text-align:right}
+.t-new{color:var(--ink)}.t-lrn{color:var(--shu)}.t-due{color:var(--seiji)}
+.hdr{flex:none;height:56px;display:flex;align-items:center;gap:var(--s3);padding:0 var(--s3);border-bottom:1px solid var(--rule)}
+.hdr h1{font-size:17px;font-weight:500;margin:0;flex:1}
+.back{width:44px;height:44px;margin-left:-12px;display:flex;align-items:center;font-size:20px;color:var(--ink-muted)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{height:32px;padding:0 12px;border:1px solid var(--rule);border-radius:var(--radius);font-size:13px;color:var(--ink-muted);display:flex;align-items:center}
+.chip.on{border-color:var(--ink);color:var(--ink)}
+.tabs{display:flex;border-bottom:1px solid var(--rule);flex:none}
+.tabs button{flex:1;height:44px;font-size:14px;color:var(--ink-muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--ink)}
+.field{display:block;margin-bottom:var(--s4)}
+.field .label{display:block;margin-bottom:6px}
+.field input,.field select{width:100%;height:44px;background:transparent;border:0;border-bottom:1px solid var(--rule);border-radius:0;padding:0 2px;font-size:16px;outline:none}
+.field input:focus,.field select:focus{border-bottom-color:var(--ink)}
+.sw{display:flex;align-items:center;justify-content:space-between;min-height:52px;border-bottom:1px solid var(--rule);gap:16px;font-size:15px}
+.tg{width:44px;height:26px;border-radius:13px;border:1px solid var(--rule);position:relative;flex:none;transition:background var(--dur)}
+.tg i{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:10px;background:var(--ink-faint);transition:transform var(--dur) var(--ease),background var(--dur)}
+.tg.on{background:var(--ink);border-color:var(--ink)}
+.tg.on i{transform:translateX(18px);background:var(--paper)}
+.empty{padding:var(--s7) var(--s3);text-align:center;color:var(--ink-muted);font-size:15px;line-height:1.7}
+#sess{flex:1;min-height:0;display:flex;flex-direction:column}
+.s-chrome{flex:none;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--s3)}
+.s-chrome .x,.s-chrome .mu{width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--ink-faint)}
+.s-chrome .x{margin-left:-12px;justify-content:flex-start;font-size:17px;width:auto;min-width:44px;padding-right:8px}
+.s-chrome .x.warn{color:var(--shu);font-size:13px}
+.s-chrome .mu{margin-right:-12px}
+.s-chrome .mu.off{opacity:.35;text-decoration:line-through}
+.s-chrome .ct{font-size:12px;color:var(--ink-faint);letter-spacing:.08em}
+.s-body{flex:1;min-height:0;padding:0 var(--s3);overflow:hidden;display:flex;flex-direction:column}
+.sentence{font-family:var(--f-serif);font-size:24px;line-height:2.05;letter-spacing:.02em;margin-top:var(--s2)}
+.solo{font-family:var(--f-serif);font-size:88px;line-height:1.15;text-align:center;margin:var(--s5) 0 0}
+.solo.md{font-size:64px}.solo.sm{font-size:40px;font-family:var(--f-jp)}
+.solo.lat{font-family:var(--f-lat);font-size:34px;font-weight:500;letter-spacing:-.01em}
+[data-theme="dark"] .sentence,[data-theme="dark"] .solo{font-weight:500}
+ruby{ruby-position:over}
+rt{font-size:.5em;font-family:var(--f-jp);color:var(--ink-muted);transition:opacity var(--dur) var(--ease)}
+.sentence[data-furi="hidden"] rt{opacity:0}
+.cell{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;min-width:4.3em;height:1.28em;border:1px solid var(--grid);border-radius:var(--radius);color:var(--ink-faint);font-family:var(--f-jp);font-size:.92em;
+ background:radial-gradient(circle,var(--grid) 1.2px,transparent 1.2px) center/100% 100% no-repeat}
+.cell.on{color:var(--seiji);border-color:var(--seiji);background:none}
+.unk{border-bottom:1px dotted var(--shu)}
+.tgt{border-bottom:2px solid var(--grid)}
+.done .tgt{border-color:var(--seiji);color:var(--seiji)}
+.gloss{margin-top:var(--s3);font-size:14px;line-height:1.5;color:var(--ink-faint);text-align:center;min-height:44px;transition:color var(--dur) var(--ease)}
+.gloss.on{color:var(--ink-muted);font-size:15px}
+.gloss.left{text-align:left}
+.hint{margin-top:var(--s4);font-size:15px;line-height:1.55;color:var(--ink-muted)}
+.hint.mid{text-align:center}
+.reveal{margin-top:var(--s3);min-height:172px}
+.ans{display:flex;align-items:baseline;gap:10px}
+.af{font-family:var(--f-serif);font-size:26px;line-height:1.3}
+.ar{font-family:var(--f-jp);font-size:16px;color:var(--seiji)}
+.ans .spk{margin-left:auto;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink-faint);border:1px solid var(--rule);border-radius:var(--radius);flex:none}
+.am{font-size:14px;color:var(--ink-muted);margin-top:2px}
+.mine{font-size:13px;color:var(--shu);margin-top:8px}
+.mine del{text-decoration:none;border-bottom:2px solid var(--shu)}
+.ctx{border-top:1px solid var(--rule);margin-top:12px;padding-top:10px}
+.cj{font-family:var(--f-jp);font-size:17px;line-height:1.6}
+.cj em{font-style:normal;border-bottom:2px solid var(--seiji)}
+.cr{font-family:var(--f-mono);font-size:12px;color:var(--ink-faint);margin-top:3px;line-height:1.5}
+.ce{font-size:12px;color:var(--ink-faint);margin-top:2px;line-height:1.5}
+.go{font-size:12px;color:var(--ink-faint);text-align:right;margin-top:10px}
+.s-body.done{cursor:pointer}
+.gloss{margin-top:12px;font-size:14px;color:var(--ink-faint)}
+.ex{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--rule)}
+.ex-w{font-family:var(--f-serif);font-size:22px;color:var(--ink)}
+.ex-r{font-size:13px;color:var(--ink-muted);font-family:var(--f-mono)}
+.ex-g{font-size:13px;color:var(--ink-faint)}
+.note{font-size:12px;color:var(--ink-faint);margin-top:8px;line-height:1.6}
+.atoms{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px;font-family:var(--f-jp);font-size:15px}
+.atoms span{min-width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:1px solid var(--rule);border-radius:var(--radius);padding:0 3px}
+.atoms span.new{border-color:var(--shu);color:var(--shu)}
+.grade{display:flex;gap:10px;margin-top:12px}
+.grade button{flex:1;height:48px;border-radius:var(--radius);font-size:15px}
+.g0{border:1px solid var(--shu);color:var(--shu)}
+.g1{background:var(--ink);color:var(--paper)}
+.play{width:88px;height:88px;border-radius:44px;border:1px solid var(--grid);display:flex;align-items:center;justify-content:center;font-size:28px;margin:var(--s5) auto 0;color:var(--ink)}
+<script src="tmp_script.js"></script>
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const segHTML=(s,furi)=>!s.r?esc(s.t):(furi?`<ruby>${esc(s.t)}<rt>${esc(s.r)}</rt></ruby>`:esc(s.t));
+function go(r,o={}){Object.assign(app,{route:r},o);render()}
+function render(){
+ document.documentElement.dataset.theme=app.theme;
+ const inSess=app.route==='session'||app.route==='summary';
+ navEl.className=inSess?'hide':'';
+ navEl.innerHTML=inSess?'':[['home','学','Study'],['collection','集','Collection'],['settings','設','Settings']]
+  .map(([r,g,l])=>`<button data-go="${r}" class="${app.route===r||(r==='collection'&&['deck','editor'].includes(app.route))?'on':''}"><span class="ic">${g}</span>${l}</button>`).join('');
+ view.innerHTML=({home:Home,collection:Collection,deck:Deck,editor:Editor,settings:Settings,session:Session,summary:Summary}[app.route])();
+ bind()}
+
+/* ===================== écrans ===================== */
+function Home(){
+ const due=queueFor().length;
+ const d=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+ if(!due)return `<div class="scroll pad"><p class="label" style="margin-top:24px">${esc(d)}</p>
+  <div class="empty">Nothing to review.<br>Come back in a few hours.</div></div>`;
+ return `<div class="scroll pad"><p class="label" style="margin-top:24px">${esc(d)}</p>
+  <div style="display:flex;justify-content:center;margin:36px 0 12px">
+   <div class="sq" style="width:146px"><span class="mono" style="font-size:60px">${due}</span></div></div>
+  <p class="muted" style="text-align:center;font-size:14px;margin:0 0 32px">cards to review</p>
+  <button class="btn" data-start="">Start</button><hr class="rule">
+  ${DECKS.map(dk=>{const n=queueFor(dk.id).length;return n?
+   `<div class="row" data-start="${dk.id}"><span>${esc(dk.name)}</span><span class="mono faint">${n}</span></div>`:''}).join('')}
+  <div style="height:24px"></div></div>`}
+
+function face(i){
+ if(i.kind==='lex')return[i.surface,i.gloss];
+ if(i.kind==='glyph')return[i.glyph,i.rom];
+ if(i.kind==='kanji')return[i.glyph,i.keyword];
+ return[i.ja,i.en]}
+function Collection(){
+ return `<div class="hdr"><h1>Collection</h1></div><div class="scroll pad">
+ ${DECKS.map(dk=>{const cs=ITEMS.filter(i=>i.deck===dk.id).map(i=>cards[i.id]);
+  const nw=cs.filter(c=>stateOf(c)==='new').length,lrn=cs.filter(c=>stateOf(c)==='lrn').length;
+  const due=cs.filter(c=>c.due!==null&&c.due<=Date.now()).length;
+  return `<div class="row" data-deck="${dk.id}"><span>${esc(dk.name)} <span class="faint" style="font-size:12px">${cs.length}</span></span>
+   <span class="tally mono"><span class="t-new">${nw}</span><span class="t-lrn">${lrn}</span><span class="t-due">${due}</span></span></div>`}).join('')}
+ <p class="faint" style="font-size:12px;margin-top:16px">new · relearning · due</p><div style="height:24px"></div></div>`}
+
+function Deck(){const dk=deck(app.deck);
+ return `<div class="hdr"><button class="back" data-go="collection">←</button><h1>${esc(dk.name)}</h1></div>
+ <div class="tabs">${[['cards','Cards'],['settings','Settings'],['stats','Stats']].map(([t,l])=>
+  `<button data-tab="${t}" class="${app.tab===t?'on':''}">${l}</button>`).join('')}</div>
+ ${({cards:DeckCards,settings:DeckSettings,stats:DeckStats}[app.tab])(dk)}`}
+function DeckCards(dk){
+ const F={all:()=>true,new:c=>stateOf(c)==='new',relearning:c=>stateOf(c)==='lrn',due:c=>c.due!==null&&c.due<=Date.now()};
+ const list=ITEMS.filter(i=>i.deck===dk.id)
+  .filter(i=>{if(!app.q)return true;const[a,b]=face(i);return(a+b).toLowerCase().includes(app.q.toLowerCase())})
+  .filter(i=>F[app.filter](cards[i.id]));
+ return `<div class="scroll pad">
+  <div class="field" style="margin:12px 0"><input id="q" placeholder="Search" value="${esc(app.q)}"></div>
+  <div class="chips" style="margin-bottom:8px">${['all','new','relearning','due'].map(f=>
+   `<button class="chip ${app.filter===f?'on':''}" data-filter="${f}">${f}</button>`).join('')}</div>
+  ${list.length?list.map(i=>{const c=cards[i.id],st=stateOf(c),[a,b]=face(i);
+   const dd=c.due===null?null:Math.round((c.due-Date.now())/DAY);
+   const locked=st==='new'&&unknownIn(atomsOf(i))>0;
+   return `<div class="row" data-edit="${i.id}" style="min-height:44px">
+    <span style="font-family:var(--f-jp);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a)}<span class="faint" style="font-size:13px"> ${esc(b)}</span></span>
+    <span class="faint mono" style="font-size:12px">${locked?'locked':st}</span>
+    <span class="faint mono" style="font-size:12px;min-width:40px;text-align:right">${dd===null?'—':(dd<=0?'due':'d+'+dd)}</span></div>`}).join('')
+   :'<div class="empty">No cards match this filter.</div>'}
+  <div style="height:24px"></div></div>`}
+function DeckSettings(dk){
+ const sel=(k,opts)=>`<label class="field"><span class="label">${k.label}</span><select data-dk="${k.key}">${
+  opts.map(([v,l])=>`<option value="${v}"${dk[k.key]===v?' selected':''}>${l}</option>`).join('')}</select></label>`;
+ return `<div class="scroll pad"><div style="height:12px"></div>
+ ${sel({label:'Input display',key:'answer'},[['kana','converts to kana as you type'],['romaji','stays in romaji']])}
+ ${sel({label:'Grading',key:'grading'},[['typed','typed answer'],['self','self-assessed']])}
+ ${sel({label:'Audio',key:'audio'},[['reveal','on reveal'],['always','prompt and reveal'],['never','never']])}
+ ${sel({label:'Furigana',key:'furi'},[['hidden','revealed with answer'],['always','always visible'],['never','never']])}
+ <label class="field"><span class="label">New per day</span>
+  <input type="number" min="0" max="50" value="${dk.newPerDay}" data-dk="newPerDay"></label>
+ <p class="faint" style="font-size:13px;line-height:1.7">${dk.kind==='glyph'
+  ?'The field stays in romaji here because the target is a sound, not a word: converting would type the question back at you. Romaji and kana are both accepted everywhere.'
+  :dk.kind==='kanji'?'Type the reading in romaji or in kana, both are accepted. No isolated on/kun drilling: which reading applies is decided by the word, so readings come from compounds.'
+  :dk.kind==='name'?'A name is only introduced once every katakana it contains has been introduced. Until then it stays locked.'
+  :'Sentences rotate across repetitions so the word is not memorised as the answer to one sentence.'}</p>
+ <div style="height:24px"></div></div>`}
+function DeckStats(dk){
+ const cs=ITEMS.filter(i=>i.deck===dk.id).map(i=>cards[i.id]);
+ const rows=[['new','new'],['relearning','lrn'],['young','young'],['mature','mature']]
+  .map(([n,s])=>[n,cs.filter(c=>stateOf(c)===s).length]);
+ const locked=ITEMS.filter(i=>i.deck===dk.id&&cards[i.id].reps===0&&unknownIn(atomsOf(i))>0).length;
+ const max=Math.max(1,...rows.map(r=>r[1]));
+ return `<div class="scroll pad"><div style="height:20px"></div>
+ ${rows.map(([n,v])=>`<div style="margin-bottom:14px">
+  <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span class="muted">${n}</span><span class="mono">${v}</span></div>
+  <div style="height:6px;background:var(--rule)"><div style="height:6px;width:${v/max*100}%;background:var(--ink)"></div></div></div>`).join('')}
+ <hr class="rule">
+ ${locked?`<div class="row"><span class="muted">locked by prerequisites</span><span class="mono">${locked}</span></div>`:''}
+ <div class="row"><span class="muted">repetitions</span><span class="mono">${cs.reduce((a,c)=>a+c.reps,0)}</span></div>
+ <div class="row" style="border:0"><span class="muted">lapses</span><span class="mono">${cs.reduce((a,c)=>a+c.lapses,0)}</span></div></div>`}
+
+function Editor(){const i=item(app.editing);if(!i)return Collection();
+ const [a,b]=face(i),c=cards[i.id];
+ const at=atomsOf(i);
+ const prev=i.kind==='lex'?(()=>{const x=CTX.find(y=>y.lex===i.id);
+  return `<div class="sentence" style="font-size:20px;margin:0">${x.segs.map((g,n)=>n===x.ti
+   ?'<span class="cell" style="min-width:3.6em"></span>':segHTML(g,true)).join('')}</div>
+   <p class="hint" style="margin-top:12px;font-size:14px">${esc(x.en)}</p>`})()
+  :`<div class="solo sm" style="margin:0">${esc(a)}</div><p class="hint mid" style="font-size:14px">${esc(b)}</p>`;
+ return `<div class="hdr"><button class="back" data-go="deck">←</button><h1>Card</h1>
+  <button class="faint" data-speak="${esc(i.kana||i.read||i.ja||i.glyph)}">♪</button></div>
+ <div class="scroll pad"><div style="height:16px"></div>
+ <label class="field"><span class="label">Front</span><input id="e-a" value="${esc(a)}" style="font-family:var(--f-jp)"></label>
+ <label class="field"><span class="label">Back</span><input id="e-b" value="${esc(b)}"></label>
+ ${at.length?`<p class="label">Prerequisites</p><div class="atoms">${at.map(id=>
+  `<span class="${known(id)?'':'new'}">${esc(item(id).glyph)}</span>`).join('')}</div>
+  <p class="note">${unknownIn(at)?unknownIn(at)+' still unknown, so this card stays locked.':'All known.'}</p>`:''}
+ <hr class="rule"><p class="label" style="margin-bottom:12px">Preview</p>
+ <div style="border:1px solid var(--rule);border-radius:var(--radius);padding:16px">${prev}</div>
+ <p class="note">reps ${c.reps} · lapses ${c.lapses} · stability ${c.stab.toFixed(1)}d</p>
+ <div style="height:24px"></div></div>`}
+
+function Settings(){
+ const sw=(k,l,on)=>`<div class="sw"><span>${l}</span><button class="tg ${on?'on':''}" data-tg="${k}"><i></i></button></div>`;
+ return `<div class="hdr"><h1>Settings</h1></div><div class="scroll pad"><div style="height:8px"></div>
+ ${sw('mute','Mute',app.mute)}
+ ${sw('theme','Dark theme',app.theme==='dark')}
+ ${sw('detailed','Detailed grading',app.detailed)}
+ ${sw('kb','Simulate software keyboard',app.kb)}
+ <hr class="rule">
+ <p class="faint" style="font-size:13px;line-height:1.7">${tts.ok?(tts.voice?'Japanese voice detected: '+esc(tts.voice.name):'No Japanese voice installed on this system. Playback will be silent or wrong.'):'Speech synthesis unavailable in this browser.'}</p>
+ <p class="faint" style="font-size:13px;line-height:1.7;margin-top:16px">Progress is now saved locally in this browser. Deck settings and review history persist across reloads. Romaji conversion uses a demo table. Pokémon names are trademarks of The Pokémon Company, used here for personal study only.</p>
+ <div style="height:24px"></div></div>`
+
+/* ===================== session ===================== */
+function contextFor(c){const i=item(c.id);
+ if(i.kind==='lex')return ctxForLex(c);
+ if(i.kind==='glyph')return ctxForGlyph(c);
+ if(i.kind==='kanji')return ctxForKanji(c);
+ return null}
+/* le contexte n'est retenu que s'il ne contient aucun atome inconnu : c'est le i+1 */
+function faceFor(c,g){const i=item(c.id),usable=!!g&&g.u===0;
+ if(i.kind==='lex')return c.reps>0&&c.reps%4===3?'bare':'cloze';
+ if(i.kind==='glyph')return c.reps===0?'glyph':c.reps%3===2?'sound':usable?'word':'glyph';
+ if(i.kind==='kanji')return c.reps>0&&usable?'comp':'keyword';
+ return 'name'}
+function startSession(id){const q=queueFor(id||null);if(!q.length)return;
+ app.sess={queue:q,seen:0,ok:0,t0:Date.now(),st:'typing',typed:'',committed:false,cur:null,face:null,ctx:null,timer:null,startTime:null};
+ nextCard();go('session')}
+function nextCard(){const s=app.sess;clearTimeout(s.timer);
+ if(!s.queue.length){s.dur=Date.now()-s.t0;go('summary');return}
+ s.cur=s.queue[0];s.committed=false;s.typed='';
+ const i=item(s.cur.id),g=contextFor(s.cur);
+ s.face=faceFor(s.cur,g);
+ s.ctx=['cloze','word','comp'].includes(s.face)?g.x:null;
+ s.st=s.face==='keyword'?'ask':'typing';
+ s.startTime=Date.now();
+ if(app.route==='session'){render();
+  const dk=deck(i.deck);
+  if(s.face==='sound')speak(i.kana,.7);
+  else if(dk.audio==='always')speak(promptAudio(s),.8)}}
+function promptAudio(s){const i=item(s.cur.id);
+ return s.face==='cloze'?s.ctx.segs.map(g=>g.t).join('')
+  :s.face==='word'?s.ctx.word:s.face==='comp'?s.ctx.read[0]
+  :i.kana||i.read||i.ja||i.glyph}
+function acceptedFor(s){const i=item(s.cur.id);
+ let a;
+ if(s.face==='cloze')a=s.ctx.ans;
+ else if(s.face==='bare')a=i.acc;
+ else if(s.face==='glyph')a=[i.rom];
+ else if(s.face==='word')a=[s.ctx.rom];
+ else if(s.face==='comp')a=s.ctx.read;
+ else if(s.face==='sound')a=[i.kana];
+ else a=[i.ja];
+ if(modeFor(s)==='romaji')a=a.map(x=>isKana(x)?toRomaji(x):x);
+ return a}
+/* le format de réponse est une propriété du deck ; seule la carte d'écoute le force,
+   puisqu'on y écrit ce qu'on entend, donc forcément en kana */
+function modeFor(s){return s.face==='sound'?'kana':deck(item(s.cur.id).deck).answer}
+const isKana=s=>/[\u3040-\u30FF]/.test(s);
+
+function Session(){
+ const s=app.sess,i=item(s.cur.id),dk=deck(i.deck);
+ const done=['ok','ko','near','shown'].includes(s.st);
+ const mode=modeFor(s),ime=mode==='kana';
+ let body='',note='',atoms=null,gloss=['',''];
+ if(s.face==='cloze'){
+  const cell=`<span class="cell${done?' on':''}" id="cell">${esc(done?s.ctx.ans[0]:toKana(s.typed))}</span>`;
+  const furi=dk.furi==='always'||(dk.furi==='hidden'&&done);
+  body=`<div class="sentence" data-furi="${furi?'on':'hidden'}">${s.ctx.segs.map((g,n)=>n===s.ctx.ti?cell:segHTML(g,true)).join('')}</div>
+`;
+  gloss=[s.ctx.en,s.ctx.en];
+ }else if(s.face==='bare'){
+  body=`<div class="solo md">${esc(i.surface)}</div>`;
+  gloss=[i.gloss,i.gloss];
+ }else if(s.face==='glyph'){
+  body=`<div class="solo">${esc(i.glyph)}</div>`;
+  gloss=[i.rom+(i.deck==='kata'?' · katakana':' · hiragana'),`type the reading in ${mode}`];
+ }else if(s.face==='word'){
+  const tgt=i.deck==='kata'?toKata(i.kana):i.kana;
+  const w=(i.deck==='kata'?toKata(s.ctx.word):s.ctx.word)
+    .replace(tgt,`<span class="tgt">${tgt}</span>`);
+  body=`<div class="solo md">${w}</div>`;
+  gloss=[s.ctx.en,`read the whole word in ${mode}`];
+  atoms=s.ctx.units.map(u=>KIDX[i.deck][i.deck==='kata'?toKata(u):u]).filter(Boolean);
+ }else if(s.face==='comp'){
+  body=`<div class="solo md">${s.ctx.word.replace(i.glyph,`<span class="tgt">${i.glyph}</span>`)}</div>`;
+  gloss=[s.ctx.en+' · '+i.keyword,`type the reading in ${mode}`];
+  atoms=s.ctx.kanji.map(k=>KIDX.kanji[k]);
+ }else if(s.face==='sound'){
+  body=`<button class="play" data-speak="${esc(i.kana)}">▶</button>`;
+  gloss=[i.rom,`write what you hear in ${i.deck==='kata'?'katakana':'hiragana'}`];
+ }else if(s.face==='name'){
+  body=`<div class="solo lat">${esc(i.en)}</div>`;
+  gloss=[`#${i.num} · ${i.type}`,`#${i.num} · ${i.type}`];
+  atoms=atomsOf(i);
+ }else{
+  body=`<div class="solo">${esc(i.glyph)}</div>`;
+  gloss=[i.keyword,'what does it mean?'];
+ }
+ const upfront=['cloze','bare','name'].includes(s.face);
+ const gtxt=(done||upfront)?gloss[0]:gloss[1];
+ body+=`<div class="gloss${(done||upfront)?' on':''}${s.face==='cloze'?' left':''}">${esc(gtxt)}</div>`;
+ let rev='<div class="reveal">';
+ if(done){
+  if(s.face!=='keyword'){
+   const form=s.face==='cloze'?s.ctx.segs[s.ctx.ti].t
+    :s.face==='word'?(i.deck==='kata'?toKata(s.ctx.word):s.ctx.word)
+    :s.face==='comp'?s.ctx.word:(i.surface||i.glyph||i.ja);
+   const read=s.face==='cloze'?s.ctx.ans[0]
+    :s.face==='word'?s.ctx.rom
+    :s.face==='comp'?s.ctx.read.join(' / ')
+    :i.kind==='glyph'?i.rom:i.kind==='lex'?i.read:toRomaji(i.ja);
+   const mean=s.face==='cloze'?i.gloss
+    :s.face==='word'?s.ctx.en:s.face==='comp'?s.ctx.en+' · '+i.keyword
+    :i.kind==='glyph'?(i.deck==='kata'?'katakana':'hiragana')
+    :i.kind==='lex'?i.gloss:'#'+i.num+' · '+i.type;
+   rev+=`<div class="ans"><span class="af">${esc(form)}</span><span class="ar">${esc(read)}</span>`
+     +(dk.audio!=='never'?`<button class="spk" data-speak="${esc(promptAudio(s))}" aria-label="play">♪</button>`:'')+`</div>`;
+   rev+=`<div class="am">${esc(mean)}</div>`;
+   if(s.face==='name'&&s.st==='ok'&&/[\u3041-\u3096]/.test(toKana(s.typed)))
+    rev+=`<div class="note">written in katakana</div>`;
+  }else{
+   rev+=`<div class="ans"><span class="af">${esc(i.glyph)}</span><span class="ar">${esc(i.keyword)}</span>`
+     +(dk.audio!=='never'?`<button class="spk" data-speak="${esc(i.glyph)}" aria-label="play">♪</button>`:'')+`</div>`;
+  }
+  const cb=ctxBlockFor(i,s.face);
+  if(cb)rev+=`<div class="ctx"><div class="cj">${ctxHTML(cb.ja)}</div>`
+    +`<div class="cr">${esc(cb.rom)}</div><div class="ce">${esc(cb.en)}</div></div>`;
+  if(atoms&&atoms.length>1)rev+=`<div class="atoms">${atoms.map(id=>
+   `<span class="${known(id)?'':'new'}">${esc(item(id).glyph)}</span>`).join('')}</div>`;
+  rev+=(s.st==='near'||app.detailed||dk.grading==='self')
+   ?`<div class="grade"><button class="g0" data-grade="0">Again</button><button class="g1" data-grade="1">Got it</button></div>`
+   :`<div class="go">tap to continue &rsaquo;</div>`;
+ }
+ rev+='</div>';
+ const input=s.st==='typing'
+  ?`<div class="s-input"><input id="f" class="${ime?'':'lat'}" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" placeholder="${ime?'romaji':'ka'}" value="${esc(s.typed)}">
+    <button class="dk" data-dontknow="">I don't know</button></div>`
+  :s.st==='ask'
+   ?`<div class="s-input"><button class="btn" data-reveal="">Reveal</button><div style="height:44px"></div></div>`
+   :`<div class="s-input"><input class="res ${s.st==='ok'?'good':'bad'} ${ime?'':'lat'}" readonly value="${
+      esc((ime?toKana(s.typed):s.typed)||'—')}"><div style="height:44px"></div></div>`;
+ return `<div id="sess">
+  <div class="s-chrome"><button class="x${s.confirmQuit?' warn':''}" data-quit="">${s.confirmQuit?'quit?':'✕'}</button>
+   <span class="ct mono">${s.seen+1} / ${s.seen+s.queue.length}</span>
+   <button class="mu${app.mute?' off':''}" data-mute="" aria-label="sound">♪</button></div>
+  <div class="s-body${done?' done':''}"${done&&s.st!=='near'&&!app.detailed&&dk.grading!=='self'?' data-next=""':''}>${body}${rev}</div>${input}
+  <div id="kb" class="${app.kb&&s.st==='typing'?'on':''}">${app.kb?KB():''}</div></div>`}
+function KB(){const rows=['azertyuiop','qsdfghjklm','wxcvbn'];
+ return rows.map((r,n)=>`<div class="kr">${n===2?'<span class="kk w">⇧</span>':''}${[...r].map(k=>`<span class="kk">${k}</span>`).join('')}${n===2?'<span class="kk w">⌫</span>':''}</div>`).join('')
+ +`<div class="kr"><span class="kk w">123</span><span class="kk sp"></span><span class="kk w" style="background:var(--ink);color:var(--paper);opacity:1">go</span></div>`}
+function validate(){const s=app.sess,dk=deck(item(s.cur.id).deck);
+ const {r}=judge(s.typed,acceptedFor(s),modeFor(s));
+ const elapsed=Date.now()-s.startTime;
+ if(s.ctx)s.cur.last=s.ctx.id;
+ if(dk.audio!=='never')speak(promptAudio(s));
+ if(r==='ok'){s.st='ok';if(!app.detailed){commit(true,elapsed);s.timer=setTimeout(advance,1400)}}
+ else if(r==='near')s.st='near';
+ else{s.st='ko';if(!app.detailed)commit(false,elapsed)}
+ render()}
+function commit(good,elapsed){const s=app.sess;if(s.committed)return;s.committed=true;
+ grade(s.cur,good,elapsed||8000);s.seen++;if(good)s.ok++;
+ s.queue.shift();if(!good)s.queue.push(s.cur)}
+function advance(){const s=app.sess;if(!s.committed)commit(s.st==='ok',Date.now()-s.startTime);nextCard()}
+function Summary(){const s=app.sess,m=Math.floor(s.dur/6e4),sec=Math.round(s.dur/1e3)%60;
+ const rate=s.seen?Math.round(s.ok/s.seen*100):0;
+ return `<div class="scroll pad"><div style="height:80px"></div>
+ <div style="display:flex;gap:12px;text-align:center">
+  ${[['cards',s.seen],['accuracy',rate+'%'],['time',m+"'"+String(sec).padStart(2,'0')]]
+   .map(([l,v])=>`<div style="flex:1"><div class="mono" style="font-size:30px">${v}</div><div class="label" style="margin-top:6px">${l}</div></div>`).join('')}</div>
+ <div style="height:56px"></div><button class="btn" data-go="home">Done</button>
+ ${queueFor().length?`<div style="height:10px"></div><button class="btn ghost" data-start="">Continue (${queueFor().length})</button>`:''}</div>`}
+
+/* ===================== liaisons ===================== */
+function bind(){
+ const q=s=>view.querySelectorAll(s);
+ q('[data-go]').forEach(e=>e.onclick=()=>go(e.dataset.go));
+ navEl.querySelectorAll('[data-go]').forEach(e=>e.onclick=()=>go(e.dataset.go));
+ q('[data-start]').forEach(e=>e.onclick=()=>startSession(e.dataset.start||null));
+ q('[data-deck]').forEach(e=>e.onclick=()=>go('deck',{deck:e.dataset.deck,tab:'cards',q:'',filter:'all'}));
+ q('[data-tab]').forEach(e=>e.onclick=()=>go('deck',{tab:e.dataset.tab}));
+ q('[data-filter]').forEach(e=>e.onclick=()=>go('deck',{filter:e.dataset.filter}));
+ q('[data-edit]').forEach(e=>e.onclick=()=>go('editor',{editing:e.dataset.edit}));
+ q('[data-speak]').forEach(e=>e.onclick=()=>speak(e.dataset.speak,.75));
+ q('[data-tg]').forEach(e=>e.onclick=()=>{const k=e.dataset.tg;
+  if(k==='theme')app.theme=app.theme==='dark'?'light':'dark';else app[k]=!app[k];render();saveState()});
+ q('[data-dk]').forEach(e=>e.onchange=()=>{const dk=deck(app.deck);
+  dk[e.dataset.dk]=e.dataset.dk==='newPerDay'?+e.value:e.value;render();saveState()});
+ const mu=view.querySelector('[data-mute]');
+ if(mu)mu.onclick=()=>{app.mute=!app.mute;if(app.mute&&tts.ok)speechSynthesis.cancel();render()};
+ const rv=view.querySelector('[data-reveal]');
+ if(rv)rv.onclick=()=>{app.sess.st='shown';speak(item(app.sess.cur.id).glyph);render()};
+ const se=view.querySelector('#q');
+ if(se)se.oninput=()=>{app.q=se.value;const p=se.selectionStart;render();
+  const n=view.querySelector('#q');if(n){n.focus();n.setSelectionRange(p,p)}};
+ ['e-a','e-b'].forEach(id=>{const el=view.querySelector('#'+id);
+  if(el)el.oninput=debounce(()=>{const i=item(app.editing);if(!i)return;
+   const front=id==='e-a';
+   if(i.kind==='lex')front?i.surface=el.value:i.gloss=el.value;
+   else if(i.kind==='kanji')front?i.glyph=el.value:i.keyword=el.value;
+   else if(i.kind==='name')front?i.ja=el.value:i.en=el.value;
+   else front?i.glyph=el.value:i.rom=el.value.trim();
+   render()},250)});
+ const f=view.querySelector('#f');
+ if(f){f.focus();
+  f.oninput=()=>{app.sess.typed=f.value;const c=view.querySelector('#cell');
+   if(c)c.textContent=toKana(f.value)};
+  f.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();validate()}}}
+ const nx=view.querySelector('[data-next]');
+ if(nx)nx.onclick=e=>{if(!e.target.closest('[data-speak]'))advance()};
+ const rs=view.querySelector('input.res');
+ if(rs)rs.focus({preventScroll:true});
+ const dn=view.querySelector('[data-dontknow]');
+ if(dn)dn.onclick=()=>{app.sess.typed='';validate()};
+ q('[data-grade]').forEach(e=>e.onclick=()=>{commit(e.dataset.grade==='1');advance()});
+ const qt=view.querySelector('[data-quit]');
+ if(qt)qt.onclick=()=>{
+  const quit=()=>{clearTimeout(app.sess.timer);if(tts.ok)speechSynthesis.cancel();
+   app.sess=null;go('home')};
+  if(app.sess.seen<5||app.sess.confirmQuit)return quit();
+  app.sess.confirmQuit=true;render();
+  setTimeout(()=>{if(app.sess&&app.sess.confirmQuit){app.sess.confirmQuit=false;
+    if(app.route==='session')render()}},3000)}
+ }
+function debounce(fn,ms){let t;return()=>{clearTimeout(t);t=setTimeout(fn,ms)}}
+document.addEventListener('keydown',e=>{
+ if(app.route!=='session')return;const s=app.sess;
+ if(e.key==='Enter'&&(s.st==='ok'||s.st==='ko')){e.preventDefault();advance()}
+ if(e.key==='Escape'){clearTimeout(s.timer);if(tts.ok)speechSynthesis.cancel();go('home')}});
+if(window.visualViewport)visualViewport.addEventListener('resize',()=>{
+ document.getElementById('frame').style.height=visualViewport.height+'px'});
+loadState();
+render();
+loadState();
+render();
+render();
+</script>
+</body>
+</html>
