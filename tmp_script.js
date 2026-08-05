@@ -388,9 +388,19 @@ function syncBaseUrl(){
  const raw=(app.sync&&app.sync.url||'').trim();
  return raw.replace(/\/+$/,'');
 }
+function syncUserKey(){
+ return String(app.sync&&app.sync.userId||'').trim().replace(/[.#$\[\]\/]/g,'_');
+}
+function syncRequestUrl(){
+ const base=syncBaseUrl();
+ const key=syncUserKey();
+ const token=(app.sync&&app.sync.anonKey||'').trim();
+ const q=token?`?auth=${encodeURIComponent(token)}`:'';
+ return `${base}/anki-sync/${encodeURIComponent(key)}.json${q}`;
+}
 function syncReady(){
  const s=app.sync||{};
- return !!(s.enabled&&syncBaseUrl()&&s.anonKey&&s.userId);
+ return !!(s.enabled&&syncBaseUrl()&&syncUserKey());
 }
 function localPayload(){
  const decks=DECKS.map(dk=>({id:dk.id,answer:dk.answer,grading:dk.grading,audio:dk.audio,furi:dk.furi,newPerDay:dk.newPerDay}));
@@ -429,17 +439,11 @@ function applyPayload(payload){
 }
 async function cloudPush(){
  if(!syncReady())throw new Error('Sync config incomplete');
- const base=syncBaseUrl();
  const payload=localPayload();
- const body=[{user_id:String(app.sync.userId),payload,updated_at:new Date().toISOString()}];
- const res=await fetch(`${base}/rest/v1/anki_sync?on_conflict=user_id`,{
-  method:'POST',
-  headers:{
-   'apikey':app.sync.anonKey,
-   'Authorization':`Bearer ${app.sync.anonKey}`,
-   'Content-Type':'application/json',
-   'Prefer':'resolution=merge-duplicates,return=minimal'
-  },
+ const body={user_id:String(syncUserKey()),payload,updated_at:new Date().toISOString()};
+ const res=await fetch(syncRequestUrl(),{
+  method:'PUT',
+  headers:{'Content-Type':'application/json'},
   body:JSON.stringify(body)
  });
  if(!res.ok)throw new Error(`Push failed (${res.status})`);
@@ -450,18 +454,11 @@ async function cloudPush(){
 }
 async function cloudPull(){
  if(!syncReady())throw new Error('Sync config incomplete');
- const base=syncBaseUrl();
- const user=encodeURIComponent(String(app.sync.userId));
- const res=await fetch(`${base}/rest/v1/anki_sync?user_id=eq.${user}&select=payload,updated_at&limit=1`,{
-  headers:{
-   'apikey':app.sync.anonKey,
-   'Authorization':`Bearer ${app.sync.anonKey}`
-  }
- });
+ const res=await fetch(syncRequestUrl());
  if(!res.ok)throw new Error(`Pull failed (${res.status})`);
- const rows=await res.json();
- if(!Array.isArray(rows)||!rows.length||!rows[0].payload)return false;
- const changed=applyPayload(rows[0].payload);
+ const row=await res.json();
+ if(!row||!row.payload)return false;
+ const changed=applyPayload(row.payload);
  app.sync.lastSync=Date.now();
  app.sync.lastError='';
  app.sync.lastDirection='pull';
@@ -852,8 +849,8 @@ function Settings(){
  <hr class="rule">
  ${sw('sync-enabled','Cloud sync enabled',sync.enabled)}
  ${sw('sync-auto','Cloud auto push',sync.auto)}
- <label class="field"><span class="label">Supabase URL</span><input id="sync-url" value="${esc(sync.url||'')}" placeholder="https://xxxx.supabase.co"></label>
- <label class="field"><span class="label">Supabase anon key</span><input id="sync-key" value="${esc(sync.anonKey||'')}" placeholder="eyJ..."></label>
+ <label class="field"><span class="label">Firebase DB URL</span><input id="sync-url" value="${esc(sync.url||'')}" placeholder="https://your-project-default-rtdb.firebaseio.com"></label>
+ <label class="field"><span class="label">Firebase auth token (optional)</span><input id="sync-key" value="${esc(sync.anonKey||'')}" placeholder="optional"></label>
  <label class="field"><span class="label">Sync user id</span><input id="sync-user" value="${esc(sync.userId||'')}" placeholder="tristan-iphone"></label>
  <div style="display:flex;gap:10px;margin:8px 0 0">
   <button class="btn ghost" style="height:44px" data-sync="save">Save cloud config</button>
@@ -861,7 +858,7 @@ function Settings(){
   <button class="btn ghost" style="height:44px" data-sync="push">Push</button>
  </div>
  <p class="faint" style="font-size:12px;line-height:1.6;margin-top:10px">Last sync: ${esc(syncStamp)}${sync.lastDirection?` · ${esc(sync.lastDirection)}`:''}${sync.lastError?` · error: ${esc(sync.lastError)}`:''}</p>
- <p class="faint" style="font-size:12px;line-height:1.6">Table required in Supabase: anki_sync(user_id text primary key, payload jsonb, updated_at timestamptz).</p>
+ <p class="faint" style="font-size:12px;line-height:1.6">Path used in Firebase: /anki-sync/{sync-user-id}. For secured rules, pass a Firebase auth token.</p>
  <p class="faint" style="font-size:13px;line-height:1.7">${tts.ok?(tts.voice?'Japanese voice detected: '+esc(tts.voice.name):'No Japanese voice installed on this system. Playback will be silent or wrong.'):'Speech synthesis unavailable in this browser.'}</p>
  <p class="faint" style="font-size:13px;line-height:1.7;margin-top:16px">Progress is now saved locally in this browser. Deck settings and review history persist across reloads. Romaji conversion uses a demo table. Pokémon names are trademarks of The Pokémon Company, used here for personal study only.</p>
  <div style="height:24px"></div></div>`
