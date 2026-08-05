@@ -575,7 +575,7 @@ function Session(){
   body=`<div class="solo md">${esc(i.surface)}</div>`;
   gloss=[i.gloss,i.gloss];
  }else if(s.face==='glyph'){
-  body=`<div class="solo-row"><div class="solo">${esc(i.glyph)}</div>${scriptTag?`<span class="tag-script">${scriptTag}</span>`:''}</div>`;
+  body=`<div class="solo-row"><div class="solo">${esc(i.glyph)}</div>${done&&scriptTag?`<span class="tag-script">${scriptTag}</span>`:''}</div>`;
   gloss=[i.rom+(i.deck==='kata'?' · katakana':' · hiragana'),`type the reading in ${mode}`];
  }else if(s.face==='word'){
   const tgt=i.deck==='kata'?toKata(i.kana):i.kana;
@@ -596,7 +596,7 @@ function Session(){
   gloss=[`#${i.num} · ${i.type}`,`#${i.num} · ${i.type}`];
   atoms=atomsOf(i);
  }else{
-  body=`<div class="solo-row"><div class="solo">${esc(i.glyph)}</div>${scriptTag?`<span class="tag-script">${scriptTag}</span>`:''}</div>`;
+  body=`<div class="solo-row"><div class="solo">${esc(i.glyph)}</div>${done&&scriptTag?`<span class="tag-script">${scriptTag}</span>`:''}</div>`;
   gloss=[i.keyword,'what does it mean?'];
  }
  const upfront=['cloze','bare','name'].includes(s.face);
