@@ -105,17 +105,88 @@ function speak(text,rate){if(!tts.ok||app.mute||!text)return;
 /* ===================== decks : la politique est une propriété du deck ===================== */
 const DECKS=[
  {id:'hira',name:'Hiragana',kind:'glyph',script:'hira',answer:'romaji',ordered:true,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:10},
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:10,level:'n5'},
  {id:'kata',name:'Katakana',kind:'glyph',script:'kata',answer:'romaji',ordered:true,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:8},
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:8,level:'n5'},
  {id:'kanji',name:'Kanji N5',kind:'kanji',answer:'kana',ordered:true,
-  audio:'reveal',grading:'self',furi:'hidden',newPerDay:4},
+  audio:'reveal',grading:'self',furi:'hidden',newPerDay:4,level:'n5'},
  {id:'vocab',name:'Sentences N5',kind:'lex',answer:'kana',ordered:false,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4},
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4,level:'n5'},
  {id:'pkmn',name:'Pokémon 151',kind:'name',answer:'kana',ordered:false,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4}
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4,level:'n5'},
+ {id:'kanji-n4',name:'Kanji N4',kind:'kanji',answer:'kana',ordered:true,
+  audio:'reveal',grading:'self',furi:'hidden',newPerDay:4,level:'n4'},
+ {id:'sent-n4',name:'Sentences N4',kind:'lex',answer:'kana',ordered:false,
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4,level:'n4'},
+ {id:'kanji-n3',name:'Kanji N3',kind:'kanji',answer:'kana',ordered:true,
+  audio:'reveal',grading:'self',furi:'hidden',newPerDay:4,level:'n3'},
+ {id:'sent-n3',name:'Sentences N3',kind:'lex',answer:'kana',ordered:false,
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4,level:'n3'},
+ {id:'kanji-n2',name:'Kanji N2',kind:'kanji',answer:'kana',ordered:true,
+  audio:'reveal',grading:'self',furi:'hidden',newPerDay:4,level:'n2'},
+ {id:'sent-n2',name:'Sentences N2',kind:'lex',answer:'kana',ordered:false,
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4,level:'n2'},
+ {id:'kanji-n1',name:'Kanji N1',kind:'kanji',answer:'kana',ordered:true,
+  audio:'reveal',grading:'self',furi:'hidden',newPerDay:4,level:'n1'},
+ {id:'sent-n1',name:'Sentences N1',kind:'lex',answer:'kana',ordered:false,
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4,level:'n1'}
+ ,{id:'pkmn-gen2',name:'Pokémon Gen 2',kind:'bonus',answer:'kana',ordered:false,
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:0,level:'bonus',threshold:1200,theme:'Generation 2'}
+ ,{id:'pkmn-gen3',name:'Pokémon Gen 3',kind:'bonus',answer:'kana',ordered:false,
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:0,level:'bonus',threshold:2200,theme:'Generation 3'}
+ ,{id:'bonus-jlpt-vocab',name:'JLPT Extra Words',kind:'bonus',answer:'kana',ordered:false,
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:0,level:'bonus',threshold:3000,theme:'Hiragana / kanji mix'}
+ ,{id:'bonus-fav-topic',name:'Your Favorite Topic',kind:'bonus',answer:'kana',ordered:false,
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:0,level:'bonus',threshold:4200,theme:'Whatever you want'}
 ];
 const deck=id=>DECKS.find(d=>d.id===id);
+const LEVELS=[
+ {id:'n5',label:'N5',deckIds:['hira','kata','kanji','vocab','pkmn'],prereq:null,open:true},
+ {id:'n4',label:'N4',deckIds:['kanji-n4','sent-n4'],prereq:'N5 fully memorized',open:false},
+ {id:'n3',label:'N3',deckIds:['kanji-n3','sent-n3'],prereq:'N4 fully memorized',open:false},
+ {id:'n2',label:'N2',deckIds:['kanji-n2','sent-n2'],prereq:'N3 fully memorized',open:false},
+ {id:'n1',label:'N1',deckIds:['kanji-n1','sent-n1'],prereq:'N2 fully memorized',open:false}
+];
+const level=id=>LEVELS.find(l=>l.id===id);
+const BONUS_DECKS=[
+ {id:'naruto',name:'Naruto',subject:'anime',threshold:900,theme:'Shinobi basics'},
+ {id:'pkmn-gen2',name:'Pokémon Gen 2',subject:'pokémon',threshold:1600,theme:'Generation 2'},
+ {id:'pkmn-gen3',name:'Pokémon Gen 3',subject:'pokémon',threshold:2600,theme:'Generation 3'},
+ {id:'bonus-jlpt-vocab',name:'JLPT Extra Words',subject:'vocab',threshold:3600,theme:'Hiragana / kanji mix'},
+ {id:'bonus-fav-topic',name:'Your Favorite Topic',subject:'custom',threshold:5000,theme:'Whatever you want'}
+];
+const bonusDeck=id=>BONUS_DECKS.find(d=>d.id===id);
+const POINTS_PER_DAY_ESTIMATE=200;
+function daysToUnlock(threshold,points){
+ const remaining=Math.max(0,threshold-(points||0));
+ return Math.max(0,Math.ceil(remaining/POINTS_PER_DAY_ESTIMATE));
+}
+function decksForLevel(levelId){
+ const l=level(levelId);if(!l)return[];
+ return l.deckIds.map(id=>deck(id)).filter(Boolean);
+}
+function deckMasteryRate(deckIds){
+ const decks=deckIds.map(id=>deck(id)).filter(Boolean);
+ const cardsForDecks=decks.flatMap(d=>ITEMS.filter(i=>i.deck===d.id));
+ if(!cardsForDecks.length)return 0;
+ const mastered=cardsForDecks.filter(i=>known(i.id)).length;
+ return mastered/cardsForDecks.length;
+}
+function levelProgress(levelId){
+ const l=level(levelId);if(!l)return 0;
+ if(l.id==='n5')return deckMasteryRate(['hira','kata','kanji','vocab']);
+ return 0;
+}
+function levelUnlockInfo(levelId){
+ const l=level(levelId);if(!l)return{open:false,need:''};
+ if(l.id==='n5')return{open:true,need:'',progress:levelProgress('n5')};
+ if(l.id==='n4'){
+  const progress=levelProgress('n5');
+  return{open:progress>=0.95,need:'N5 foundation fully memorized',progress};
+ }
+ const prev=LEVELS[LEVELS.findIndex(x=>x.id===l.id)-1];
+ return{open:false,need:prev?`${prev.label} content pending import`:'',progress:0};
+}
 
 /* ===================== items ===================== */
 const ITEMS=[],CTX=[],KIDX={hira:{},kata:{},kanji:{}};
@@ -180,6 +251,90 @@ const STORAGE_KEY='anki-jp-state-v1';
    sur un hiragana vu une seule fois. */
 const MASTERY_REPS=3;
 const known=id=>cards[id]&&cards[id].reps>=MASTERY_REPS;
+const allDeckItems=id=>ITEMS.filter(i=>i.deck===id);
+const masteredCount=id=>allDeckItems(id).filter(i=>known(i.id)).length;
+const totalCount=id=>allDeckItems(id).length;
+function deckUnlockInfo(dk){
+ if(dk.level==='bonus'){
+  const open=(app.points||0)>=(dk.threshold||0);
+  return{stage:'BONUS',open,limit:0,label:dk.name,need:open?'':`${dk.threshold||0} points`,theme:dk.theme||''};
+ }
+ if(dk.level&&dk.level!=='n5'){
+  const lvl=levelUnlockInfo(dk.level);
+  return{stage:dk.level.toUpperCase(),open:lvl.open,limit:lvl.open?totalCount(dk.id):0,label:dk.name,need:lvl.need||`unlock ${dk.level.toUpperCase()}`};
+ }
+ const hira=masteredCount('hira');
+ const kata=masteredCount('kata');
+ const kanaReady=hira>=30&&kata>=30;
+ const kanjiReady=masteredCount('kanji')>=10;
+ if(dk.id==='hira')return{stage:'N5',open:true,limit:totalCount('hira'),label:'Hiragana'};
+ if(dk.id==='kata')return{stage:'N5',open:hira>=30,limit:hira>=30?totalCount('kata'):0,label:'Katakana',need:`${Math.min(hira,30)}/30 hiragana`};
+ if(dk.id==='vocab')return{stage:'N5',open:kanaReady&&kanjiReady,limit:kanaReady&&kanjiReady?totalCount('vocab'):0,label:'Sentences N5',need:kanaReady?`${masteredCount('kanji')}/10 kanji mastery`:`${Math.min(hira,30)}/30 hira · ${Math.min(kata,30)}/30 kata`};
+ if(dk.id==='kanji')return{stage:'N5',open:kanaReady,limit:kanaReady?totalCount('kanji'):0,label:'Kanji N5',need:`${Math.min(hira,30)}/30 hira · ${Math.min(kata,30)}/30 kata`};
+ return pokemonUnlockInfo();
+}
+const deckVisibleItems=dk=>{
+ const info=deckUnlockInfo(dk);
+ const items=allDeckItems(dk.id).slice().sort((a,b)=>a.idx-b.idx);
+ return info.limit>=items.length?items:items.slice(0,info.limit);
+};
+const POKEMON_SHINY_RATE=1/32;
+function pokemonUnlockedByKana(i){
+ return kanaUnits(i.ja).every(u=>known(KIDX.kata[u]));
+}
+function pokemonUnlockInfo(){
+ const items=allDeckItems('pkmn');
+ const unlocked=items.filter(pokemonUnlockedByKana).length;
+ const total=items.length;
+ return{stage:'N5',open:true,limit:total,label:'Pokémon 151',need:`${unlocked}/${total} unlocked by kana`,total,unlocked};
+}
+function pokemonMeta(id){
+ return app.pokemonUnlocks&&app.pokemonUnlocks[id]||null;
+}
+function syncPokemonUnlocks(){
+ const items=allDeckItems('pkmn').filter(pokemonUnlockedByKana).sort((a,b)=>a.idx-b.idx);
+ if(!app.pokemonUnlocks)app.pokemonUnlocks={};
+ let changed=false;
+ for(const i of items){
+  if(!app.pokemonUnlocks[i.id]){
+   app.pokemonUnlocks[i.id]={unlockedAt:Date.now(),shiny:Math.random()<POKEMON_SHINY_RATE};
+   changed=true;
+  }
+ }
+ return changed;
+}
+function levelRowsHtml(){
+ return LEVELS.map(l=>{
+  const info=levelUnlockInfo(l.id);
+  const decks=decksForLevel(l.id);
+  const count=decks.length?decks.reduce((n,dk)=>n+deckVisibleItems(dk).length,0):0;
+  const subtitle=l.id==='n5'
+   ?'Hiragana, Katakana, Kanji N5, Sentences N5, Pokémon 151'
+   :`Locked until ${info.need}`;
+  const progress=l.id==='n5'?Math.round(info.progress*100):0;
+  const deckList=decks.map(dk=>{
+      const dkInfo=deckUnlockInfo(dk);
+      const cs=deckVisibleItems(dk).map(i=>cards[i.id]);
+      const nw=cs.filter(c=>stateOf(c)==='new').length,lrn=cs.filter(c=>stateOf(c)==='lrn').length;
+      const due=cs.filter(c=>c.due!==null&&c.due<=Date.now()).length;
+      return `<div class="deck-link ${dkInfo.open?'open':'locked'}" data-deck="${dk.id}">
+       <span>${esc(dk.name)}</span>
+       <span class="tally mono"><span class="chip ${dkInfo.open?'on':'locked'}" style="height:22px;padding:0 8px;font-size:10px">${dkInfo.stage}</span><span class="t-new">${nw}</span><span class="t-lrn">${lrn}</span><span class="t-due">${due}</span></span>
+      </div>`
+     }).join('');
+  return `<div class="level-card ${info.open?'open':'locked'}">
+   <div class="level-row">
+    <div class="level-main">
+     <div class="level-top"><span class="level-pill">${l.label}</span><span class="level-title">${l.label} Collection</span></div>
+     <div class="level-sub">${esc(subtitle)}</div>
+     <div class="level-sub">${l.id==='n5'?`${progress}% mastered`:info.open?'open':'locked'}</div>
+    </div>
+    <div class="tally mono"><span class="t-new">${count}</span></div>
+   </div>
+   ${deckList?`<div class="level-decks">${deckList}</div>`:''}
+  </div>`
+ }).join('');
+}
 function atomsOf(i){
  if(i.kind==='glyph')return [];
  if(i.kind==='kanji')return [];
@@ -197,18 +352,30 @@ function loadState(){
   if(stored?.app){
    Object.assign(app,stored.app);
   }
+  if(stored?.progress){
+   Object.assign(app,{points:stored.progress.points||0,streak:stored.progress.streak||0,bestStreak:stored.progress.bestStreak||0,totalRuns:stored.progress.totalRuns||0,unlockedBonus:stored.progress.unlockedBonus||{}});
+  }
+  app.unlockedBonus=bonusUnlocksForPoints(app.points||0);
+  if(stored?.dailyStats){
+   app.dailyStats=stored.dailyStats;
+  }
+  if(stored?.pokemonUnlocks){
+   app.pokemonUnlocks=stored.pokemonUnlocks;
+  }
   if(stored?.decks){
    for(const dk of stored.decks){
     const target=DECKS.find(d=>d.id===dk.id);
     if(target)Object.assign(target,dk);
    }
   }
+  const backfilled=syncPokemonUnlocks();
+  if(backfilled)saveState();
  }catch(e){console.warn('Failed to load state',e)}
 }
 function saveState(){
  try{
   const decks=DECKS.map(dk=>({id:dk.id,answer:dk.answer,grading:dk.grading,audio:dk.audio,furi:dk.furi,newPerDay:dk.newPerDay}));
-  localStorage.setItem(STORAGE_KEY,JSON.stringify({cards,app:{theme:app.theme,mute:app.mute,detailed:app.detailed,kb:app.kb},decks}));
+  localStorage.setItem(STORAGE_KEY,JSON.stringify({cards,app:{theme:app.theme,mute:app.mute,detailed:app.detailed,kb:app.kb},decks,progress:{points:app.points,streak:app.streak,bestStreak:app.bestStreak,totalRuns:app.totalRuns,unlockedBonus:app.unlockedBonus},dailyStats:app.dailyStats||{},pokemonUnlocks:app.pokemonUnlocks||{}}));
  }catch(e){console.warn('Failed to save state',e)}
 }
 
@@ -216,7 +383,7 @@ function saveState(){
 const DAY=864e5,cards={};
 ITEMS.forEach(i=>cards[i.id]={id:i.id,stab:0,diff:5,due:null,reps:0,lapses:0,last:null});
 function stateOf(c){if(c.reps===0)return 'new';if(c.lapses&&c.stab<1)return 'lrn';return c.stab>=21?'mature':'young'}
-function grade(c,good,elapsed){
+function grade(c,good,elapsed,skip){
  c.reps++;
  c.lastSeen=Date.now();
  c.responseCount=(c.responseCount||0)+1;
@@ -226,20 +393,75 @@ function grade(c,good,elapsed){
   c.diff=Math.max(1,c.diff - 0.12*speed);
   c.stab=c.stab<1?1:c.stab*(1.35+(10-c.diff)*.08)*speed;
  } else {
-  c.lapses++;
-  c.diff=Math.min(10,c.diff+.9);
-  c.stab=Math.max(.4,c.stab*(0.35 + 0.1*speed));
+  if(skip){
+   c.diff=Math.min(10,c.diff+.25);
+   c.stab=Math.max(.6,c.stab*(0.75 + 0.06*speed));
+  } else {
+   c.lapses++;
+   c.diff=Math.min(10,c.diff+.9);
+   c.stab=Math.max(.4,c.stab*(0.35 + 0.1*speed));
+  }
  }
  c.due=c.lastSeen+Math.round(c.stab*DAY);
  saveState();
 }
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+function pointsForResult(good,combo){
+ if(!good)return-6;
+ const tier=Math.floor(Math.max(1,combo)-1)/3;
+ const mult=1+Math.min(1.75,tier*0.25);
+ return Math.round(10*mult);
+}
+function bonusUnlocksForPoints(points){
+ const unlocked={};
+ for(const b of BONUS_DECKS)unlocked[b.id]=points>=b.threshold;
+ return unlocked;
+}
+function dayKey(d=new Date()){
+ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function dailyDefault(){return {points:0,attempts:0,good:0,wrong:0,skip:0};}
+function getDailyStats(){
+ if(!app.dailyStats)app.dailyStats={};
+ return app.dailyStats;
+}
+function noteDailyProgress(delta,outcome){
+ const stats=getDailyStats();
+ const key=dayKey();
+ const day=stats[key]||(stats[key]=dailyDefault());
+ day.points=(day.points||0)+Math.max(0,delta||0);
+ day.attempts=(day.attempts||0)+1;
+ day[outcome]=(day[outcome]||0)+1;
+ app.dailyStats=stats;
+}
+function heatmapDays(year=new Date().getFullYear()){
+ const start=new Date(year,0,1);
+ const end=new Date(year,11,31);
+ const today=new Date();
+ const out=[];
+ const stats=getDailyStats();
+ for(const d=new Date(start);d<=end;d.setDate(d.getDate()+1)){
+  const key=dayKey(d);
+  out.push({key,date:new Date(d),future:d>today,stats:stats[key]||dailyDefault()});
+ }
+ return out;
+}
+function heatmapClass(stats,max,future){
+ if(future)return 'heat future';
+ const pts=stats.points||0;
+ if(pts<=0)return stats.attempts? 'heat attempt':'heat zero';
+ const ratio=max?pts/max:0;
+ if(ratio>=0.75)return 'heat s4';
+ if(ratio>=0.5)return 'heat s3';
+ if(ratio>=0.25)return 'heat s2';
+ return 'heat s1';
+}
 /* kanji fait figure d'exception : c'est un deck ordonné (non filtré par atomes),
    mais ses lectures sont en hiragana — donc pas de nouveau kanji tant que la base
    hiragana n'est pas raisonnablement en place. */
 const KANJI_UNLOCK_HIRA=10;
 function unseenPool(dk){
- let pool=ITEMS.filter(i=>i.deck===dk.id&&cards[i.id].reps===0);
+ let pool=deckVisibleItems(dk).filter(i=>cards[i.id].reps===0);
  if(dk.ordered)pool.sort((a,b)=>a.idx-b.idx);
  else{
   pool=pool.filter(i=>unknownIn(atomsOf(i))===0)
@@ -282,7 +504,7 @@ const DAILY_BUDGET=30;
 function queueFor(id){const now=Date.now(),out=[];
  const targets=id?[deck(id)]:DECKS;
  for(const dk of targets)
-  out.push(...ITEMS.filter(i=>i.deck===dk.id).map(i=>cards[i.id]).filter(c=>c.due!==null&&c.due<=now));
+  out.push(...deckVisibleItems(dk).map(i=>cards[i.id]).filter(c=>c.due!==null&&c.due<=now));
  if(id){
   out.push(...newFor(deck(id)));
  }else{
@@ -332,7 +554,7 @@ const ctxHTML=t=>esc(t).split('\u0001').join('<em>').split('\u0002').join('</em>
 
 /* ===================== état ===================== */
 const app={route:'home',deck:null,editing:null,tab:'cards',filter:'all',q:'',
- kb:false,detailed:false,mute:false,theme:'light',sess:null};
+ kb:false,detailed:false,mute:false,theme:'light',sess:null,points:0,streak:0,bestStreak:0,totalRuns:0,unlockedBonus:{}};
 const view=document.getElementById('view'),navEl=document.getElementById('nav');
 function esc(s){
   s = String(s);
@@ -366,15 +588,23 @@ function render(){
 function Home(){
  const due=queueFor().length;
  const d=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
- if(!due)return `<div class="scroll pad"><p class="label" style="margin-top:24px">${esc(d)}</p>
-  <div class="empty">Nothing to review.<br>Come back in a few hours.</div></div>`;
+ const days=heatmapDays();
+ const maxPts=Math.max(1,...days.map(x=>x.stats.points||0));
  return `<div class="scroll pad"><p class="label" style="margin-top:24px">${esc(d)}</p>
   <div style="display:flex;justify-content:center;margin:36px 0 12px">
    <div class="sq" style="width:146px"><span class="mono" style="font-size:60px">${due}</span></div></div>
   <p class="muted" style="text-align:center;font-size:14px;margin:0 0 32px">cards to review</p>
+  <div style="display:flex;gap:12px;margin:0 0 18px">
+   ${[['points',app.points||0],['streak',app.streak||0],['best',app.bestStreak||0]].map(([l,v])=>`<div style="flex:1;border:1px solid var(--rule);border-radius:var(--radius);padding:10px 12px"><div class="mono" style="font-size:22px">${v}</div><div class="label" style="margin-top:4px">${l}</div></div>`).join('')}
+  </div>
   <button class="btn" data-start="">Start</button><hr class="rule">
-  ${DECKS.map(dk=>{const n=queueFor(dk.id).length;return n?
-   `<div class="row" data-start="${dk.id}"><span>${esc(dk.name)}</span><span class="mono faint">${n}</span></div>`:''}).join('')}
+  ${due?``:`<div class="empty" style="padding:24px 0 12px">Nothing to review.<br>Come back in a few hours.</div>`}
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px">
+   <span class="label">progress</span>
+   <span class="faint" style="font-size:12px">${POINTS_PER_DAY_ESTIMATE} pts/day target</span>
+  </div>
+  <div class="hm-wrap"><div class="hm" aria-label="daily progress heatmap">${days.map(({key,stats,future})=>`<span class="${heatmapClass(stats,maxPts,future)}" title="${key} · ${stats.points||0} pts · ${stats.attempts||0} tries"></span>`).join('')}</div></div>
+  <div style="display:flex;justify-content:space-between;margin-top:8px"><span class="faint" style="font-size:12px">less</span><span class="faint" style="font-size:12px">more</span></div>
   <div style="height:24px"></div></div>`}
 
 function face(i){
@@ -383,13 +613,34 @@ function face(i){
  if(i.kind==='kanji')return[i.glyph,i.keyword];
  return[i.ja,i.en]}
 function Collection(){
+ const pkmn=pokemonUnlockInfo();
+ const shinyCount=app.pokemonUnlocks?Object.values(app.pokemonUnlocks).filter(x=>x.shiny).length:0;
  return `<div class="hdr"><h1>Collection</h1></div><div class="scroll pad">
- ${DECKS.map(dk=>{const cs=ITEMS.filter(i=>i.deck===dk.id).map(i=>cards[i.id]);
-  const nw=cs.filter(c=>stateOf(c)==='new').length,lrn=cs.filter(c=>stateOf(c)==='lrn').length;
-  const due=cs.filter(c=>c.due!==null&&c.due<=Date.now()).length;
-  return `<div class="row" data-deck="${dk.id}"><span>${esc(dk.name)} <span class="faint" style="font-size:12px">${cs.length}</span></span>
-   <span class="tally mono"><span class="t-new">${nw}</span><span class="t-lrn">${lrn}</span><span class="t-due">${due}</span></span></div>`}).join('')}
- <p class="faint" style="font-size:12px;margin-top:16px">new · relearning · due</p><div style="height:24px"></div></div>`}
+  <div class="label" style="margin:12px 0 10px">JLPT collections</div>
+  ${levelRowsHtml()}
+  <div class="level-card ${pkmn.open?'open':'locked'}" data-deck="pkmn">
+   <div class="level-row">
+    <div class="level-main">
+     <div class="level-top"><span class="level-pill">${pkmn.open?'✓':'★'}</span><span class="level-title">Pokémon 151</span></div>
+     <div class="level-sub">${pkmn.unlocked}/${pkmn.total} unlocked${shinyCount?` · ${shinyCount} shiny`:''}</div>
+      <div class="level-sub">Each Pokémon opens when every kana in its Japanese name is mastered.</div>
+    </div>
+    <div class="tally mono"><span class="t-new">${pkmn.unlocked}</span></div>
+   </div>
+  </div>
+  <div class="label" style="margin:22px 0 10px">Bonus decks</div>
+  ${BONUS_DECKS.map(b=>{const open=app.unlockedBonus&&app.unlockedBonus[b.id];
+  const eta=daysToUnlock(b.threshold,app.points||0);
+    return `<div class="level-card ${open?'open':'locked'}" data-deck="${b.id}">
+    <div class="level-row">
+     <div class="level-main">
+      <div class="level-top"><span class="level-pill">${open?'✓':'★'}</span><span class="level-title">${esc(b.name)}</span></div>
+      <div class="level-sub">${open?`Unlocked at ${b.threshold} points`:`${esc(b.theme)} · ${b.threshold} points to unlock · ~${eta} day${eta===1?'':'s'} left`}</div>
+     </div>
+     <div class="tally mono"><span class="t-new">${b.threshold}</span></div>
+    </div>
+   </div>`}).join('')}
+  <p class="faint" style="font-size:12px;margin-top:16px">new · relearning · due</p><div style="height:24px"></div></div>`}
 
 function Deck(){const dk=deck(app.deck);
  return `<div class="hdr"><button class="back" data-go="collection">←</button><h1>${esc(dk.name)}</h1></div>
@@ -398,18 +649,22 @@ function Deck(){const dk=deck(app.deck);
  ${({cards:DeckCards,settings:DeckSettings,stats:DeckStats}[app.tab])(dk)}`}
 function DeckCards(dk){
  const F={all:()=>true,new:c=>stateOf(c)==='new',relearning:c=>stateOf(c)==='lrn',due:c=>c.due!==null&&c.due<=Date.now()};
- const list=ITEMS.filter(i=>i.deck===dk.id)
+ const info=deckUnlockInfo(dk);
+ const list=deckVisibleItems(dk)
   .filter(i=>{if(!app.q)return true;const[a,b]=face(i);return(a+b).toLowerCase().includes(app.q.toLowerCase())})
   .filter(i=>F[app.filter](cards[i.id]));
+ if(dk.kind==='bonus')return `<div class="scroll pad"><div style="height:12px"></div><div class="empty">${info.open?`Unlocked. This bonus deck is a shell for your next theme.`:`Locked for now.<br>${esc(info.need||'Keep pushing the point total higher.')}.
+`}</div><div style="height:24px"></div></div>`;
+ if(!info.open)return `<div class="scroll pad"><div style="height:12px"></div><div class="empty">Locked for now.<br>${esc(info.need||'Keep memorizing the base decks first.')}.</div><div style="height:24px"></div></div>`;
  return `<div class="scroll pad">
   <div class="field" style="margin:12px 0"><input id="q" placeholder="Search" value="${esc(app.q)}"></div>
   <div class="chips" style="margin-bottom:8px">${['all','new','relearning','due'].map(f=>
    `<button class="chip ${app.filter===f?'on':''}" data-filter="${f}">${f}</button>`).join('')}</div>
-  ${list.length?list.map(i=>{const c=cards[i.id],st=stateOf(c),[a,b]=face(i);
+  ${list.length?list.map(i=>{const c=cards[i.id],st=stateOf(c),[a,b]=face(i),meta=i.deck==='pkmn'?pokemonMeta(i.id):null;
    const dd=c.due===null?null:Math.round((c.due-Date.now())/DAY);
    const locked=st==='new'&&unknownIn(atomsOf(i))>0;
-   return `<div class="row" data-edit="${i.id}" style="min-height:44px">
-    <span style="font-family:var(--f-jp);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a)}<span class="faint" style="font-size:13px"> ${esc(b)}</span></span>
+   return `<div class="row${meta?.shiny?' shiny':''}" data-edit="${i.id}" style="min-height:44px">
+    <span style="font-family:var(--f-jp);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a)}<span class="faint" style="font-size:13px"> ${esc(b)}</span>${meta?.shiny?` <span class="tag-shiny">shiny</span>`:''}</span>
     <span class="faint mono" style="font-size:12px">${locked?'locked':st}</span>
     <span class="faint mono" style="font-size:12px;min-width:40px;text-align:right">${dd===null?'—':(dd<=0?'due':'d+'+dd)}</span></div>`}).join('')
    :'<div class="empty">No cards match this filter.</div>'}
@@ -428,15 +683,19 @@ function DeckSettings(dk){
   ?'The field stays in romaji here because the target is a sound, not a word: converting would type the question back at you. Romaji and kana are both accepted everywhere.'
   :dk.kind==='kanji'?'Type the reading in romaji or in kana, both are accepted. No isolated on/kun drilling: which reading applies is decided by the word, so readings come from compounds.'
   :dk.kind==='name'?'A name is only introduced once every katakana it contains has been introduced. Until then it stays locked.'
+    :dk.kind==='bonus'?'Bonus decks unlock when your point total crosses their threshold. They are shells for now: add the theme you want later and keep the same roguelike gate.'
   :'Sentences rotate across repetitions so the word is not memorised as the answer to one sentence.'}</p>
  <div style="height:24px"></div></div>`}
 function DeckStats(dk){
- const cs=ITEMS.filter(i=>i.deck===dk.id).map(i=>cards[i.id]);
+ const info=deckUnlockInfo(dk);
+ const cs=deckVisibleItems(dk).map(i=>cards[i.id]);
  const rows=[['new','new'],['relearning','lrn'],['young','young'],['mature','mature']]
   .map(([n,s])=>[n,cs.filter(c=>stateOf(c)===s).length]);
- const locked=ITEMS.filter(i=>i.deck===dk.id&&cards[i.id].reps===0&&unknownIn(atomsOf(i))>0).length;
+ const locked=deckVisibleItems(dk).filter(i=>cards[i.id].reps===0&&unknownIn(atomsOf(i))>0).length;
  const max=Math.max(1,...rows.map(r=>r[1]));
  return `<div class="scroll pad"><div style="height:20px"></div>
+ <div class="row"><span class="muted">stage</span><span class="mono">${info.stage}</span></div>
+ <div class="row"><span class="muted">unlock</span><span class="mono">${info.open?'open':esc(info.need||'locked')}</span></div>
  ${rows.map(([n,v])=>`<div style="margin-bottom:14px">
   <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span class="muted">${n}</span><span class="mono">${v}</span></div>
   <div style="height:6px;background:var(--rule)"><div style="height:6px;width:${v/max*100}%;background:var(--ink)"></div></div></div>`).join('')}
@@ -493,9 +752,10 @@ function faceFor(c,g){const i=item(c.id),usable=!!g&&g.u===0;
  if(i.kind==='kanji')return c.reps>0&&usable?'comp':'keyword';
  return 'name'}
 function startSession(id){const q=queueFor(id||null);if(!q.length)return;
- app.sess={queue:q,seen:0,ok:0,t0:Date.now(),st:'typing',typed:'',committed:false,cur:null,face:null,ctx:null,timer:null,startTime:null,feedback:null};
+ app.sess={queue:q,seen:0,ok:0,t0:Date.now(),st:'typing',typed:'',committed:false,cur:null,face:null,ctx:null,timer:null,startTime:null,feedback:null,fx:null,fxTimer:null,runPoints:0,runCombo:0,runBestCombo:0};
  nextCard();go('session')}
 function nextCard(){const s=app.sess;clearTimeout(s.timer);
+ clearTimeout(s.fxTimer);s.fx=null;
  if(!s.queue.length){s.dur=Date.now()-s.t0;go('summary');return}
  s.cur=s.queue[0];s.committed=false;s.typed='';
  const i=item(s.cur.id),g=contextFor(s.cur);
@@ -592,7 +852,8 @@ function Session(){
   body=`<button class="play" data-speak="${esc(i.kana)}">▶</button>`;
   gloss=[i.rom,`write what you hear in ${i.deck==='kata'?'katakana':'hiragana'}`];
  }else if(s.face==='name'){
-  body=`<div class="solo lat">${esc(i.en)}</div>`;
+  const shiny=i.deck==='pkmn'&&pokemonMeta(i.id)?.shiny;
+  body=`<div class="solo-row${shiny?' shiny':''}"><div class="solo lat">${esc(i.en)}</div>${shiny?'<span class="tag-shiny">shiny</span>':''}</div>`;
   gloss=[`#${i.num} · ${i.type}`,`#${i.num} · ${i.type}`];
   atoms=atomsOf(i);
  }else{
@@ -648,13 +909,13 @@ function Session(){
     <button class="dk" data-validate="">Check</button><button class="dk" data-dontknow="">I don't know</button></div>${feedbackHtml}`
   :s.st==='ask'
    ?`<div class="s-input"><button class="btn" data-reveal="">Reveal</button><div style="height:44px"></div></div>`
-   :`<div class="s-input"><input class="res ${s.st==='ok'?'good':'bad'} ${ime?'':'lat'}" readonly value="${
+    :`<div class="s-input"><input class="res ${s.st==='ok'?'good':s.st==='skip'?'skip':'bad'} ${ime?'':'lat'}" readonly value="${
       esc((ime?toKana(s.typed):s.typed)||'—')}"><div style="height:44px"></div></div>`;
  return `<div id="sess">
   <div class="s-chrome"><button class="x${s.confirmQuit?' warn':''}" data-quit="">${s.confirmQuit?'quit?':'✕'}</button>
    <span class="ct mono">${s.seen+1} / ${s.seen+s.queue.length}</span>
    <button class="mu${app.mute?' off':''}" data-mute="" aria-label="sound">${app.mute?muteIcon(18):speakerIcon(18)}</button></div>
-  <div class="s-body${done?' done':''}"${done&&s.st!=='near'&&!app.detailed&&dk.grading!=='self'?' data-next=""':''}>${body}${rev}</div>${input}
+    <div class="s-body${done?' done':''}"${done&&s.st!=='near'&&!app.detailed&&dk.grading!=='self'?' data-next=""':''}>${s.fx?`<div class="score-fx ${s.fx.kind}${s.fx.boost?' boost':''}"><span class="pts">${s.fx.delta>0?'+':''}${s.fx.delta}</span></div>`:''}${body}${rev}</div>${input}
   <div id="kb" class="${app.kb&&s.st==='typing'?'on':''}">${app.kb?KB():''}</div></div>`}
 function KB(){const rows=['azertyuiop','qsdfghjklm','wxcvbn'];
  return rows.map((r,n)=>`<div class="kr">${n===2?'<span class="kk w">⇧</span>':''}${[...r].map(k=>`<span class="kk">${k}</span>`).join('')}${n===2?'<span class="kk w">⌫</span>':''}</div>`).join('')
@@ -665,20 +926,45 @@ function validate(){const s=app.sess,dk=deck(item(s.cur.id).deck);
  s.feedback = r==='ok'?{state:'good',text:'Looks right'}:r==='near'?{state:'near',text:'Almost there'}:{state:'bad',text:'Keep going'};
  if(s.ctx)s.cur.last=s.ctx.id;
  if(dk.audio!=='never')speak(promptAudio(s));
- if(r==='ok'){s.st='ok';if(!app.detailed)commit(true,elapsed)}
+ if(r==='ok'){s.st='ok';if(!app.detailed)commit('good',elapsed)}
  else if(r==='near')s.st='near';
- else{s.st='ko';if(!app.detailed)commit(false,elapsed)}
+ else{s.st='ko';if(!app.detailed)commit('wrong',elapsed)}
  render()}
-function commit(good,elapsed){const s=app.sess;if(s.committed)return;s.committed=true;
- grade(s.cur,good,elapsed||8000);s.seen++;if(good)s.ok++;
- s.queue.shift();if(!good)s.queue.push(s.cur)}
-function advance(){const s=app.sess;if(!s.committed)commit(s.st==='ok',Date.now()-s.startTime);nextCard()}
+function skipCard(){const s=app.sess;if(!s||s.st!=='typing')return;
+ s.typed='';s.feedback={state:'skip',text:'Skipped'};s.st='skip';commit('skip',Date.now()-s.startTime);render();}
+function commit(outcome,elapsed){const s=app.sess;if(s.committed)return;s.committed=true;
+ const good=outcome==='good';
+ const combo=good?s.runCombo+1:0;
+ const delta=outcome==='good'?pointsForResult(true,combo):outcome==='wrong'?-6:0;
+ if(good)s.runCombo=combo;else s.runCombo=0;
+ s.runBestCombo=Math.max(s.runBestCombo,s.runCombo);
+ s.runPoints+=delta;
+ app.points=Math.max(0,(app.points||0)+delta);
+ app.streak=good?combo:0;
+ app.bestStreak=Math.max(app.bestStreak||0,good?combo:0,s.runBestCombo||0);
+ app.totalRuns=(app.totalRuns||0)+1;
+ app.unlockedBonus=bonusUnlocksForPoints(app.points);
+ noteDailyProgress(delta,outcome);
+ if(outcome==='good')grade(s.cur,true,elapsed||8000);
+ else if(outcome==='wrong')grade(s.cur,false,elapsed||8000,false);
+ else grade(s.cur,false,elapsed||8000,true);
+ syncPokemonUnlocks();
+ s.seen++;if(good)s.ok++;
+ s.queue.shift();if(!good)s.queue.push(s.cur);
+ s.fx=outcome==='skip'?null:{kind:outcome,delta,combo:s.runCombo,total:app.points,boost:good&&combo>1};
+ clearTimeout(s.fxTimer);s.fxTimer=setTimeout(()=>{if(app.sess===s){s.fx=null;render()}},950);
+ saveState();}
+function advance(){const s=app.sess;if(!s.committed)commit(s.st==='ok'?'good':s.st==='skip'?'skip':'wrong',Date.now()-s.startTime);nextCard()}
 function Summary(){const s=app.sess,m=Math.floor(s.dur/6e4),sec=Math.round(s.dur/1e3)%60;
  const rate=s.seen?Math.round(s.ok/s.seen*100):0;
  return `<div class="scroll pad"><div style="height:80px"></div>
  <div style="display:flex;gap:12px;text-align:center">
   ${[['cards',s.seen],['accuracy',rate+'%'],['time',m+"'"+String(sec).padStart(2,'0')]]
    .map(([l,v])=>`<div style="flex:1"><div class="mono" style="font-size:30px">${v}</div><div class="label" style="margin-top:6px">${l}</div></div>`).join('')}</div>
+ <div style="height:24px"></div>
+ <div style="display:flex;gap:12px;text-align:center">
+  ${[['points',s.runPoints||0],['best streak',s.runBestCombo||0],['total points',app.points||0]]
+   .map(([l,v])=>`<div style="flex:1"><div class="mono" style="font-size:24px">${v}</div><div class="label" style="margin-top:6px">${l}</div></div>`).join('')}</div>
  <div style="height:56px"></div><button class="btn" data-go="home">Done</button>
  ${queueFor().length?`<div style="height:10px"></div><button class="btn ghost" data-start="">Continue (${queueFor().length})</button>`:''}</div>`}
 
@@ -716,7 +1002,7 @@ function bind(){
  if(f){f.focus();
   f.oninput=()=>{app.sess.typed=f.value;const c=view.querySelector('#cell');
    if(c)c.textContent=toKana(f.value);syncLiveFeedback()};
-  f.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();validate()}}}
+  f.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();e.stopPropagation();validate()}}}
  const nx=view.querySelector('[data-next]');
  if(nx)nx.onclick=e=>{if(!e.target.closest('[data-speak]'))advance()};
  const rs=view.querySelector('input.res');
@@ -724,7 +1010,7 @@ function bind(){
  const dv=view.querySelector('[data-validate]');
  if(dv)dv.onclick=()=>validate();
  const dn=view.querySelector('[data-dontknow]');
- if(dn)dn.onclick=()=>{app.sess.typed='';app.sess.feedback={state:'bad',text:'Keep going'};validate()};
+ if(dn)dn.onclick=()=>skipCard();
  q('[data-grade]').forEach(e=>e.onclick=()=>{commit(e.dataset.grade==='1');advance()});
  const qt=view.querySelector('[data-quit]');
  if(qt)qt.onclick=()=>{
