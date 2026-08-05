@@ -351,7 +351,10 @@ function loadState(){
   }
   if(stored?.app){
    Object.assign(app,stored.app);
-    app.sync={...SYNC_DEFAULT,...(stored.app.sync||{})};
+   app.sync={...SYNC_DEFAULT,...(stored.app.sync||{})};
+   if(!app.sync.url)app.sync.url=SYNC_DEFAULT.url;
+   if(!app.sync.userId)app.sync.userId=SYNC_DEFAULT.userId;
+   if(typeof app.sync.enabled!=='boolean')app.sync.enabled=SYNC_DEFAULT.enabled;
   }
   if(stored?.progress){
    Object.assign(app,{points:stored.progress.points||0,streak:stored.progress.streak||0,bestStreak:stored.progress.bestStreak||0,totalRuns:stored.progress.totalRuns||0,unlockedBonus:stored.progress.unlockedBonus||{}});
@@ -662,7 +665,16 @@ function ctxBlockFor(i,f){
  return null}
 function hash(s){let h=0;for(let n=0;n<s.length;n++)h=(h*31+s.charCodeAt(n))|0;return h}
 const ctxHTML=t=>esc(t).split('\u0001').join('<em>').split('\u0002').join('</em>');
-const SYNC_DEFAULT={enabled:false,auto:true,url:'',anonKey:'',userId:'',lastSync:0,lastError:'',lastDirection:''};
+const SYNC_DEFAULT={
+ enabled:true,
+ auto:true,
+ url:'https://flashcard-1d3b9-default-rtdb.europe-west1.firebasedatabase.app/',
+ anonKey:'',
+ userId:'tristan-main',
+ lastSync:0,
+ lastError:'',
+ lastDirection:''
+};
 
 /* ===================== état ===================== */
 const app={route:'home',deck:null,editing:null,tab:'cards',filter:'all',q:'',
