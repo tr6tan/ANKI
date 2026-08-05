@@ -351,6 +351,7 @@ function loadState(){
   }
   if(stored?.app){
    Object.assign(app,stored.app);
+    app.sync={...SYNC_DEFAULT,...(stored.app.sync||{})};
   }
   if(stored?.progress){
    Object.assign(app,{points:stored.progress.points||0,streak:stored.progress.streak||0,bestStreak:stored.progress.bestStreak||0,totalRuns:stored.progress.totalRuns||0,unlockedBonus:stored.progress.unlockedBonus||{}});
@@ -375,8 +376,121 @@ function loadState(){
 function saveState(){
  try{
   const decks=DECKS.map(dk=>({id:dk.id,answer:dk.answer,grading:dk.grading,audio:dk.audio,furi:dk.furi,newPerDay:dk.newPerDay}));
-  localStorage.setItem(STORAGE_KEY,JSON.stringify({cards,app:{theme:app.theme,mute:app.mute,detailed:app.detailed,kb:app.kb},decks,progress:{points:app.points,streak:app.streak,bestStreak:app.bestStreak,totalRuns:app.totalRuns,unlockedBonus:app.unlockedBonus},dailyStats:app.dailyStats||{},pokemonUnlocks:app.pokemonUnlocks||{}}));
+  localStorage.setItem(STORAGE_KEY,JSON.stringify({cards,app:{theme:app.theme,mute:app.mute,detailed:app.detailed,kb:app.kb,sync:app.sync},decks,progress:{points:app.points,streak:app.streak,bestStreak:app.bestStreak,totalRuns:app.totalRuns,unlockedBonus:app.unlockedBonus},dailyStats:app.dailyStats||{},pokemonUnlocks:app.pokemonUnlocks||{}}));
  }catch(e){console.warn('Failed to save state',e)}
+}
+function flushState(){
+ if(!app) return;
+ saveState();
+ maybeAutoPush();
+}
+function syncBaseUrl(){
+ const raw=(app.sync&&app.sync.url||'').trim();
+ return raw.replace(/\/+$/,'');
+}
+function syncReady(){
+ const s=app.sync||{};
+ return !!(s.enabled&&syncBaseUrl()&&s.anonKey&&s.userId);
+}
+function localPayload(){
+ const decks=DECKS.map(dk=>({id:dk.id,answer:dk.answer,grading:dk.grading,audio:dk.audio,furi:dk.furi,newPerDay:dk.newPerDay}));
+ return {
+  version:1,
+  cards,
+  decks,
+  progress:{points:app.points||0,streak:app.streak||0,bestStreak:app.bestStreak||0,totalRuns:app.totalRuns||0,unlockedBonus:app.unlockedBonus||{}},
+  dailyStats:app.dailyStats||{},
+  pokemonUnlocks:app.pokemonUnlocks||{},
+  updatedAt:new Date().toISOString()
+ };
+}
+function applyPayload(payload){
+ if(!payload||!payload.cards)return false;
+ for(const id in payload.cards){if(cards[id])Object.assign(cards[id],payload.cards[id]);}
+ if(payload.progress){
+  app.points=payload.progress.points||0;
+  app.streak=payload.progress.streak||0;
+  app.bestStreak=payload.progress.bestStreak||0;
+  app.totalRuns=payload.progress.totalRuns||0;
+  app.unlockedBonus=payload.progress.unlockedBonus||{};
+ }
+ app.dailyStats=payload.dailyStats||{};
+ app.pokemonUnlocks=payload.pokemonUnlocks||{};
+ if(Array.isArray(payload.decks)){
+  for(const dk of payload.decks){
+   const target=DECKS.find(d=>d.id===dk.id);
+   if(target)Object.assign(target,dk);
+  }
+ }
+ app.unlockedBonus=bonusUnlocksForPoints(app.points||0);
+ syncPokemonUnlocks();
+ saveState();
+ return true;
+}
+async function cloudPush(){
+ if(!syncReady())throw new Error('Sync config incomplete');
+ const base=syncBaseUrl();
+ const payload=localPayload();
+ const body=[{user_id:String(app.sync.userId),payload,updated_at:new Date().toISOString()}];
+ const res=await fetch(`${base}/rest/v1/anki_sync?on_conflict=user_id`,{
+  method:'POST',
+  headers:{
+   'apikey':app.sync.anonKey,
+   'Authorization':`Bearer ${app.sync.anonKey}`,
+   'Content-Type':'application/json',
+   'Prefer':'resolution=merge-duplicates,return=minimal'
+  },
+  body:JSON.stringify(body)
+ });
+ if(!res.ok)throw new Error(`Push failed (${res.status})`);
+ app.sync.lastSync=Date.now();
+ app.sync.lastError='';
+ app.sync.lastDirection='push';
+ saveState();
+}
+async function cloudPull(){
+ if(!syncReady())throw new Error('Sync config incomplete');
+ const base=syncBaseUrl();
+ const user=encodeURIComponent(String(app.sync.userId));
+ const res=await fetch(`${base}/rest/v1/anki_sync?user_id=eq.${user}&select=payload,updated_at&limit=1`,{
+  headers:{
+   'apikey':app.sync.anonKey,
+   'Authorization':`Bearer ${app.sync.anonKey}`
+  }
+ });
+ if(!res.ok)throw new Error(`Pull failed (${res.status})`);
+ const rows=await res.json();
+ if(!Array.isArray(rows)||!rows.length||!rows[0].payload)return false;
+ const changed=applyPayload(rows[0].payload);
+ app.sync.lastSync=Date.now();
+ app.sync.lastError='';
+ app.sync.lastDirection='pull';
+ saveState();
+ return changed;
+}
+let syncBusy=false;
+let lastAutoPushAt=0;
+async function runSync(dir){
+ if(syncBusy)return;
+ syncBusy=true;
+ try{
+  if(dir==='pull')await cloudPull();
+  else await cloudPush();
+  render();
+ }catch(e){
+  app.sync.lastError=String(e.message||e);
+  saveState();
+  render();
+ }finally{
+  syncBusy=false;
+ }
+}
+function maybeAutoPush(){
+ if(!syncReady()||!(app.sync&&app.sync.auto))return;
+ const now=Date.now();
+ if(now-lastAutoPushAt<45000)return;
+ lastAutoPushAt=now;
+ runSync('push');
 }
 
 /* ===================== ordonnanceur ===================== */
@@ -551,10 +665,11 @@ function ctxBlockFor(i,f){
  return null}
 function hash(s){let h=0;for(let n=0;n<s.length;n++)h=(h*31+s.charCodeAt(n))|0;return h}
 const ctxHTML=t=>esc(t).split('\u0001').join('<em>').split('\u0002').join('</em>');
+const SYNC_DEFAULT={enabled:false,auto:true,url:'',anonKey:'',userId:'',lastSync:0,lastError:'',lastDirection:''};
 
 /* ===================== état ===================== */
 const app={route:'home',deck:null,editing:null,tab:'cards',filter:'all',q:'',
- kb:false,detailed:false,mute:false,theme:'light',sess:null,points:0,streak:0,bestStreak:0,totalRuns:0,unlockedBonus:{}};
+ kb:false,detailed:false,mute:false,theme:'light',sess:null,points:0,streak:0,bestStreak:0,totalRuns:0,unlockedBonus:{},sync:{...SYNC_DEFAULT}};
 const view=document.getElementById('view'),navEl=document.getElementById('nav');
 function esc(s){
   s = String(s);
@@ -727,12 +842,26 @@ function Editor(){const i=item(app.editing);if(!i)return Collection();
 
 function Settings(){
  const sw=(k,l,on)=>`<div class="sw"><span>${l}</span><button class="tg ${on?'on':''}" data-tg="${k}"><i></i></button></div>`;
+ const sync=app.sync||SYNC_DEFAULT;
+ const syncStamp=sync.lastSync?new Date(sync.lastSync).toLocaleString('fr-FR'):'never';
  return `<div class="hdr"><h1>Settings</h1></div><div class="scroll pad"><div style="height:8px"></div>
  ${sw('mute','Mute',app.mute)}
  ${sw('theme','Dark theme',app.theme==='dark')}
  ${sw('detailed','Detailed grading',app.detailed)}
  ${sw('kb','Simulate software keyboard',app.kb)}
  <hr class="rule">
+ ${sw('sync-enabled','Cloud sync enabled',sync.enabled)}
+ ${sw('sync-auto','Cloud auto push',sync.auto)}
+ <label class="field"><span class="label">Supabase URL</span><input id="sync-url" value="${esc(sync.url||'')}" placeholder="https://xxxx.supabase.co"></label>
+ <label class="field"><span class="label">Supabase anon key</span><input id="sync-key" value="${esc(sync.anonKey||'')}" placeholder="eyJ..."></label>
+ <label class="field"><span class="label">Sync user id</span><input id="sync-user" value="${esc(sync.userId||'')}" placeholder="tristan-iphone"></label>
+ <div style="display:flex;gap:10px;margin:8px 0 0">
+  <button class="btn ghost" style="height:44px" data-sync="save">Save cloud config</button>
+  <button class="btn ghost" style="height:44px" data-sync="pull">Pull</button>
+  <button class="btn ghost" style="height:44px" data-sync="push">Push</button>
+ </div>
+ <p class="faint" style="font-size:12px;line-height:1.6;margin-top:10px">Last sync: ${esc(syncStamp)}${sync.lastDirection?` · ${esc(sync.lastDirection)}`:''}${sync.lastError?` · error: ${esc(sync.lastError)}`:''}</p>
+ <p class="faint" style="font-size:12px;line-height:1.6">Table required in Supabase: anki_sync(user_id text primary key, payload jsonb, updated_at timestamptz).</p>
  <p class="faint" style="font-size:13px;line-height:1.7">${tts.ok?(tts.voice?'Japanese voice detected: '+esc(tts.voice.name):'No Japanese voice installed on this system. Playback will be silent or wrong.'):'Speech synthesis unavailable in this browser.'}</p>
  <p class="faint" style="font-size:13px;line-height:1.7;margin-top:16px">Progress is now saved locally in this browser. Deck settings and review history persist across reloads. Romaji conversion uses a demo table. Pokémon names are trademarks of The Pokémon Company, used here for personal study only.</p>
  <div style="height:24px"></div></div>`
@@ -954,6 +1083,7 @@ function commit(outcome,elapsed){const s=app.sess;if(s.committed)return;s.commit
  s.fx=outcome==='skip'?null:{kind:outcome,delta,combo:s.runCombo,total:app.points,boost:good&&combo>1};
  clearTimeout(s.fxTimer);s.fxTimer=setTimeout(()=>{if(app.sess===s){s.fx=null;render()}},950);
  saveState();}
+ maybeAutoPush();
 function advance(){const s=app.sess;if(!s.committed)commit(s.st==='ok'?'good':s.st==='skip'?'skip':'wrong',Date.now()-s.startTime);nextCard()}
 function Summary(){const s=app.sess,m=Math.floor(s.dur/6e4),sec=Math.round(s.dur/1e3)%60;
  const rate=s.seen?Math.round(s.ok/s.seen*100):0;
@@ -980,7 +1110,11 @@ function bind(){
  q('[data-edit]').forEach(e=>e.onclick=()=>go('editor',{editing:e.dataset.edit}));
  q('[data-speak]').forEach(e=>e.onclick=()=>speak(e.dataset.speak,.75));
  q('[data-tg]').forEach(e=>e.onclick=()=>{const k=e.dataset.tg;
-  if(k==='theme')app.theme=app.theme==='dark'?'light':'dark';else app[k]=!app[k];render();saveState()});
+  if(k==='theme')app.theme=app.theme==='dark'?'light':'dark';
+  else if(k==='sync-enabled')app.sync.enabled=!app.sync.enabled;
+  else if(k==='sync-auto')app.sync.auto=!app.sync.auto;
+  else app[k]=!app[k];
+  render();saveState()});
  q('[data-dk]').forEach(e=>e.onchange=()=>{const dk=deck(app.deck);
   dk[e.dataset.dk]=e.dataset.dk==='newPerDay'?+e.value:e.value;render();saveState()});
  const mu=view.querySelector('[data-mute]');
@@ -1011,6 +1145,23 @@ function bind(){
  if(dv)dv.onclick=()=>validate();
  const dn=view.querySelector('[data-dontknow]');
  if(dn)dn.onclick=()=>skipCard();
+ q('[data-sync]').forEach(e=>e.onclick=async()=>{
+  const action=e.dataset.sync;
+  if(action==='save'){
+   const url=view.querySelector('#sync-url');
+   const key=view.querySelector('#sync-key');
+   const user=view.querySelector('#sync-user');
+   app.sync.url=(url&&url.value||'').trim();
+   app.sync.anonKey=(key&&key.value||'').trim();
+   app.sync.userId=(user&&user.value||'').trim();
+   app.sync.lastError='';
+   saveState();
+   render();
+   return;
+  }
+  if(action==='pull')await runSync('pull');
+  if(action==='push')await runSync('push');
+ });
  q('[data-grade]').forEach(e=>e.onclick=()=>{commit(e.dataset.grade==='1');advance()});
  const qt=view.querySelector('[data-quit]');
  if(qt)qt.onclick=()=>{
@@ -1028,6 +1179,12 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Escape'){clearTimeout(s.timer);if(tts.ok)speechSynthesis.cancel();go('home')}});
 if(window.visualViewport)visualViewport.addEventListener('resize',()=>{
  document.getElementById('frame').style.height=visualViewport.height+'px'});
+document.addEventListener('visibilitychange',()=>{
+ if(document.visibilityState==='hidden')flushState();
+});
+window.addEventListener('pagehide',flushState);
+window.addEventListener('beforeunload',flushState);
+setInterval(flushState,60000);
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Service worker registration failed', err));
 }
@@ -1037,6 +1194,7 @@ try{
   loadState();
   render();
   render();
+  if(syncReady())runSync('pull');
 }catch(e){
   console.error('Initialization error',e);
   try{
