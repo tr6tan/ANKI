@@ -91,6 +91,9 @@ function judge(input,accepted,mode){
 
 /* ===================== voix ===================== */
 const tts={ok:'speechSynthesis'in window,voice:null};
+/* icône haut-parleur en ligne, plus sobre qu'une note de musique */
+const speakerIcon=(size)=>`<svg width="${size||16}" height="${size||16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M18.36 5.64a9 9 0 0 1 0 12.72"></path></svg>`;
+const muteIcon=(size)=>`<svg width="${size||16}" height="${size||16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>`;
 function pickVoice(){if(tts.ok)tts.voice=speechSynthesis.getVoices().find(v=>/^ja/i.test(v.lang))||null}
 if(tts.ok){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
 function speak(text,rate){if(!tts.ok||app.mute||!text)return;
@@ -102,15 +105,15 @@ function speak(text,rate){if(!tts.ok||app.mute||!text)return;
 /* ===================== decks : la politique est une propriété du deck ===================== */
 const DECKS=[
  {id:'hira',name:'Hiragana',kind:'glyph',script:'hira',answer:'romaji',ordered:true,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:6},
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:10},
  {id:'kata',name:'Katakana',kind:'glyph',script:'kata',answer:'romaji',ordered:true,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:6},
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:8},
  {id:'kanji',name:'Kanji N5',kind:'kanji',answer:'kana',ordered:true,
   audio:'reveal',grading:'self',furi:'hidden',newPerDay:4},
  {id:'vocab',name:'Sentences N5',kind:'lex',answer:'kana',ordered:false,
   audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4},
  {id:'pkmn',name:'Pokémon 151',kind:'name',answer:'kana',ordered:false,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:6}
+  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4}
 ];
 const deck=id=>DECKS.find(d=>d.id===id);
 
@@ -172,7 +175,11 @@ COMP.split('|').forEach((s,n)=>{const p=s.split(' ');
 /* ===================== atomes et i+1 ===================== */
 const item=id=>ITEMS.find(i=>i.id===id);
 const STORAGE_KEY='anki-jp-state-v1';
-const known=id=>cards[id]&&cards[id].reps>0;
+/* une carte n'est un prérequis fiable qu'après plusieurs rappels réussis,
+   pas dès la première exposition : évite de débloquer kanji/mots/pokémon
+   sur un hiragana vu une seule fois. */
+const MASTERY_REPS=3;
+const known=id=>cards[id]&&cards[id].reps>=MASTERY_REPS;
 function atomsOf(i){
  if(i.kind==='glyph')return [];
  if(i.kind==='kanji')return [];
@@ -227,15 +234,61 @@ function grade(c,good,elapsed){
  saveState();
 }
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
-function newFor(dk){
+/* kanji fait figure d'exception : c'est un deck ordonné (non filtré par atomes),
+   mais ses lectures sont en hiragana — donc pas de nouveau kanji tant que la base
+   hiragana n'est pas raisonnablement en place. */
+const KANJI_UNLOCK_HIRA=10;
+function unseenPool(dk){
  let pool=ITEMS.filter(i=>i.deck===dk.id&&cards[i.id].reps===0);
  if(dk.ordered)pool.sort((a,b)=>a.idx-b.idx);
- else pool=pool.filter(i=>unknownIn(atomsOf(i))===0).sort(()=>Math.random()-.5);
- return pool.slice(0,dk.newPerDay).map(i=>cards[i.id])}
+ else{
+  pool=pool.filter(i=>unknownIn(atomsOf(i))===0)
+   .map(i=>({item:i,unknown:unknownIn(atomsOf(i)),len:(i.surface||i.ja||i.glyph||'').length}))
+   .sort((a,b)=>a.unknown-b.unknown||a.len-b.len||Math.random()-.5)
+   .map(x=>x.item);
+ }
+ if(dk.id==='kanji'){
+  const hiraMastered=ITEMS.filter(i=>i.deck==='hira'&&known(i.id)).length;
+  if(hiraMastered<KANJI_UNLOCK_HIRA)pool=[];
+ }
+ return pool;
+}
+function newFor(dk,limit){
+ const n=limit===undefined?dk.newPerDay:limit;
+ return unseenPool(dk).slice(0,n).map(i=>cards[i.id]);
+}
+/* le budget quotidien se répartit selon le poids newPerDay de chaque deck,
+   et se redistribue vers les decks suivants dès qu'un deck est épuisé ou verrouillé :
+   le total glisse ainsi naturellement des cartes neuves vers les révisions à mesure
+   que l'apprentissage avance, sans jamais dépasser la charge du jour. */
+function allocateNewBudget(remaining){
+ const totalWeight=DECKS.reduce((s,dk)=>s+dk.newPerDay,0)||1;
+ const avail={};for(const dk of DECKS)avail[dk.id]=unseenPool(dk).length;
+ const alloc={};for(const dk of DECKS)alloc[dk.id]=0;
+ let left=remaining;
+ for(const dk of DECKS){
+  const want=Math.round(remaining*dk.newPerDay/totalWeight);
+  const give=Math.min(want,avail[dk.id],left);
+  alloc[dk.id]=give;left-=give;
+ }
+ for(const dk of DECKS){
+  if(left<=0)break;
+  const room=avail[dk.id]-alloc[dk.id];
+  if(room>0){const take=Math.min(room,left);alloc[dk.id]+=take;left-=take}
+ }
+ return alloc;
+}
+const DAILY_BUDGET=30;
 function queueFor(id){const now=Date.now(),out=[];
- for(const dk of (id?[deck(id)]:DECKS)){
+ const targets=id?[deck(id)]:DECKS;
+ for(const dk of targets)
   out.push(...ITEMS.filter(i=>i.deck===dk.id).map(i=>cards[i.id]).filter(c=>c.due!==null&&c.due<=now));
-  out.push(...newFor(dk))}
+ if(id){
+  out.push(...newFor(deck(id)));
+ }else{
+  const alloc=allocateNewBudget(Math.max(0,DAILY_BUDGET-out.length));
+  for(const dk of DECKS)out.push(...newFor(dk,alloc[dk.id]));
+ }
  return shuffle(out)}
 
 /* sélection de contexte : le moins d'atomes inconnus, jamais celui de la répétition précédente */
@@ -298,11 +351,16 @@ function go(r,o={}){Object.assign(app,{route:r},o);render()}
 function render(){
  document.documentElement.dataset.theme=app.theme;
  const inSess=app.route==='session'||app.route==='summary';
- navEl.className=inSess?'hide':'';
- navEl.innerHTML=inSess?'':[['home','学','Study'],['collection','集','Collection'],['settings','設','Settings']]
-  .map(([r,g,l])=>`<button data-go="${r}" class="${app.route===r||(r==='collection'&&['deck','editor'].includes(app.route))?'on':''}"><span class="ic">${g}</span>${l}</button>`).join('');
- view.innerHTML=({home:Home,collection:Collection,deck:Deck,editor:Editor,settings:Settings,session:Session,summary:Summary}[app.route])();
- bind()}
+ if(navEl){
+  navEl.className=inSess?'hide':'';
+  navEl.innerHTML=inSess?'':[['home','学','Study'],['collection','集','Collection'],['settings','設','Settings']]
+   .map(([r,g,l])=>`<button data-go="${r}" class="${app.route===r||(r==='collection'&&['deck','editor'].includes(app.route))?'on':''}"><span class="ic">${g}</span>${l}</button>`).join('');
+ }
+ if(view){
+  view.innerHTML=({home:Home,collection:Collection,deck:Deck,editor:Editor,settings:Settings,session:Session,summary:Summary}[app.route])();
+  bind()
+ }
+}
 
 /* ===================== écrans ===================== */
 function Home(){
@@ -396,7 +454,7 @@ function Editor(){const i=item(app.editing);if(!i)return Collection();
    <p class="hint" style="margin-top:12px;font-size:14px">${esc(x.en)}</p>`})()
   :`<div class="solo sm" style="margin:0">${esc(a)}</div><p class="hint mid" style="font-size:14px">${esc(b)}</p>`;
  return `<div class="hdr"><button class="back" data-go="deck">←</button><h1>Card</h1>
-  <button class="faint" data-speak="${esc(i.kana||i.read||i.ja||i.glyph)}">♪</button></div>
+  <button class="faint" data-speak="${esc(i.kana||i.read||i.ja||i.glyph)}">${speakerIcon(18)}</button></div>
  <div class="scroll pad"><div style="height:16px"></div>
  <label class="field"><span class="label">Front</span><input id="e-a" value="${esc(a)}" style="font-family:var(--f-jp)"></label>
  <label class="field"><span class="label">Back</span><input id="e-b" value="${esc(b)}"></label>
@@ -435,7 +493,7 @@ function faceFor(c,g){const i=item(c.id),usable=!!g&&g.u===0;
  if(i.kind==='kanji')return c.reps>0&&usable?'comp':'keyword';
  return 'name'}
 function startSession(id){const q=queueFor(id||null);if(!q.length)return;
- app.sess={queue:q,seen:0,ok:0,t0:Date.now(),st:'typing',typed:'',committed:false,cur:null,face:null,ctx:null,timer:null,startTime:null};
+ app.sess={queue:q,seen:0,ok:0,t0:Date.now(),st:'typing',typed:'',committed:false,cur:null,face:null,ctx:null,timer:null,startTime:null,feedback:null};
  nextCard();go('session')}
 function nextCard(){const s=app.sess;clearTimeout(s.timer);
  if(!s.queue.length){s.dur=Date.now()-s.t0;go('summary');return}
@@ -468,12 +526,45 @@ function acceptedFor(s){const i=item(s.cur.id);
    puisqu'on y écrit ce qu'on entend, donc forcément en kana */
 function modeFor(s){return s.face==='sound'?'kana':deck(item(s.cur.id).deck).answer}
 const isKana=s=>/[\u3040-\u30FF]/.test(s);
+function liveFeedback(s){
+ const input=String(s.typed||'').trim();
+ if(!input)return null;
+ const mode=modeFor(s);
+ const accepted=acceptedFor(s);
+ const normalized=mode==='kana'?normKana(toKana(input)):normRom(input);
+ const match=accepted.some(a=>{
+  const target=mode==='kana'?normKana(a):normRom(hasKana(a)?toRomaji(a):a);
+  return normalized===target;
+ });
+ if(match)return {state:'good',text:'Looks right'};
+ const ref=accepted[0];
+ const target=mode==='kana'?normKana(ref):normRom(hasKana(ref)?toRomaji(ref):ref);
+ const dist=lev(normalized,target);
+ return {state:dist<=1?'near':'bad',text:dist<=1?'Almost there':'Keep going'};
+}
+function syncLiveFeedback(){
+ const info=liveFeedback(app.sess);
+ if(app.sess)app.sess.feedback=info;
+ const el=view.querySelector('.feedback');
+ if(!el||!app.sess)return;
+ el.textContent=info?info.text:'';
+ el.className='note feedback'+(info?` ${info.state}`:'');
+}
+function feedbackFor(s){
+ if(!s)return null;
+ if(s.feedback)return s.feedback;
+ return liveFeedback(s);
+}
 
 function Session(){
  const s=app.sess,i=item(s.cur.id),dk=deck(i.deck);
  const done=['ok','ko','near','shown'].includes(s.st);
  const mode=modeFor(s),ime=mode==='kana';
+ /* seuls les glyphes isolés (kana/kanji) portent un type de script identifiable */
+ const scriptTag=i.kind==='glyph'?(i.deck==='kata'?'katakana':'hiragana'):i.kind==='kanji'?'kanji':null;
  let body='',note='',atoms=null,gloss=['',''];
+ const feedback=feedbackFor(s);
+ const feedbackHtml=(feedback&&['typing','ok','near','ko'].includes(s.st))?`<div class="feedback note ${feedback.state}">${feedback.text}</div>`:'';
  if(s.face==='cloze'){
   const cell=`<span class="cell${done?' on':''}" id="cell">${esc(done?s.ctx.ans[0]:toKana(s.typed))}</span>`;
   const furi=dk.furi==='always'||(dk.furi==='hidden'&&done);
@@ -484,7 +575,7 @@ function Session(){
   body=`<div class="solo md">${esc(i.surface)}</div>`;
   gloss=[i.gloss,i.gloss];
  }else if(s.face==='glyph'){
-  body=`<div class="solo">${esc(i.glyph)}</div>`;
+  body=`<div class="solo-row"><div class="solo">${esc(i.glyph)}</div>${scriptTag?`<span class="tag-script">${scriptTag}</span>`:''}</div>`;
   gloss=[i.rom+(i.deck==='kata'?' · katakana':' · hiragana'),`type the reading in ${mode}`];
  }else if(s.face==='word'){
   const tgt=i.deck==='kata'?toKata(i.kana):i.kana;
@@ -505,12 +596,15 @@ function Session(){
   gloss=[`#${i.num} · ${i.type}`,`#${i.num} · ${i.type}`];
   atoms=atomsOf(i);
  }else{
-  body=`<div class="solo">${esc(i.glyph)}</div>`;
+  body=`<div class="solo-row"><div class="solo">${esc(i.glyph)}</div>${scriptTag?`<span class="tag-script">${scriptTag}</span>`:''}</div>`;
   gloss=[i.keyword,'what does it mean?'];
  }
  const upfront=['cloze','bare','name'].includes(s.face);
  const gtxt=(done||upfront)?gloss[0]:gloss[1];
- body+=`<div class="gloss${(done||upfront)?' on':''}${s.face==='cloze'?' left':''}">${esc(gtxt)}</div>`;
+ /* une fois la carte r\u00e9v\u00e9l\u00e9e, le bloc reveal r\u00e9p\u00e8te d\u00e9j\u00e0 cette m\u00eame info (lecture/sens) :
+    seul cloze y ajoute la traduction de la phrase, distincte du sens du mot. */
+ if(!done||s.face==='cloze')
+  body+=`<div class="gloss${(done||upfront)?' on':''}${s.face==='cloze'?' left':''}">${esc(gtxt)}</div>`;
  let rev='<div class="reveal">';
  if(done){
   if(s.face!=='keyword'){
@@ -525,14 +619,19 @@ function Session(){
     :s.face==='word'?s.ctx.en:s.face==='comp'?s.ctx.en+' · '+i.keyword
     :i.kind==='glyph'?(i.deck==='kata'?'katakana':'hiragana')
     :i.kind==='lex'?i.gloss:'#'+i.num+' · '+i.type;
-   rev+=`<div class="ans"><span class="af">${esc(form)}</span><span class="ar">${esc(read)}</span>`
-     +(dk.audio!=='never'?`<button class="spk" data-speak="${esc(promptAudio(s))}" aria-label="play">♪</button>`:'')+`</div>`;
-   rev+=`<div class="am">${esc(mean)}</div>`;
+   /* pour glyph, le gros caractère et son tag de script sont déjà affichés au-dessus :
+      la révélation ne montre alors que la réponse (lecture), sans les répéter. */
+   const skipForm=s.face==='glyph';
+   const skipMean=s.face==='glyph'||s.face==='sound';
+   rev+=`<div class="ans">${skipForm?'':`<span class="af">${esc(form)}</span>`}<span class="ar">${esc(read)}</span>`
+     +(!skipForm&&scriptTag?`<span class="tag-script">${scriptTag}</span>`:'')
+     +(dk.audio!=='never'?`<button class="spk" data-speak="${esc(promptAudio(s))}" aria-label="play">${speakerIcon()}</button>`:'')+`</div>`;
+   if(!skipMean)rev+=`<div class="am">${esc(mean)}</div>`;
    if(s.face==='name'&&s.st==='ok'&&/[\u3041-\u3096]/.test(toKana(s.typed)))
     rev+=`<div class="note">written in katakana</div>`;
   }else{
-   rev+=`<div class="ans"><span class="af">${esc(i.glyph)}</span><span class="ar">${esc(i.keyword)}</span>`
-     +(dk.audio!=='never'?`<button class="spk" data-speak="${esc(i.glyph)}" aria-label="play">♪</button>`:'')+`</div>`;
+   rev+=`<div class="ans"><span class="ar">${esc(i.keyword)}</span>`
+     +(dk.audio!=='never'?`<button class="spk" data-speak="${esc(i.glyph)}" aria-label="play">${speakerIcon()}</button>`:'')+`</div>`;
   }
   const cb=ctxBlockFor(i,s.face);
   if(cb)rev+=`<div class="ctx"><div class="cj">${ctxHTML(cb.ja)}</div>`
@@ -546,7 +645,7 @@ function Session(){
  rev+='</div>';
  const input=s.st==='typing'
   ?`<div class="s-input"><input id="f" class="${ime?'':'lat'}" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" placeholder="${ime?'romaji':'ka'}" value="${esc(s.typed)}">
-    <button class="dk" data-dontknow="">I don't know</button></div>`
+    <button class="dk" data-validate="">Check</button><button class="dk" data-dontknow="">I don't know</button></div>${feedbackHtml}`
   :s.st==='ask'
    ?`<div class="s-input"><button class="btn" data-reveal="">Reveal</button><div style="height:44px"></div></div>`
    :`<div class="s-input"><input class="res ${s.st==='ok'?'good':'bad'} ${ime?'':'lat'}" readonly value="${
@@ -554,7 +653,7 @@ function Session(){
  return `<div id="sess">
   <div class="s-chrome"><button class="x${s.confirmQuit?' warn':''}" data-quit="">${s.confirmQuit?'quit?':'✕'}</button>
    <span class="ct mono">${s.seen+1} / ${s.seen+s.queue.length}</span>
-   <button class="mu${app.mute?' off':''}" data-mute="" aria-label="sound">♪</button></div>
+   <button class="mu${app.mute?' off':''}" data-mute="" aria-label="sound">${app.mute?muteIcon(18):speakerIcon(18)}</button></div>
   <div class="s-body${done?' done':''}"${done&&s.st!=='near'&&!app.detailed&&dk.grading!=='self'?' data-next=""':''}>${body}${rev}</div>${input}
   <div id="kb" class="${app.kb&&s.st==='typing'?'on':''}">${app.kb?KB():''}</div></div>`}
 function KB(){const rows=['azertyuiop','qsdfghjklm','wxcvbn'];
@@ -563,9 +662,10 @@ function KB(){const rows=['azertyuiop','qsdfghjklm','wxcvbn'];
 function validate(){const s=app.sess,dk=deck(item(s.cur.id).deck);
  const {r}=judge(s.typed,acceptedFor(s),modeFor(s));
  const elapsed=Date.now()-s.startTime;
+ s.feedback = r==='ok'?{state:'good',text:'Looks right'}:r==='near'?{state:'near',text:'Almost there'}:{state:'bad',text:'Keep going'};
  if(s.ctx)s.cur.last=s.ctx.id;
  if(dk.audio!=='never')speak(promptAudio(s));
- if(r==='ok'){s.st='ok';if(!app.detailed){commit(true,elapsed);s.timer=setTimeout(advance,1400)}}
+ if(r==='ok'){s.st='ok';if(!app.detailed)commit(true,elapsed)}
  else if(r==='near')s.st='near';
  else{s.st='ko';if(!app.detailed)commit(false,elapsed)}
  render()}
@@ -615,14 +715,16 @@ function bind(){
  const f=view.querySelector('#f');
  if(f){f.focus();
   f.oninput=()=>{app.sess.typed=f.value;const c=view.querySelector('#cell');
-   if(c)c.textContent=toKana(f.value)};
+   if(c)c.textContent=toKana(f.value);syncLiveFeedback()};
   f.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();validate()}}}
  const nx=view.querySelector('[data-next]');
  if(nx)nx.onclick=e=>{if(!e.target.closest('[data-speak]'))advance()};
  const rs=view.querySelector('input.res');
  if(rs)rs.focus({preventScroll:true});
+ const dv=view.querySelector('[data-validate]');
+ if(dv)dv.onclick=()=>validate();
  const dn=view.querySelector('[data-dontknow]');
- if(dn)dn.onclick=()=>{app.sess.typed='';validate()};
+ if(dn)dn.onclick=()=>{app.sess.typed='';app.sess.feedback={state:'bad',text:'Keep going'};validate()};
  q('[data-grade]').forEach(e=>e.onclick=()=>{commit(e.dataset.grade==='1');advance()});
  const qt=view.querySelector('[data-quit]');
  if(qt)qt.onclick=()=>{
@@ -640,6 +742,9 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Escape'){clearTimeout(s.timer);if(tts.ok)speechSynthesis.cancel();go('home')}});
 if(window.visualViewport)visualViewport.addEventListener('resize',()=>{
  document.getElementById('frame').style.height=visualViewport.height+'px'});
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Service worker registration failed', err));
+}
 try{
   loadState();
   render();
