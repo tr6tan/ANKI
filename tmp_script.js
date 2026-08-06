@@ -678,7 +678,7 @@ const SYNC_DEFAULT={
 
 /* ===================== état ===================== */
 const app={route:'home',deck:null,editing:null,tab:'cards',filter:'all',q:'',
- kb:false,detailed:false,mute:false,theme:'light',sess:null,points:0,streak:0,bestStreak:0,totalRuns:0,unlockedBonus:{},sync:{...SYNC_DEFAULT}};
+ kb:true,detailed:false,mute:false,theme:'light',sess:null,points:0,streak:0,bestStreak:0,totalRuns:0,unlockedBonus:{},sync:{...SYNC_DEFAULT}};
 const view=document.getElementById('view'),navEl=document.getElementById('nav');
 function esc(s){
   s = String(s);
@@ -1043,7 +1043,7 @@ function Session(){
  }
  rev+='</div>';
  const input=s.st==='typing'
-  ?`<div class="s-input"><input id="f" class="${ime?'':'lat'}" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" placeholder="${ime?'romaji':'ka'}" value="${esc(s.typed)}">
+  ?`<div class="s-input"><input id="f" class="${ime?'':'lat'}" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" lang="${ime?'ja':'fr'}" inputmode="${app.kb?'none':'text'}"${app.kb?' readonly':''} placeholder="${ime?'romaji':'ka'}" value="${esc(s.typed)}">
     <button class="dk" data-validate="">Check</button><button class="dk" data-dontknow="">I don't know</button></div>`
   :s.st==='ask'
    ?`<div class="s-input"><button class="btn" data-reveal="">Reveal</button><div style="height:44px"></div></div>`
@@ -1054,10 +1054,16 @@ function Session(){
    <span class="ct mono">${s.seen+1} / ${s.seen+s.queue.length}</span>
    <button class="mu${app.mute?' off':''}" data-mute="" aria-label="sound">${app.mute?muteIcon(18):speakerIcon(18)}</button></div><div class="s-feedback">${feedbackHtml}</div></div>
     <div class="s-body${done?' done':''}"${done&&s.st!=='near'&&!app.detailed&&dk.grading!=='self'?' data-next=""':''}>${s.fx?`<div class="score-fx ${s.fx.kind}${s.fx.boost?' boost':''}"><span class="pts">${s.fx.delta>0?'+':''}${s.fx.delta}</span></div>`:''}${body}${rev}</div>${input}
-  <div id="kb" class="${app.kb&&s.st==='typing'?'on':''}">${app.kb?KB():''}</div></div>`}
-function KB(){const rows=['azertyuiop','qsdfghjklm','wxcvbn'];
- return rows.map((r,n)=>`<div class="kr">${n===2?'<span class="kk w">⇧</span>':''}${[...r].map(k=>`<span class="kk">${k}</span>`).join('')}${n===2?'<span class="kk w">⌫</span>':''}</div>`).join('')
- +`<div class="kr"><span class="kk w">123</span><span class="kk sp"></span><span class="kk w" style="background:var(--ink);color:var(--paper);opacity:1">go</span></div>`}
+  <div id="kb" class="${app.kb&&s.st==='typing'?'on':''}">${app.kb?KB(mode):''}</div></div>`}
+function KB(mode){
+ const frRows=['azertyuiop','qsdfghjklm','wxcvbn'];
+ const kanaRows=[['あ','い','う','え','お'],['か','き','く','け','こ'],['さ','し','す','せ','そ'],['た','ち','つ','て','と']];
+ const rowHtml=mode==='kana'
+  ?kanaRows.map(r=>`<div class="kr">${r.map(k=>`<span class="kk" data-kb="${k}">${k}</span>`).join('')}</div>`).join('')
+  :frRows.map(r=>`<div class="kr">${[...r].map(k=>`<span class="kk" data-kb="${k}">${k}</span>`).join('')}</div>`).join('');
+ const mid=mode==='kana'?'かな':'espace';
+ return rowHtml+`<div class="kr"><span class="kk w" data-kb="backspace">⌫</span><span class="kk sp" data-kb="space">${mid}</span><span class="kk w go" data-kb="enter">go</span></div>`;
+}
 function validate(){const s=app.sess,dk=deck(item(s.cur.id).deck);
  const {r}=judge(s.typed,acceptedFor(s),modeFor(s));
  const elapsed=Date.now()-s.startTime;
@@ -1142,7 +1148,7 @@ function bind(){
    else front?i.glyph=el.value:i.rom=el.value.trim();
    render()},250)});
  const f=view.querySelector('#f');
- if(f){f.focus({preventScroll:true});
+ if(f){if(!app.kb)f.focus({preventScroll:true});
   f.addEventListener('focus',()=>{
    const sess=view.querySelector('.s-body');
    if(sess)sess.scrollTop=0;
@@ -1166,6 +1172,19 @@ function bind(){
  if(dv)dv.onclick=()=>validate();
  const dn=view.querySelector('[data-dontknow]');
  if(dn)dn.onclick=()=>skipCard();
+ q('[data-kb]').forEach(e=>e.onclick=()=>{
+  const s=app.sess;if(!s||s.st!=='typing')return;
+  const key=e.dataset.kb;
+  if(key==='enter')return validate();
+  if(key==='backspace')s.typed=s.typed.slice(0,-1);
+  else if(key==='space')s.typed+=' ';
+  else s.typed+=key;
+  const input=view.querySelector('#f');
+  if(input)input.value=s.typed;
+  const c=view.querySelector('#cell');
+  if(c)c.textContent=toKana(s.typed);
+  syncLiveFeedback();
+ });
  q('[data-sync]').forEach(e=>e.onclick=async()=>{
   const action=e.dataset.sync;
   if(action==='save'){

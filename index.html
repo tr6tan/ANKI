@@ -96,7 +96,7 @@ nav.hide{display:none}
 .s-chrome .mu.off{opacity:.35}
 .s-chrome .ct{font-size:12px;color:var(--ink-faint);letter-spacing:.08em}
 .s-feedback{height:28px;padding:0 var(--s3) 6px;font-size:13px;line-height:1.25;display:flex;align-items:flex-start}
-.s-body{position:absolute;top:var(--session-top);left:0;right:0;bottom:calc(var(--session-bottom) + var(--keyboard-inset));padding:0 var(--s3) 20px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column}
+.s-body{position:absolute;top:var(--session-top);left:0;right:0;bottom:calc(var(--session-bottom) + var(--keyboard-inset));padding:10px var(--s3) 20px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column}
 .sentence{font-family:var(--f-serif);font-size:24px;line-height:2.05;letter-spacing:.02em;margin-top:var(--s2)}
 .solo{font-family:var(--f-serif);font-size:88px;line-height:1.15;text-align:center;margin:var(--s5) 0 0}
 .solo-row{display:flex;align-items:center;justify-content:center;gap:12px;margin:var(--s5) 0 0}
@@ -183,8 +183,9 @@ rt{font-size:.5em;font-family:var(--f-jp);color:var(--ink-muted);transition:opac
 #kb{position:absolute;left:0;right:0;bottom:0;height:0;overflow:hidden;background:var(--rule);z-index:5}
 #kb.on{height:275px;padding:8px 5px 20px;display:flex;flex-direction:column;gap:8px}
 .kr{display:flex;gap:5px}
-.kk{flex:1;height:40px;background:var(--surface);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.kk{flex:1;height:40px;background:var(--surface);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;user-select:none;-webkit-user-select:none;cursor:pointer}
 .kk.w{flex:1.6;opacity:.6}.kk.sp{flex:5}
+.kk.go{background:var(--ink);color:var(--paper);opacity:1}
 @supports (-webkit-touch-callout:none){
  html,body{height:-webkit-fill-available}
  body{min-height:-webkit-fill-available}
@@ -198,6 +199,6 @@ rt{font-size:.5em;font-family:var(--f-jp);color:var(--ink-muted);transition:opac
     <div id="view"></div>
     <nav id="nav"></nav>
   </div>
-  <script src="tmp_script.js?v=20260806-3"></script>
+  <script src="tmp_script.js?v=20260806-4"></script>
 </body>
 </html>
