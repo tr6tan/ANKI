@@ -94,12 +94,39 @@ const tts={ok:'speechSynthesis'in window,voice:null};
 /* icône haut-parleur en ligne, plus sobre qu'une note de musique */
 const speakerIcon=(size)=>`<svg width="${size||16}" height="${size||16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M18.36 5.64a9 9 0 0 1 0 12.72"></path></svg>`;
 const muteIcon=(size)=>`<svg width="${size||16}" height="${size||16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>`;
-function pickVoice(){if(tts.ok)tts.voice=speechSynthesis.getVoices().find(v=>/^ja/i.test(v.lang))||null}
+function pickVoice(){
+ if(!tts.ok)return;
+ const voices=speechSynthesis.getVoices().filter(v=>/^ja/i.test(v.lang));
+ if(!voices.length){tts.voice=null;return;}
+ const score=v=>{
+  const n=String(v.name||'').toLowerCase();
+  let s=0;
+  if(v.localService)s+=8;
+  if(/google|siri|kyoko|otoya|haruka|japanese|nihongo|日本語|ja-jp/.test(n))s+=10;
+  if(/enhanced|premium|natural|neural/.test(n))s+=4;
+  return s;
+ };
+ voices.sort((a,b)=>score(b)-score(a));
+ tts.voice=voices[0]||null;
+}
 if(tts.ok){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+function prepareSpeechText(text){
+ const raw=String(text||'').trim();
+ if(!raw)return '';
+ const hasJa=/[\u3040-\u30ff\u3400-\u9fff]/.test(raw);
+ const looksRomaji=/^[a-zA-Z\s'\-.,/]+$/.test(raw);
+ const base=(!hasJa&&looksRomaji)?toKana(raw):raw;
+ return base.replace(/\s*\/\s*/g,'、').replace(/·/g,'、');
+}
 function speak(text,rate){if(!tts.ok||app.mute||!text)return;
  speechSynthesis.cancel();
- const u=new SpeechSynthesisUtterance(text);
- u.lang='ja-JP';if(tts.voice)u.voice=tts.voice;u.rate=rate||.85;
+ const speakText=prepareSpeechText(text);
+ if(!speakText)return;
+ const u=new SpeechSynthesisUtterance(speakText);
+ u.lang='ja-JP';
+ if(tts.voice)u.voice=tts.voice;
+ u.rate=rate||0.9;
+ u.pitch=1.0;
  speechSynthesis.speak(u)}
 
 /* ===================== decks : la politique est une propriété du deck ===================== */
@@ -651,17 +678,17 @@ function ctxBlockFor(i,f){
   const w=pool[Math.abs(hash(i.id))%pool.length];
   const kata=i.deck==='kata',tgt=kata?toKata(i.kana):i.kana;
   const word=kata?toKata(w.word):w.word;
-  return{ja:word.replace(tgt,'\u0001'+tgt+'\u0002'),rom:w.rom,en:w.en}}
+  return{ja:word.replace(tgt,'\u0001'+tgt+'\u0002'),kana:word,rom:w.rom,en:w.en}}
  if(i.kind==='kanji'){
   const pool=COMPCTX.filter(m=>m.kanji.includes(i.glyph));
   if(!pool.length)return null;
   const m=pool[Math.abs(hash(i.id))%pool.length];
-  return{ja:m.word.replace(i.glyph,'\u0001'+i.glyph+'\u0002'),rom:toRomaji(m.read[0]),en:m.en}}
+  return{ja:m.word.replace(i.glyph,'\u0001'+i.glyph+'\u0002'),kana:m.read.join(' / '),rom:toRomaji(m.read[0]),en:m.en}}
  if(i.kind==='lex'){
   const pool=CTX.filter(x=>x.lex===i.id);if(!pool.length)return null;
   const x=pool[Math.abs(hash(i.id))%pool.length];
-  return{ja:x.segs.map((g,n)=>n===x.ti?'\u0001'+g.t+'\u0002':g.t).join(''),rom:segRomaji(x.segs),en:x.en}}
- if(i.kind==='name')return{ja:'\u0001'+i.ja+'\u0002',rom:toRomaji(i.ja),en:i.type};
+  return{ja:x.segs.map((g,n)=>n===x.ti?'\u0001'+g.t+'\u0002':g.t).join(''),kana:segKana(x.segs),rom:segRomaji(x.segs),en:x.en}}
+ if(i.kind==='name')return{ja:'\u0001'+i.ja+'\u0002',kana:i.ja,rom:toRomaji(i.ja),en:i.type};
  return null}
 function hash(s){let h=0;for(let n=0;n<s.length;n++)h=(h*31+s.charCodeAt(n))|0;return h}
 const ctxHTML=t=>esc(t).split('\u0001').join('<em>').split('\u0002').join('</em>');
@@ -1010,10 +1037,17 @@ function Session(){
    const form=s.face==='cloze'?s.ctx.segs[s.ctx.ti].t
     :s.face==='word'?(i.deck==='kata'?toKata(s.ctx.word):s.ctx.word)
     :s.face==='comp'?s.ctx.word:(i.surface||i.glyph||i.ja);
-   const read=s.face==='cloze'?s.ctx.ans[0]
-    :s.face==='word'?s.ctx.rom
-    :s.face==='comp'?s.ctx.read.join(' / ')
-    :i.kind==='glyph'?i.rom:i.kind==='lex'?i.read:toRomaji(i.ja);
+  const read=s.face==='cloze'
+   ?{jp:s.ctx.ans[0],rom:toRomaji(s.ctx.ans[0])}
+   :s.face==='word'
+    ?{jp:(i.deck==='kata'?toKata(s.ctx.word):s.ctx.word),rom:s.ctx.rom}
+    :s.face==='comp'
+    ?{jp:s.ctx.read.join(' / '),rom:s.ctx.read.map(x=>toRomaji(x)).join(' / ')}
+    :i.kind==='glyph'
+     ?{jp:(i.deck==='kata'?toKata(i.kana):i.kana),rom:i.rom}
+     :i.kind==='lex'
+      ?{jp:i.read,rom:toRomaji(i.read)}
+      :{jp:i.ja||'',rom:i.ja?toRomaji(i.ja):''};
    const mean=s.face==='cloze'?i.gloss
     :s.face==='word'?s.ctx.en:s.face==='comp'?s.ctx.en+' · '+i.keyword
     :i.kind==='glyph'?(i.deck==='kata'?'katakana':'hiragana')
@@ -1022,7 +1056,7 @@ function Session(){
       la révélation ne montre alors que la réponse (lecture), sans les répéter. */
    const skipForm=s.face==='glyph';
    const skipMean=s.face==='glyph'||s.face==='sound';
-   rev+=`<div class="ans">${skipForm?'':`<span class="af">${esc(form)}</span>`}<span class="ar">${esc(read)}</span>`
+   rev+=`<div class="ans">${skipForm?'':`<span class="af">${esc(form)}</span>`}<span class="ar">${esc(read.jp)}</span>${read.rom&&read.rom!==read.jp?`<span class="ar-rom">${esc(read.rom)}</span>`:''}`
      +(!skipForm&&scriptTag?`<span class="tag-script">${scriptTag}</span>`:'')
      +(dk.audio!=='never'?`<button class="spk" data-speak="${esc(promptAudio(s))}" aria-label="play">${speakerIcon()}</button>`:'')+`</div>`;
    if(!skipMean)rev+=`<div class="am">${esc(mean)}</div>`;
@@ -1034,7 +1068,9 @@ function Session(){
   }
   const cb=ctxBlockFor(i,s.face);
   if(cb)rev+=`<div class="ctx"><div class="cj">${ctxHTML(cb.ja)}</div>`
-    +`<div class="cr">${esc(cb.rom)}</div><div class="ce">${esc(cb.en)}</div></div>`;
+    +(cb.kana?`<div class="cr">${esc(cb.kana)}</div>`:'')
+    +(cb.rom&&cb.rom!==cb.kana?`<div class="cro">${esc(cb.rom)}</div>`:'')
+    +`<div class="ce">${esc(cb.en)}</div></div>`;
   if(atoms&&atoms.length>1)rev+=`<div class="atoms">${atoms.map(id=>
    `<span class="${known(id)?'':'new'}">${esc(item(id).glyph)}</span>`).join('')}</div>`;
   rev+=(s.st==='near'||app.detailed||dk.grading==='self')

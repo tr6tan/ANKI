@@ -11,13 +11,14 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <title>原稿用紙</title>
 <style>
 :root{--paper:#FAFAF8;--surface:#FFF;--rule:#E2E5E1;--grid:#C3D3CA;
  --ink:#16181A;--ink-muted:#5C6260;--ink-faint:#8A918E;--shu:#C8402E;--seiji:#3F6B57;
  --s2:8px;--s3:16px;--s4:24px;--s5:32px;--s6:48px;--s7:64px;--radius:2px;--dur:140ms;--ease:cubic-bezier(.2,0,.2,1);
  --f-serif:"Shippori Mincho","Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;
+ --f-calli:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;
  --f-jp:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
  --f-lat:"IBM Plex Sans",system-ui,sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,monospace;
  --app-height:100dvh;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
@@ -97,8 +98,8 @@ nav.hide{display:none}
 .s-chrome .ct{font-size:12px;color:var(--ink-faint);letter-spacing:.08em}
 .s-feedback{height:28px;padding:0 var(--s3) 6px;font-size:13px;line-height:1.25;display:flex;align-items:flex-start}
 .s-body{position:absolute;top:var(--session-top);left:0;right:0;bottom:calc(var(--session-bottom) + var(--keyboard-inset));padding:10px var(--s3) 20px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column}
-.sentence{font-family:var(--f-serif);font-size:24px;line-height:2.05;letter-spacing:.02em;margin-top:var(--s2)}
-.solo{font-family:var(--f-serif);font-size:88px;line-height:1.15;text-align:center;margin:var(--s5) 0 0}
+.sentence{font-family:var(--f-calli);font-size:24px;line-height:2.05;letter-spacing:.02em;margin-top:var(--s2)}
+.solo{font-family:var(--f-calli);font-size:88px;line-height:1.15;text-align:center;margin:var(--s5) 0 0}
 .solo-row{display:flex;align-items:center;justify-content:center;gap:12px;margin:var(--s5) 0 0}
 .solo-row .solo{margin:0}
 .solo.md{font-size:64px}.solo.sm{font-size:40px;font-family:var(--f-jp)}
@@ -118,25 +119,27 @@ rt{font-size:.5em;font-family:var(--f-jp);color:var(--ink-muted);transition:opac
 .gloss.left{text-align:left}
 .hint{margin-top:var(--s4);font-size:15px;line-height:1.55;color:var(--ink-muted)}
 .hint.mid{text-align:center}
-.reveal{margin-top:var(--s3);min-height:172px}
-.ans{display:flex;align-items:baseline;gap:10px}
-.af{font-family:var(--f-serif);font-size:26px;line-height:1.3}
-.ar{font-family:var(--f-jp);font-size:16px;color:var(--seiji)}
+.reveal{margin-top:var(--s3);min-height:172px;padding:14px 14px 10px;border:1px solid var(--rule);border-radius:18px;background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 86%,white),var(--surface))}
+.ans{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.af{font-family:var(--f-calli);font-size:30px;line-height:1.25}
+.ar{font-family:var(--f-jp);font-size:22px;font-weight:700;line-height:1.35;color:var(--seiji)}
+.ar-rom{font-family:var(--f-mono);font-size:13px;line-height:1.55;color:var(--ink-faint);letter-spacing:.02em}
 .tag-script{display:inline-block;padding:2px 7px;font-family:var(--f-lat);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--seiji);border:1px solid var(--seiji);border-radius:999px;font-weight:600;line-height:1.6}
 .ans .spk{margin-left:auto;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink-faint);border:1px solid var(--rule);border-radius:var(--radius);flex:none}
-.am{font-size:14px;color:var(--ink-muted);margin-top:2px}
+.am{font-size:17px;color:var(--ink);margin-top:8px;line-height:1.55}
 .mine{font-size:13px;color:var(--shu);margin-top:8px}
 .mine del{text-decoration:none;border-bottom:2px solid var(--shu)}
-.ctx{border-top:1px solid var(--rule);margin-top:12px;padding-top:10px}
-.cj{font-family:var(--f-jp);font-size:17px;line-height:1.6}
+.ctx{border-top:1px solid var(--rule);margin-top:14px;padding-top:14px;display:grid;gap:6px}
+.cj{font-family:var(--f-jp);font-size:20px;line-height:1.7}
 .cj em{font-style:normal;border-bottom:2px solid var(--seiji)}
-.cr{font-family:var(--f-mono);font-size:12px;color:var(--ink-faint);margin-top:3px;line-height:1.5}
-.ce{font-size:12px;color:var(--ink-faint);margin-top:2px;line-height:1.5}
+.cr{font-family:var(--f-jp);font-size:18px;color:var(--ink-muted);margin-top:2px;line-height:1.6}
+.cro{font-family:var(--f-mono);font-size:13px;color:var(--ink-faint);margin-top:-2px;line-height:1.5}
+.ce{font-size:15px;color:var(--ink);margin-top:0;line-height:1.6}
 .go{font-size:12px;color:var(--ink-faint);text-align:right;margin-top:10px}
 .s-body.done{cursor:pointer}
 .gloss{margin-top:12px;font-size:14px;color:var(--ink-faint)}
 .ex{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--rule)}
-.ex-w{font-family:var(--f-serif);font-size:22px;color:var(--ink)}
+.ex-w{font-family:var(--f-calli);font-size:22px;color:var(--ink)}
 .ex-r{font-size:13px;color:var(--ink-muted);font-family:var(--f-mono)}
 .ex-g{font-size:13px;color:var(--ink-faint)}
 .note{font-size:12px;color:var(--ink-faint);margin-top:8px;line-height:1.6}
