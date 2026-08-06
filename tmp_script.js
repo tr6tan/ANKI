@@ -1182,12 +1182,26 @@ function bind(){
     if(app.route==='session')render()}},3000)}
  }
 function debounce(fn,ms){let t;return()=>{clearTimeout(t);t=setTimeout(fn,ms)}}
+function isStandaloneDisplay(){
+ return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+}
+function syncViewportHeight(){
+ const viewport=window.visualViewport;
+ const layoutHeight=window.innerHeight||document.documentElement.clientHeight;
+ const keyboardOpen=!!(viewport&&layoutHeight-viewport.height>120);
+ const nextHeight=keyboardOpen?viewport.height:layoutHeight;
+ document.documentElement.style.setProperty('--app-height',Math.round(nextHeight)+'px');
+ document.documentElement.dataset.displayMode=isStandaloneDisplay()?'standalone':'browser';
+ document.documentElement.dataset.keyboard=keyboardOpen?'open':'closed';
+}
+const syncViewportHeightDebounced=debounce(syncViewportHeight,50);
 document.addEventListener('keydown',e=>{
  if(app.route!=='session')return;const s=app.sess;
  if(e.key==='Enter'&&(s.st==='ok'||s.st==='ko')){e.preventDefault();advance()}
  if(e.key==='Escape'){clearTimeout(s.timer);if(tts.ok)speechSynthesis.cancel();go('home')}});
-if(window.visualViewport)visualViewport.addEventListener('resize',()=>{
- document.getElementById('frame').style.height=visualViewport.height+'px'});
+window.addEventListener('resize',syncViewportHeightDebounced);
+window.addEventListener('orientationchange',syncViewportHeight);
+if(window.visualViewport)visualViewport.addEventListener('resize',syncViewportHeightDebounced);
 document.addEventListener('visibilitychange',()=>{
  if(document.visibilityState==='hidden')flushState();
 });
@@ -1198,6 +1212,7 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Service worker registration failed', err));
 }
 try{
+  syncViewportHeight();
   loadState();
   render();
   loadState();
