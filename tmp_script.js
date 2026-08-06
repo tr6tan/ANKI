@@ -1146,6 +1146,12 @@ function bind(){
   f.addEventListener('focus',()=>{
    const sess=view.querySelector('.s-body');
    if(sess)sess.scrollTop=0;
+   resetWindowScroll();
+   syncViewportHeight();
+  });
+  f.addEventListener('blur',()=>{
+   resetWindowScroll();
+   syncViewportHeight();
   });
   f.oninput=()=>{app.sess.typed=f.value;const c=view.querySelector('#cell');
    if(c)c.textContent=toKana(f.value);syncLiveFeedback()};
@@ -1189,14 +1195,23 @@ function debounce(fn,ms){let t;return()=>{clearTimeout(t);t=setTimeout(fn,ms)}}
 function isStandaloneDisplay(){
  return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
 }
+function resetWindowScroll(){
+ window.scrollTo(0,0);
+ document.documentElement.scrollTop=0;
+ document.body.scrollTop=0;
+}
 function syncViewportHeight(){
  const viewport=window.visualViewport;
  const layoutHeight=window.innerHeight||document.documentElement.clientHeight;
  const keyboardOpen=!!(viewport&&layoutHeight-viewport.height>120);
- const nextHeight=keyboardOpen?viewport.height:layoutHeight;
- document.documentElement.style.setProperty('--app-height',Math.round(nextHeight)+'px');
+ const keyboardInset=keyboardOpen&&viewport
+  ?Math.max(0,Math.round(layoutHeight-viewport.height-(viewport.offsetTop||0)))
+  :0;
+ document.documentElement.style.setProperty('--app-height',Math.round(layoutHeight)+'px');
+ document.documentElement.style.setProperty('--keyboard-inset',keyboardInset+'px');
  document.documentElement.dataset.displayMode=isStandaloneDisplay()?'standalone':'browser';
  document.documentElement.dataset.keyboard=keyboardOpen?'open':'closed';
+ if(keyboardOpen&&app.route==='session')resetWindowScroll();
 }
 const syncViewportHeightDebounced=debounce(syncViewportHeight,50);
 document.addEventListener('keydown',e=>{
