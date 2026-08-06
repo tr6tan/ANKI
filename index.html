@@ -175,20 +175,22 @@ rt{font-size:.5em;font-family:var(--f-jp);color:var(--ink-muted);transition:opac
 .s-input{position:absolute;left:0;right:0;bottom:var(--keyboard-inset);padding:8px var(--s3) max(var(--s2),var(--safe-bottom));background:var(--paper);z-index:4}
 #sess.kb-on .s-input{bottom:275px}
 #sess.kb-on .s-body{bottom:calc(var(--session-bottom) + 275px)}
+.typed-preview{min-height:28px;margin-top:4px;padding:0 2px;font-family:var(--f-jp);font-size:18px;line-height:1.4;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.typed-preview.empty{color:var(--ink-faint);opacity:.7}
 .s-input input{width:100%;height:52px;background:transparent;border:0;border-bottom:1px solid var(--grid);font-size:20px;font-family:var(--f-jp);outline:none;padding:0 2px}
 .s-input input.lat{font-family:var(--f-lat);letter-spacing:.04em}
 .s-input input:focus{border-bottom-color:var(--ink)}
 .s-input input.good{color:var(--seiji);border-bottom-color:var(--seiji)}
 .s-input input.bad{color:var(--shu);border-bottom-color:var(--shu);text-decoration:line-through}
 .s-input input::placeholder{color:var(--ink-faint);opacity:.55}
-.s-actions{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-.s-act{height:44px;border:1px solid var(--rule);background:var(--surface);border-radius:6px;font-size:14px;color:var(--ink)}
+.s-actions{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.s-act{height:48px;border:1px solid var(--rule);background:var(--surface);border-radius:6px;font-size:16px;color:var(--ink)}
 .s-act.check{border-color:var(--ink);background:var(--ink);color:var(--paper)}
 .s-act.idk{border-color:var(--shu);color:var(--shu)}
 #kb{position:absolute;left:0;right:0;bottom:0;height:0;overflow:hidden;background:var(--rule);z-index:5}
 #kb.on{height:275px;padding:8px 5px 20px;display:flex;flex-direction:column;gap:8px}
 .kr{display:flex;gap:5px}
-.kk{flex:1;height:40px;background:var(--surface);border:1px solid var(--rule);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;user-select:none;-webkit-user-select:none;cursor:pointer}
+.kk{flex:1;height:48px;background:var(--surface);border:1px solid var(--rule);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:16px;user-select:none;-webkit-user-select:none;cursor:pointer}
 .kk.w{flex:1.6}.kk.sp{flex:5}
 .kk.go{background:var(--ink);color:var(--paper);opacity:1}
 @supports (-webkit-touch-callout:none){
@@ -204,6 +206,6 @@ rt{font-size:.5em;font-family:var(--f-jp);color:var(--ink-muted);transition:opac
     <div id="view"></div>
     <nav id="nav"></nav>
   </div>
-  <script src="tmp_script.js?v=20260806-6"></script>
+  <script src="tmp_script.js?v=20260806-8"></script>
 </body>
 </html>

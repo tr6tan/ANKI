@@ -1044,7 +1044,8 @@ function Session(){
  rev+='</div>';
  const input=s.st==='typing'
   ?`<div class="s-input"><input id="f" class="${ime?'':'lat'}" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" lang="${ime?'ja':'fr'}" inputmode="${app.kb?'none':'text'}"${app.kb?' readonly':''} placeholder="${ime?'romaji':'ka'}" value="${esc(s.typed)}">
-    <div class="s-actions"><button class="s-act check" data-validate="">Check</button><button class="s-act idk" data-dontknow="">I don't know</button></div></div>`
+    <div id="typed-preview" class="typed-preview ${s.typed?'':'empty'}">${esc(s.typed||'Type your answer here')}</div>
+    <div class="s-actions"><button type="button" class="s-act check" data-validate="">Check</button><button type="button" class="s-act idk" data-dontknow="">I don't know</button></div></div>`
   :s.st==='ask'
    ?`<div class="s-input"><button class="btn" data-reveal="">Reveal</button><div style="height:44px"></div></div>`
     :`<div class="s-input"><input class="res ${s.st==='ok'?'good':s.st==='skip'?'skip':'bad'} ${ime?'':'lat'}" readonly value="${
@@ -1172,6 +1173,10 @@ function bind(){
  if(dv)dv.onclick=()=>validate();
  const dn=view.querySelector('[data-dontknow]');
  if(dn)dn.onclick=()=>skipCard();
+ const actionTap=fn=>e=>{e.preventDefault();fn();};
+ const primaryTouchEvent=window.PointerEvent?'pointerdown':'touchstart';
+ if(dv)dv.addEventListener(primaryTouchEvent,actionTap(()=>validate()),{passive:false});
+ if(dn)dn.addEventListener(primaryTouchEvent,actionTap(()=>skipCard()),{passive:false});
  const handleKbPress=e=>{
   e.preventDefault();
   const s=app.sess;if(!s||s.st!=='typing')return;
@@ -1182,14 +1187,17 @@ function bind(){
   else s.typed+=key;
   const input=view.querySelector('#f');
   if(input)input.value=s.typed;
+  const preview=view.querySelector('#typed-preview');
+  if(preview){
+   preview.textContent=s.typed||'Type your answer here';
+   preview.classList.toggle('empty',!s.typed);
+  }
   const c=view.querySelector('#cell');
   if(c)c.textContent=toKana(s.typed);
   syncLiveFeedback();
  };
  q('[data-kb]').forEach(e=>{
-  e.addEventListener('pointerdown',handleKbPress);
-  e.addEventListener('touchstart',handleKbPress,{passive:false});
-  e.addEventListener('mousedown',handleKbPress);
+  e.addEventListener(primaryTouchEvent,handleKbPress,{passive:false});
   e.addEventListener('click',ev=>ev.preventDefault());
  });
  q('[data-sync]').forEach(e=>e.onclick=async()=>{
