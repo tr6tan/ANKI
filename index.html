@@ -179,12 +179,15 @@ rt{font-size:.5em;font-family:var(--f-jp);color:var(--ink-muted);transition:opac
 .s-input input.good{color:var(--seiji);border-bottom-color:var(--seiji)}
 .s-input input.bad{color:var(--shu);border-bottom-color:var(--shu);text-decoration:line-through}
 .s-input input::placeholder{color:var(--ink-faint);opacity:.55}
-.dk{display:block;margin-left:auto;height:44px;font-size:13px;color:var(--ink-faint)}
+.s-actions{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.s-act{height:44px;border:1px solid var(--rule);background:var(--surface);border-radius:6px;font-size:14px;color:var(--ink)}
+.s-act.check{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.s-act.idk{border-color:var(--shu);color:var(--shu)}
 #kb{position:absolute;left:0;right:0;bottom:0;height:0;overflow:hidden;background:var(--rule);z-index:5}
 #kb.on{height:275px;padding:8px 5px 20px;display:flex;flex-direction:column;gap:8px}
 .kr{display:flex;gap:5px}
-.kk{flex:1;height:40px;background:var(--surface);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;user-select:none;-webkit-user-select:none;cursor:pointer}
-.kk.w{flex:1.6;opacity:.6}.kk.sp{flex:5}
+.kk{flex:1;height:40px;background:var(--surface);border:1px solid var(--rule);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;user-select:none;-webkit-user-select:none;cursor:pointer}
+.kk.w{flex:1.6}.kk.sp{flex:5}
 .kk.go{background:var(--ink);color:var(--paper);opacity:1}
 @supports (-webkit-touch-callout:none){
  html,body{height:-webkit-fill-available}
@@ -199,6 +202,6 @@ rt{font-size:.5em;font-family:var(--f-jp);color:var(--ink-muted);transition:opac
     <div id="view"></div>
     <nav id="nav"></nav>
   </div>
-  <script src="tmp_script.js?v=20260806-4"></script>
+  <script src="tmp_script.js?v=20260806-5"></script>
 </body>
 </html>

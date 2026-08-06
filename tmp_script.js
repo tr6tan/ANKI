@@ -1044,7 +1044,7 @@ function Session(){
  rev+='</div>';
  const input=s.st==='typing'
   ?`<div class="s-input"><input id="f" class="${ime?'':'lat'}" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" lang="${ime?'ja':'fr'}" inputmode="${app.kb?'none':'text'}"${app.kb?' readonly':''} placeholder="${ime?'romaji':'ka'}" value="${esc(s.typed)}">
-    <button class="dk" data-validate="">Check</button><button class="dk" data-dontknow="">I don't know</button></div>`
+    <div class="s-actions"><button class="s-act check" data-validate="">Check</button><button class="s-act idk" data-dontknow="">I don't know</button></div></div>`
   :s.st==='ask'
    ?`<div class="s-input"><button class="btn" data-reveal="">Reveal</button><div style="height:44px"></div></div>`
     :`<div class="s-input"><input class="res ${s.st==='ok'?'good':s.st==='skip'?'skip':'bad'} ${ime?'':'lat'}" readonly value="${
@@ -1059,10 +1059,10 @@ function KB(mode){
  const frRows=['azertyuiop','qsdfghjklm','wxcvbn'];
  const kanaRows=[['あ','い','う','え','お'],['か','き','く','け','こ'],['さ','し','す','せ','そ'],['た','ち','つ','て','と']];
  const rowHtml=mode==='kana'
-  ?kanaRows.map(r=>`<div class="kr">${r.map(k=>`<span class="kk" data-kb="${k}">${k}</span>`).join('')}</div>`).join('')
-  :frRows.map(r=>`<div class="kr">${[...r].map(k=>`<span class="kk" data-kb="${k}">${k}</span>`).join('')}</div>`).join('');
+  ?kanaRows.map(r=>`<div class="kr">${r.map(k=>`<button class="kk" type="button" data-kb="${k}">${k}</button>`).join('')}</div>`).join('')
+  :frRows.map(r=>`<div class="kr">${[...r].map(k=>`<button class="kk" type="button" data-kb="${k}">${k}</button>`).join('')}</div>`).join('');
  const mid=mode==='kana'?'かな':'espace';
- return rowHtml+`<div class="kr"><span class="kk w" data-kb="backspace">⌫</span><span class="kk sp" data-kb="space">${mid}</span><span class="kk w go" data-kb="enter">go</span></div>`;
+ return rowHtml+`<div class="kr"><button class="kk w" type="button" data-kb="backspace">⌫</button><button class="kk sp" type="button" data-kb="space">${mid}</button><button class="kk w go" type="button" data-kb="enter">go</button></div>`;
 }
 function validate(){const s=app.sess,dk=deck(item(s.cur.id).deck);
  const {r}=judge(s.typed,acceptedFor(s),modeFor(s));
@@ -1172,9 +1172,10 @@ function bind(){
  if(dv)dv.onclick=()=>validate();
  const dn=view.querySelector('[data-dontknow]');
  if(dn)dn.onclick=()=>skipCard();
- q('[data-kb]').forEach(e=>e.onclick=()=>{
+ const handleKbPress=e=>{
+  e.preventDefault();
   const s=app.sess;if(!s||s.st!=='typing')return;
-  const key=e.dataset.kb;
+  const key=e.currentTarget.dataset.kb;
   if(key==='enter')return validate();
   if(key==='backspace')s.typed=s.typed.slice(0,-1);
   else if(key==='space')s.typed+=' ';
@@ -1184,6 +1185,10 @@ function bind(){
   const c=view.querySelector('#cell');
   if(c)c.textContent=toKana(s.typed);
   syncLiveFeedback();
+ };
+ q('[data-kb]').forEach(e=>{
+  e.addEventListener('pointerdown',handleKbPress);
+  e.addEventListener('click',ev=>ev.preventDefault());
  });
  q('[data-sync]').forEach(e=>e.onclick=async()=>{
   const action=e.dataset.sync;
