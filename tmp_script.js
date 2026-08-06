@@ -1,8 +1,9 @@
 "use strict";
+const BUILD_VERSION = '20260806-16';
 const PK="1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS=["あa いi うu えe おo かka きki くku けke こko さsa しshi すsu せse そso たta ちchi つtsu てte とto なna にni ぬnu ねne のno はha ひhi ふfu へhe ほho まma みmi むmu めme もmo やya ゆyu よyo らra りri るru れre ろro わwa をwo んn", "がga ぎgi ぐgu げge ごgo ざza じji ずzu ぜze ぞzo だda ぢji づzu でde どdo ばba びbi ぶbu べbe ぼbo ぱpa ぴpi ぷpu ぺpe ぽpo", "きゃkya きゅkyu きょkyo しゃsha しゅshu しょsho ちゃcha ちゅchu ちょcho にゃnya にゅnyu にょnyo ひゃhya ひゅhyu ひょhyo みゃmya みゅmyu みょmyo りゃrya りゅryu りょryo ぎゃgya ぎゅgyu ぎょgyo じゃja じゅju じょjo びゃbya びゅbyu びょbyo ぴゃpya ぴゅpyu ぴょpyo"];
 const KWORDS="あお blue|いえ house|うえ above|あう to meet|あい love|おい nephew|あか red|かお face|いか squid|かう to buy|えき station|あき autumn|いく to go|きく to listen|かき persimmon|こえ voice|ここ here|くうき air|あさ morning|いす chair|すし sushi|せかい world|そこ over there|あし leg|うし cow|おかし sweets|きせつ season|した below|つき moon|て hand|とし year|くつ shoes|あつい hot|いち one|たかい expensive|ちかてつ subway|なつ summer|にく meat|ねこ cat|いぬ dog|なに what|きのこ mushroom|なか inside|はな flower|ひと person|ふね boat|へや room|ほし star|はし bridge|ふゆ winter|ひふ skin|まち town|みみ ear|むし insect|め eye|もり forest|みせ shop|まつ to wait|やま mountain|ゆき snow|よる night|やすい cheap|おゆ hot water|そら sky|とり bird|はる spring|くるま car|これ this|わたし I|わかい young|うみ sea|ほん book|にほん Japan|みかん mandarin|しんぶん newspaper|さくら cherry blossom|たまご egg|かぎ key|めがね glasses|かぞく family|みず water|ちず map|かぜ wind|ぞう elephant|だいがく university|でんき electricity|どこ where|まど window|たべる to eat|ともだち friend|ぶんか culture|べんり convenient|ぼうし hat|かんぱい cheers|えんぴつ pencil|さんぽ a walk|ばんごはん dinner|きゃく guest|きょう today|しゃしん photo|しゅみ hobby|ちゃいろ brown|じゅぎょう class|りょこう travel|びょうき illness|としょかん library";
-const KANJI="日 sun, day|月 moon, month|火 fire|水 water|木 tree, wood|金 gold, money|土 earth, soil|山 mountain|川 river|田 rice field|人 person|口 mouth|目 eye|耳 ear|手 hand|足 foot, leg|力 power|男 man|女 woman|子 child|大 big|小 small|上 above, up|下 below, down|中 middle, inside|右 right|左 left|前 front, before|後 behind, after|年 year|時 hour, time|分 minute, part|見 to see|聞 to hear, to ask|行 to go|来 to come|食 to eat|飲 to drink|車 car|電 electricity|気 spirit, energy|本 book, origin|天 heaven|空 sky, empty|雨 rain|先 ahead, previous|生 life, birth|学 to study|校 school|毎 every";
+const KANJI="日 sun, day|月 moon, month|火 fire|水 water|木 tree, wood|金 gold, money|土 earth, soil|山 mountain|川 river|田 rice field|人 person|口 mouth|目 eye|耳 ear|手 hand|足 foot, leg|力 power|男 man|女 woman|子 child|大 big|小 small|上 above, up|下 below, down|中 middle, inside|右 right|左 left|前 front, before|後 behind, after|年 year|時 hour, time|分 minute, part|見 to see|聞 to hear, to ask|行 to go|来 to come|食 to eat|飲 to drink|車 car|電 electricity|気 spirit, energy|本 book, origin|天 heaven|空 sky, empty|雨 rain|先 ahead, previous|生 life, birth|学 to study|校 school|毎 every|一 one|二 two|三 three|四 four|五 five|六 six|七 seven|八 eight|九 nine|十 ten|百 hundred|千 thousand|万 ten thousand|円 yen|何 what|名 name|白 white|半 half|入 to enter|出 to exit|話 to talk|読 to read|書 to write|語 language, word|新 new|古 old|今 now|自 self|文 sentence, text|言 to say|立 to stand";
 const COMP="日本 にほん Japan|大人 おとな adult|火山 かざん volcano|学校 がっこう school|先生 せんせい teacher|大学 だいがく university|電車 でんしゃ train|天気 てんき weather|空気 くうき air|毎日 まいにち every day|毎年 まいとし,まいねん every year|毎月 まいつき,まいげつ every month|人口 じんこう population|中学 ちゅうがく middle school|本日 ほんじつ today (formal)|雨天 うてん rainy weather|見学 けんがく study visit|来年 らいねん next year|来月 らいげつ next month|先月 せんげつ last month|上下 じょうげ up and down|左右 さゆう left and right|前後 ぜんご before and after|水力 すいりょく water power|電力 でんりょく electric power|気力 きりょく willpower|手足 てあし hands and feet|学生 がくせい student|月見 つきみ moon viewing|女子 じょし girl|男子 だんし boy|山口 やまぐち Yamaguchi|川口 かわぐち Kawaguchi|小川 おがわ small stream|田中 たなか Tanaka|生年月日 せいねんがっぴ date of birth|小学校 しょうがっこう elementary school|電気 でんき electricity";
 
 /* ===================== kana <-> romaji ===================== */
@@ -143,45 +144,23 @@ const DECKS=[
   audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4,level:'n5'},
  {id:'kanji-n4',name:'Kanji N4',kind:'kanji',answer:'kana',ordered:true,
   audio:'reveal',grading:'self',furi:'hidden',newPerDay:4,level:'n4'},
- {id:'sent-n4',name:'Sentences N4',kind:'lex',answer:'kana',ordered:false,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4,level:'n4'},
  {id:'kanji-n3',name:'Kanji N3',kind:'kanji',answer:'kana',ordered:true,
   audio:'reveal',grading:'self',furi:'hidden',newPerDay:4,level:'n3'},
- {id:'sent-n3',name:'Sentences N3',kind:'lex',answer:'kana',ordered:false,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4,level:'n3'},
  {id:'kanji-n2',name:'Kanji N2',kind:'kanji',answer:'kana',ordered:true,
   audio:'reveal',grading:'self',furi:'hidden',newPerDay:4,level:'n2'},
- {id:'sent-n2',name:'Sentences N2',kind:'lex',answer:'kana',ordered:false,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4,level:'n2'},
  {id:'kanji-n1',name:'Kanji N1',kind:'kanji',answer:'kana',ordered:true,
-  audio:'reveal',grading:'self',furi:'hidden',newPerDay:4,level:'n1'},
- {id:'sent-n1',name:'Sentences N1',kind:'lex',answer:'kana',ordered:false,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:4,level:'n1'}
- ,{id:'pkmn-gen2',name:'Pokémon Gen 2',kind:'bonus',answer:'kana',ordered:false,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:0,level:'bonus',threshold:1200,theme:'Generation 2'}
- ,{id:'pkmn-gen3',name:'Pokémon Gen 3',kind:'bonus',answer:'kana',ordered:false,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:0,level:'bonus',threshold:2200,theme:'Generation 3'}
- ,{id:'bonus-jlpt-vocab',name:'JLPT Extra Words',kind:'bonus',answer:'kana',ordered:false,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:0,level:'bonus',threshold:3000,theme:'Hiragana / kanji mix'}
- ,{id:'bonus-fav-topic',name:'Your Favorite Topic',kind:'bonus',answer:'kana',ordered:false,
-  audio:'reveal',grading:'typed',furi:'hidden',newPerDay:0,level:'bonus',threshold:4200,theme:'Whatever you want'}
+  audio:'reveal',grading:'self',furi:'hidden',newPerDay:4,level:'n1'}
 ];
 const deck=id=>DECKS.find(d=>d.id===id);
 const LEVELS=[
  {id:'n5',label:'N5',deckIds:['hira','kata','kanji','vocab','pkmn'],prereq:null,open:true},
- {id:'n4',label:'N4',deckIds:['kanji-n4','sent-n4'],prereq:'N5 fully memorized',open:false},
- {id:'n3',label:'N3',deckIds:['kanji-n3','sent-n3'],prereq:'N4 fully memorized',open:false},
- {id:'n2',label:'N2',deckIds:['kanji-n2','sent-n2'],prereq:'N3 fully memorized',open:false},
- {id:'n1',label:'N1',deckIds:['kanji-n1','sent-n1'],prereq:'N2 fully memorized',open:false}
+ {id:'n4',label:'N4',deckIds:['kanji-n4'],prereq:'N5 fully memorized',open:false},
+ {id:'n3',label:'N3',deckIds:['kanji-n3'],prereq:'N4 fully memorized',open:false},
+ {id:'n2',label:'N2',deckIds:['kanji-n2'],prereq:'N3 fully memorized',open:false},
+ {id:'n1',label:'N1',deckIds:['kanji-n1'],prereq:'N2 fully memorized',open:false}
 ];
 const level=id=>LEVELS.find(l=>l.id===id);
-const BONUS_DECKS=[
- {id:'naruto',name:'Naruto',subject:'anime',threshold:900,theme:'Shinobi basics'},
- {id:'pkmn-gen2',name:'Pokémon Gen 2',subject:'pokémon',threshold:1600,theme:'Generation 2'},
- {id:'pkmn-gen3',name:'Pokémon Gen 3',subject:'pokémon',threshold:2600,theme:'Generation 3'},
- {id:'bonus-jlpt-vocab',name:'JLPT Extra Words',subject:'vocab',threshold:3600,theme:'Hiragana / kanji mix'},
- {id:'bonus-fav-topic',name:'Your Favorite Topic',subject:'custom',threshold:5000,theme:'Whatever you want'}
-];
+const BONUS_DECKS=[];
 const bonusDeck=id=>BONUS_DECKS.find(d=>d.id===id);
 const POINTS_PER_DAY_ESTIMATE=200;
 function daysToUnlock(threshold,points){
@@ -201,18 +180,14 @@ function deckMasteryRate(deckIds){
 }
 function levelProgress(levelId){
  const l=level(levelId);if(!l)return 0;
- if(l.id==='n5')return deckMasteryRate(['hira','kata','kanji','vocab']);
- return 0;
+ return deckMasteryRate(l.deckIds);
 }
 function levelUnlockInfo(levelId){
  const l=level(levelId);if(!l)return{open:false,need:''};
  if(l.id==='n5')return{open:true,need:'',progress:levelProgress('n5')};
- if(l.id==='n4'){
-  const progress=levelProgress('n5');
-  return{open:progress>=0.95,need:'N5 foundation fully memorized',progress};
- }
  const prev=LEVELS[LEVELS.findIndex(x=>x.id===l.id)-1];
- return{open:false,need:prev?`${prev.label} content pending import`:'',progress:0};
+ const progress=prev?levelProgress(prev.id):0;
+ return{open:progress>=0.95,need:prev?`${prev.label} foundation fully memorized`:'',progress};
 }
 
 /* ===================== items ===================== */
@@ -227,6 +202,17 @@ KANJI.split('|').forEach((s,n)=>{const i=s.indexOf(' ');
  const g=s.slice(0,i);
  ITEMS.push({id:'j'+n,deck:'kanji',kind:'kanji',idx:n,glyph:g,keyword:s.slice(i+1)});
  KIDX.kanji[g]='j'+n});
+const KANJI_N4="会 meeting|事 matter|同 same|自 self|社 company|発 to depart|者 person|地 ground|業 business|方 direction, way|新 new|場 place|員 member|開 to open|問 question|代 to substitute, generation|明 bright|動 to move|京 capital|通 to pass through|言 to say|理 reason|体 body|主 main, master|題 topic|意 meaning, intent|不 not, un-|作 to make|用 use, business|度 degree, times|強 strong|公 public, official|持 to hold|野 field|東 east|高 tall, expensive|少 few|光 light|使 to use|万 ten thousand|全 all, whole|部 part, section|花 flower|世 world, generation|界 boundary|進 to advance|別 separate|感 feeling|育 to raise|教 to teach|音 sound|家 house|病 illness|院 institution|建 to build|説 to explain|送 to send|民 people|決 to decide|定 to determine|特 special|経 to pass through|科 subject|医 doctor|銀 silver|験 test, to experience|質 quality|集 to gather|選 to choose|商 commerce|死 to die|品 goods|直 to fix, direct|番 turn, number|洋 western, ocean|服 clothes|顔 face|私 I, me|対 versus, against|予 in advance|政 politics|治 to govern|法 law|権 authority|若 young|無 nothing|始 to begin|終 to end|住 to live, reside|借 to borrow|貸 to lend|考 to think|思 to think|知 to know|運 to carry, fortune|転 to turn, roll|乗 to ride|降 to descend, get off|歩 to walk|走 to run|止 to stop|買 to buy|売 to sell|店 shop|道 road, way|遠 far|近 near|外 outside|内 inside|広 wide|長 long|短 short|重 heavy|安 cheap, safe|古 old|文 sentence, text|字 character|語 language, word|話 to talk|読 to read|書 to write|勉 diligence, study|習 to learn|覚 to memorize|忘 to forget|待 to wait|入 to enter|出 to exit|帰 to return home|閉 to close|続 to continue|兄 older brother|姉 older sister|弟 younger brother|妹 younger sister|父 father|母 mother|親 parent|族 family, tribe|友 friend|好 to like|朝 morning|昼 noon|夜 night|夕 evening|晩 evening|週 week|曜 weekday|春 spring|夏 summer|秋 autumn|冬 winter|寒 cold weather|暑 hot weather|暖 warm|涼 cool|海 sea|島 island|森 forest|林 grove|米 rice|肉 meat|魚 fish|茶 tea|酒 alcohol|飯 meal|料 fee, material|画 picture|映 to project, reflect|写 to copy|真 truth, photo|歌 song|楽 fun, music|苦 bitter, painful|忙 busy|急 urgent|遅 late|早 early|速 fast|軽 light (weight)|多 many|狭 narrow|深 deep|浅 shallow|低 low|飛 to fly|泳 to swim|着 to wear, to arrive|色 color|赤 red|青 blue|黄 yellow|緑 green|紙 paper";
+const KANJI_N3="仕 to serve|例 example|側 side|信 to trust|価 price|億 hundred million|優 gentle, superior|備 to prepare|働 to work|党 party|共 together|具 tool|典 rule, code|冷 to cool|列 line, row|判 judgment|利 benefit|割 to divide|創 to create|勇 brave|勝 to win|勢 momentum|化 to change|区 ward|印 mark|危 dangerous|原 field, origin|参 to visit, participate|反 to oppose|収 to collect|各 each|向 to face|吸 to inhale|吹 to blow|周 circumference|命 life|和 harmony|喜 to rejoice|営 to manage|器 container|囲 to surround|団 group|困 to be troubled|域 area|城 castle|報 news, reward|境 boundary|増 to increase|夢 dream|奪 to snatch|婚 marriage|嫌 to dislike|季 season|寄 to approach|寺 temple|射 to shoot|将 general|尽 to exhaust|居 to reside|届 to deliver|尾 tail|岩 rock|差 difference|巻 to roll|布 cloth|希 hope, rare|師 teacher, master|席 seat|常 always, normal|幸 happiness|幼 young child|庁 government office|府 government|庭 garden|延 to postpone|建 to build|弱 weak|張 to stretch|強 dup skip|形 shape|影 shadow|役 role, duty|徒 follower|徳 virtue|忘 dup skip|忙 busy|念 concept, wish|怒 to be angry|恐 to fear|恥 shame|息 breath|悩 to worry|愛 love|感 dup skip|慣 to become used to|憎 to hate|懐 nostalgia|戦 war, to fight|戻 to return|払 to pay|批 criticism|承 to consent|技 skill|抜 to pull out|抱 to embrace|招 to invite|拾 to pick up|指 finger, to point|捕 to catch|授 to grant|採 to gather|探 to search|接 to touch|推 to infer|提 to present|揺 to shake|連 to link|関 to relate|必 must|要 necessary|求 to request|込 crowded|確 sure|違 different|在 to exist|様 style|守 to protect|存 to exist|現 present|状 condition|態 condition|準 standard|含 to include|残 to remain|過 to pass|性 nature|局 office|的 target|面 face, surface|議 discussion|論 discourse|展 to develop|象 phenomenon|制 system|複 double|査 to investigate|援 to help|派 group|辺 area|順 order|容 form|案 plan|効 effect|異 different (dup skip)|訳 translation|講 lecture|録 record|述 to state|評 evaluation|談 discussion|費 expense|資 resources|豊 abundant|貴 noble|貨 goods|賃 rent|貿 trade|輸 transport|輪 wheel|輝 to shine|遊 to play|達 to reach|避 to avoid|邦 country|港 harbor|測 to measure|湖 lake|温 warm|漁 fishing|激 intense|災 disaster|炭 charcoal|点 point|然 so|焼 to burn|煙 smoke|熱 heat|燃 to burn|片 piece|版 edition|牛 cow|犬 dog|猫 cat|王 king|球 sphere|畑 field, farm|留 to stay|略 abbreviation|痛 pain|皆 all|皿 plate|益 benefit|相 phase|眠 sleep|眼 eyeball|石 stone|砂 sand|研 to polish|破 to break|硬 hard|示 to show|礼 courtesy|祈 to pray|祖 ancestor|祝 to celebrate|神 god|祭 festival|禁 to prohibit|福 fortune|秀 excellent|秘 secret|移 to shift|税 tax|窓 window|穴 hole|究 to research|突 sudden|竜 dragon|端 edge|竹 bamboo|笑 to smile|笛 flute|符 mark|第 ordinal|筆 brush|筋 muscle|等 grade|答 answer|策 plan|簡 simple|粉 flour|精 refined|糖 sugar|糸 thread|系 lineage|紀 chronicle|約 promise|納 to store|純 pure|級 grade|素 element|細 slender|紹 to introduce|結 to tie|絵 picture|給 salary|統 to unite|絶 to end|継 to inherit|網 net|線 line|締 to tighten|編 to edit|縁 edge|織 to weave|群 group|義 justice|翌 next day|翻 to translate|老 old|耕 to till|聖 holy|職 employment|肌 skin|肩 shoulder|背 back|肺 lung|胃 stomach|胸 chest|能 skill|脂 fat|脈 pulse|脱 to escape|脳 brain|腐 to rot|腕 arm|腰 waist|腹 belly|臣 minister|臨 to face|至 to reach|致 to cause|舌 tongue|舎 shed|舞 to dance|舟 boat|航 to navigate|般 kind";
+const KANJI_N2="与 to give|丘 hill|丈 length, height|与 dup skip|丘 dup|乱 disturbance|乳 milk|乾 to dry|了 finish|互 mutual|井 well|亜 sub-|享 to receive|京 dup skip|仮 temporary|伏 to bow|伐 to cut down|伯 uncle|伴 companion|伸 to stretch|但 however|位 rank|低 low|佐 to help|余 remainder|供 to provide|依 to depend on|価 dup skip|侵 to invade|便 convenience, mail|係 person in charge|保 to preserve|信 dup skip|修 to master|俳 haiku|俵 straw bag|倉 warehouse|個 individual|倍 double|倒 to fall|候 climate|借 dup skip|倣 to imitate|値 value|倹 thrifty|偉 great, admirable|偏 partial, biased|健 healthy|偵 spy|側 dup skip|偶 accidentally|偽 false|傍 side|傑 outstanding|傘 umbrella|催 to hold event|傷 wound|傾 to lean|債 debt|傲 arrogant|僅 slightly|僕 I (male)|僧 monk|儀 ceremony|億 dup skip|儒 Confucian|償 compensation|優 dup skip|允 permit|元 dup skip|兆 sign, trillion|兇 evil|克 to overcome|免 to excuse|党 dup skip|入 dup skip|全 dup skip|共 dup skip|典 dup skip|兼 dual|冒 to risk|冗 excess|冠 crown|冥 dark, hades|冶 to smelt|冷 dup skip|凍 to freeze|凡 mediocre|凡 dup|凶 evil|凸 convex|凹 concave|出 dup skip|函 box|刀 sword|刃 blade|分 dup skip|切 to cut|刈 to reap|刊 publish|刑 punishment|列 dup skip|初 first|判 dup skip|別 dup skip|利 dup skip|刺 to pierce|刻 to carve|剖 to divide|副 secondary|創 dup skip|副 dup skip|勧 to recommend|勘 intuition|募 to recruit|勲 merit|化 dup skip|匹 counter for animals|匿 to hide|匠 artisan|匝 sweep|区 dup skip|医 dup skip|升 measure|卒 to graduate|協 cooperation|博 broad, doctor|印 dup skip|即 immediate|却 to refuse|卵 egg|厚 thick|原 dup skip|双 pair|叔 uncle|受 to receive|吐 to spit|吟 to recite|含 dup skip|吸 dup skip|呉 to give|呑 to swallow|呉 dup skip|周 dup skip|呪 curse|咲 to bloom|哀 sorrow|哲 wisdom|唄 song|唆 to tempt|唇 lips|唯 only|唱 to sing, chant|唾 saliva|啓 to open, enlighten|善 good|喉 throat|喚 to summon|喝 to scold|喪 mourning|嗅 to smell|嗜 hobby|嘆 to lament|噂 rumor|噴 to spout|囚 prisoner|回 to return, times|因 cause|団 dup skip|園 park, garden|土 dup skip|圧 pressure|圭 gem|坂 slope|坊 boy, monk|坑 pit|坪 tsubo (area unit)|垂 to hang down|型 model|埋 to bury|城 dup skip|域 dup skip|培 to cultivate|基 base, foundation|堂 hall|堅 solid|堀 moat|堤 embankment|堪 to endure|報 dup skip|塀 fence|塁 base (baseball)|塊 lump|塑 clay figure|塔 tower|塗 to paint|塾 cram school|境 dup skip|墓 grave|墜 to fall|増 dup skip|墨 ink|墳 mound|壁 wall|壇 platform|壊 to break|壌 soil|士 gentleman, samurai|壮 majestic|声 voice|壱 one (formal)|売 dup skip|変 to change, strange|夏 dup skip|夕 dup skip|外 dup skip|多 dup skip|夜 dup skip|夢 dup skip|大 dup skip|奇 strange|奈 how|奉 to serve|契 pledge|奏 to play music|奥 interior|奨 to encourage|奪 dup skip|奮 to rouse|好 dup skip|如 like, if|妃 princess|妄 delusion|妊 pregnancy|妖 bewitching|妙 exquisite|妨 to disturb|姓 surname|姫 princess|姻 marriage|姿 figure|威 authority|娘 daughter|婆 old woman|婿 son-in-law|媒 medium|嫁 bride|嫉 jealous|嬢 young lady|子 dup skip|存 dup skip|季 dup skip|孤 alone|孫 grandchild|宅 residence|宇 space, universe|守 dup skip|安 dup skip|宗 religion|官 government official|宙 space, universe|宝 treasure|宣 to declare|室 room|宮 palace|宰 to preside|害 damage|宴 banquet|家 dup skip|容 dup skip|宿 inn, to lodge|寂 lonely|寄 dup skip|富 wealth|寛 tolerant|察 to guess|寡 few|寿 congratulations|専 exclusive|将 dup skip|尉 lieutenant|尊 respect|尋 to ask, inquire|導 to lead|封 to seal|射 dup skip|尽 to exhaust|局 dup skip|居 dup skip|履 to wear (shoes)|山 dup skip|岐 branch off|岡 hill|岳 peak|岸 shore|峠 mountain pass|峡 gorge|峰 peak|島 dup skip|崇 to revere|崎 promontory|崩 to collapse|嵐 storm|巡 to patrol|巣 nest|巨 huge|巧 skill|差 dup skip|己 self|巻 dup skip|市 dup skip|布 dup skip|帆 sail|希 dup skip|帝 emperor|帥 commander|師 dup skip|席 dup skip|帽 hat|幅 width|幕 curtain, act|幣 currency|干 dry, to interfere|平 flat, peace|幸 dup skip|幹 trunk, main|幻 illusion|幾 how many|序 order, preface|底 bottom|店 dup skip|府 dup skip|度 dup skip|座 seat|庫 warehouse|庭 dup skip|廊 corridor|廃 to abolish|建 dup skip|弊 evil|式 style|引 to pull|弘 broad|弟 dup skip|弦 string|弧 arc|弱 dup skip|張 dup skip|強 dup skip|弾 bullet, to play strings|当 to hit|録 dup skip|彦 handsome youth|彩 to colour|彫 to carve|彰 clear|影 dup skip|彼 he|往 to head to|征 to conquer|径 diameter|待 dup skip|律 law|徐 slowly|得 to gain|従 to follow|微 minute|徴 sign|徳 dup skip|徹 to penetrate|忍 to endure|志 aspiration|忠 loyalty";
+const KANJI_N1="且 furthermore|丙 third class|丞 to help|乃 whereupon|之 of (classical)|乎 exclamation|乏 scarce|乗 dup skip|乞 to beg|亀 turtle|亙 to extend|亦 also|亭 pavilion|亮 clear|仄 hint|仇 enemy|仔 detailed|仗 stick|仙 hermit|仮 dup skip|仰 to revere|伊 that|伍 five, ally|伎 skill|伏 dup skip|伐 dup skip|伴 dup skip|伶 actor|伽 nursing|佃 cultivated field|佇 to loiter|佑 to help|佐 dup skip|佛 buddha (old)|作 dup skip|佩 to wear|佳 excellent|併 to combine|佼 clever|使 dup skip|來 to come (old)|侃 strong|侍 samurai|侏 dwarf|侑 to help meal|侘 lonely|侠 chivalrous|侯 marquis|侵 dup skip|便 dup skip|係 dup skip|促 to urge|俊 talented|俐 clever|俗 vulgar, custom|俘 captive|俚 rustic|俠 chivalrous|俣 fork|俥 rickshaw|俯 to bow|俳 dup skip|俵 dup skip|倅 son|倆 skill|倉 dup skip|倍 dup skip|倏 quickly|倒 dup skip|倖 luck|候 dup skip|倚 to lean|倣 dup skip|値 dup skip|倭 Yamato|倶 all|倹 dup skip|偃 to lie down|偉 dup skip|偏 dup skip|健 dup skip|偲 to remember|側 dup skip|偵 dup skip|偶 dup skip|偽 dup skip|傀 puppet|傅 tutor|傍 dup skip|傑 dup skip|催 dup skip|傭 employed|傲 dup skip|傳 to transmit (old)|傷 dup skip|傾 dup skip|僅 dup skip|僑 sojourn|僕 dup skip|僚 colleague|僧 dup skip|僻 remote|儀 dup skip|億 dup skip|儒 dup skip|償 dup skip|優 dup skip|允 permit|兆 sign, trillion|克 to overcome|免 to excuse|党 dup skip|兼 dual|冒 to risk|冗 excess|冠 crown|冥 dark, hades|凡 dup skip|凶 evil|凸 convex|凹 concave|刀 sword|刃 blade|切 to cut|刈 to reap|刊 to publish|刑 punishment|初 first|刺 to pierce|刻 dup skip|剖 dup skip|剛 sturdy|剣 sword|剤 medicine dose|剰 surplus|剥 to peel|剪 to prune|勅 imperial edict|勺 shakuunit|匂 fragrance|升 dup skip|卓 table, excellent|卜 divination|卦 divination sign|即 dup skip|却 dup skip|厄 misfortune|厘 rin (unit)|又 also|叉 crotch|叙 to relate, to appoint|叢 clump|吉 good luck|吊 to hang|吏 official|叶 to grant|吐 dup skip|吟 dup skip|呂 spine|呆 amazed|呑 dup skip|哉 how, alas|哨 sentry|唆 dup skip|唖 mute|唸 to hum|嗣 heir|嗜 dup skip|嘉 esteemed|嘆 dup skip|噛 to bite|囂 noisy|嚢 sack|囚 dup skip|団 dup skip|圏 sphere, range|圏 dup skip|坑 dup skip|坤 southwest|垢 dirt|垣 hedge|埃 dust|埠 wharf|堆 heap|堡 fort|塁 dup skip|塑 dup skip|塚 tumulus|塩 salt|塵 dust|塾 dup skip|墟 ruins|墾 to reclaim land|壇 dup skip|壮 dup skip|壱 dup skip|壷 pot, jar|奄 to cover|奉 dup skip|契 dup skip|奢 luxury|奥 dup skip|奨 dup skip|奪 dup skip|妃 dup skip|妄 dup skip|妊 dup skip|妖 dup skip|妨 dup skip|妬 jealous|姑 mother-in-law|姦 wicked|娼 prostitute|媚 to flatter|嫉 dup skip|嫌 dup skip|嫡 legitimate wife|嬉 glad|嬌 charming|孔 hole|孕 to conceive|孟 chief|孤 dup skip|孵 to hatch|宏 broad|宗 dup skip|宛 as if|宣 dup skip|寂 dup skip|寛 dup skip|寡 dup skip|寺 dup skip|寓 to reside temporarily|寧 rather|審 to investigate|寵 favor|寸 sun (unit)|尉 dup skip|尚 esteem|尿 urine|屍 corpse|屠 to butcher|屯 barracks|岡 dup skip|岬 cape (geog)|峨 lofty|峻 severe|崇 dup skip|崖 cliff|嵌 to fit in|嵩 pile up|嵯 towering|嶋 island|嶺 peak|巌 sturdy rock|巫 sorceress|已 already|巳 snake (zodiac)|帆 dup skip|幇 to help|幟 banner|幣 dup skip|幽 seclusion|幾 dup skip|庄 estate|庇 to shelter|庵 hermitage|廟 mausoleum|廠 workshop|廻 to go around|弐 two (formal)|弘 dup skip|弛 to slacken|弥 more and more|弦 dup skip|弧 dup skip|彊 firm|彗 comet|彦 dup skip|彼 dup skip|徊 wander about|徘 wander|徽 badge|忌 to abhor|忘 dup skip|忽 to ignore|怠 idle|怨 grudge|恒 constant|恩 favor, kindness|恫 to threaten|悌 elder brother|悔 to regret|悟 enlightenment|悦 joy|悉 all|悠 leisure|惑 to be confused|惚 to be enchanted|惜 regret|惟 to think|惧 fear|愁 melancholy|愉 pleasure|慄 to tremble|慈 mercy|慕 to yearn|慢 pride, sluggish|憂 melancholy|憎 dup skip|憐 pity|憾 remorse|懇 sociable|懐 dup skip|懲 to punish|懸 to hang|戒 commandment|戚 sad, relative|戦 dup skip|戴 to be crowned with|扇 fan|払 dup skip|扮 to be dressed as|扱 to handle|扶 to help|批 dup skip|抄 selection|抗 to resist|折 to fold, snap|抹 to erase|拉 to pull|拍 to clap|拒 to refuse|拓 to open up|抽 to pull, extract|拘 to arrest|拙 clumsy|拠 to be based on|括 to fasten|拳 fist|挑 to challenge|振 to swing, shake|挿 to insert|捉 to catch|捜 to search";
+[[KANJI_N4,'kanji-n4','j4-'],[KANJI_N3,'kanji-n3','j3-'],[KANJI_N2,'kanji-n2','j2-'],[KANJI_N1,'kanji-n1','j1-']].forEach(([str,deckId,prefix])=>{
+ str.split('|').forEach((s,n)=>{const i=s.indexOf(' ');
+  const g=s.slice(0,i),desc=s.slice(i+1);
+  if(!g||desc.includes('dup skip')||KIDX.kanji[g])return;
+  ITEMS.push({id:prefix+n,deck:deckId,kind:'kanji',idx:n,glyph:g,keyword:desc});
+  KIDX.kanji[g]=prefix+n;});
+});
 PK.split(',').forEach(s=>{const p=s.split(' ');
  ITEMS.push({id:'p'+p[0],deck:'pkmn',kind:'name',num:+p[0],ja:p[1],en:p[2],type:p[3].replace('/',' / ')})});
 
@@ -269,6 +255,11 @@ const COMPCTX=[];
 COMP.split('|').forEach((s,n)=>{const p=s.split(' ');
  COMPCTX.push({id:'m'+n,word:p[0],read:p[1].split(','),en:p.slice(2).join(' '),
   kanji:[...p[0]].filter(c=>KIDX.kanji[c])})});
+const COMP_EXT="会社 かいしゃ company|会話 かいわ conversation|家族 かぞく family|勉強 べんきょう study|質問 しつもん question|問題 もんだい problem|意味 いみ meaning|使用 しよう use|使用 しよう usage|運転 うんてん driving|運動 うんどう exercise|自動車 じどうしゃ automobile|新聞 しんぶん newspaper|地図 ちず,ちづ map|世界 せかい world|旅行 りょこう travel|飛行機 ひこうき airplane|映画 えいが movie|音楽 おんがく music|病院 びょういん hospital|医者 いしゃ doctor|銀行 ぎんこう bank|警察 けいさつ police|時間 じかん time|時計 とけい clock|昨日 きのう yesterday|明日 あした,あす tomorrow|今週 こんしゅう this week|来週 らいしゅう next week|先週 せんしゅう last week|全部 ぜんぶ everything|一部 いちぶ one part|部屋 へや room|台所 だいどころ kitchen|居間 いま living room|寝室 しんしつ bedroom|洗面所 せんめんじょ washroom|通行 つうこう passage|通学 つうがく commuting to school|通勤 つうきん commuting to work|開始 かいし start|終了 しゅうりょう end|開店 かいてん shop opening|閉店 へいてん shop closing|入学 にゅうがく school entry|卒業 そつぎょう graduation|高校 こうこう high school|大学 だいがく university|生徒 せいと pupil|学生 がくせい student|先生 せんせい teacher|授業 じゅぎょう class|教室 きょうしつ classroom|試験 しけん exam|経験 けいけん experience|運命 うんめい destiny|同時 どうじ simultaneous|同意 どうい agreement|不安 ふあん anxiety|不思議 ふしぎ mysterious|感謝 かんしゃ gratitude|感動 かんどう emotion|決定 けってい decision|決心 けっしん determination|安心 あんしん peace of mind|安全 あんぜん safety|信用 しんよう trust|信号 しんごう traffic light|商品 しょうひん product|商店 しょうてん store|生産 せいさん production|工業 こうぎょう manufacturing|農業 のうぎょう agriculture|政治 せいじ politics|政府 せいふ government|法律 ほうりつ law|法学 ほうがく law studies|文化 ぶんか culture|文学 ぶんがく literature|文字 もじ letter, character|漢字 かんじ kanji|外国 がいこく foreign country|外国人 がいこくじん foreigner|市民 しみん citizen|国民 こくみん nation, people|民主 みんしゅ democracy|東京 とうきょう Tokyo|京都 きょうと Kyoto|洋服 ようふく western clothes|和服 わふく Japanese clothes|洋食 ようしょく western food|和食 わしょく Japanese food|注意 ちゅうい caution|注文 ちゅうもん order|質問 dup skip|発見 はっけん discovery|発明 はつめい invention|発表 はっぴょう announcement|発展 はってん development|準備 じゅんび preparation|完全 かんぜん complete|完成 かんせい completion|理解 りかい understanding|説明 せつめい explanation|意見 いけん opinion|会議 かいぎ meeting|会員 かいいん member|社員 しゃいん employee|社会 しゃかい society|会長 かいちょう chairman|課長 かちょう section chief|部長 ぶちょう department chief|専門 せんもん specialty|専攻 せんこう major|研究 けんきゅう research|開発 かいはつ development|技術 ぎじゅつ technology|情報 じょうほう information|通信 つうしん communication";
+COMP_EXT.split('|').forEach((s,n)=>{const p=s.split(' ');
+ if(!p[0]||p[2]==='dup'&&p[3]==='skip')return;
+ COMPCTX.push({id:'me'+n,word:p[0],read:p[1].split(','),en:p.slice(2).join(' '),
+  kanji:[...p[0]].filter(c=>KIDX.kanji[c])})});
 
 /* ===================== atomes et i+1 ===================== */
 const item=id=>ITEMS.find(i=>i.id===id);
@@ -277,7 +268,7 @@ const STORAGE_KEY='anki-jp-state-v1';
    pas dès la première exposition : évite de débloquer kanji/mots/pokémon
    sur un hiragana vu une seule fois. */
 const MASTERY_REPS=3;
-const known=id=>cards[id]&&cards[id].reps>=MASTERY_REPS;
+const known=id=>cards[id]&&((cards[id].goodReps||0)>=MASTERY_REPS);
 const allDeckItems=id=>ITEMS.filter(i=>i.deck===id);
 const masteredCount=id=>allDeckItems(id).filter(i=>known(i.id)).length;
 const totalCount=id=>allDeckItems(id).length;
@@ -522,10 +513,11 @@ function maybeAutoPush(){
 
 /* ===================== ordonnanceur ===================== */
 const DAY=864e5,cards={};
-ITEMS.forEach(i=>cards[i.id]={id:i.id,stab:0,diff:5,due:null,reps:0,lapses:0,last:null});
+ITEMS.forEach(i=>cards[i.id]={id:i.id,stab:0,diff:5,due:null,reps:0,goodReps:0,lapses:0,last:null});
 function stateOf(c){if(c.reps===0)return 'new';if(c.lapses&&c.stab<1)return 'lrn';return c.stab>=21?'mature':'young'}
 function grade(c,good,elapsed,skip){
  c.reps++;
+ if(good)c.goodReps=(c.goodReps||0)+1;
  c.lastSeen=Date.now();
  c.responseCount=(c.responseCount||0)+1;
  c.responseAvg=((c.responseAvg||0)*(c.responseCount-1)+elapsed)/c.responseCount;
@@ -605,7 +597,7 @@ function unseenPool(dk){
  let pool=deckVisibleItems(dk).filter(i=>cards[i.id].reps===0);
  if(dk.ordered)pool.sort((a,b)=>a.idx-b.idx);
  else{
-  pool=pool.filter(i=>unknownIn(atomsOf(i))===0)
+  pool=pool
    .map(i=>({item:i,unknown:unknownIn(atomsOf(i)),len:(i.surface||i.ja||i.glyph||'').length}))
    .sort((a,b)=>a.unknown-b.unknown||a.len-b.len||Math.random()-.5)
    .map(x=>x.item);
@@ -741,7 +733,7 @@ function Home(){
  const d=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
  const days=heatmapDays();
  const maxPts=Math.max(1,...days.map(x=>x.stats.points||0));
- return `<div class="scroll pad"><p class="label" style="margin-top:24px">${esc(d)}</p>
+ return `<div class="scroll pad" style="position:relative"><span class="mono faint" style="position:absolute;top:10px;right:0;font-size:11px;letter-spacing:.04em">v${BUILD_VERSION}</span><p class="label" style="margin-top:24px">${esc(d)}</p>
   <div style="display:flex;justify-content:center;margin:36px 0 12px">
    <div class="sq" style="width:146px"><span class="mono" style="font-size:60px">${due}</span></div></div>
   <p class="muted" style="text-align:center;font-size:14px;margin:0 0 32px">cards to review</p>
@@ -780,7 +772,7 @@ function Collection(){
    </div>
   </div>
   <div class="label" style="margin:22px 0 10px">Bonus decks</div>
-  ${BONUS_DECKS.map(b=>{const open=app.unlockedBonus&&app.unlockedBonus[b.id];
+  ${BONUS_DECKS.length?BONUS_DECKS.map(b=>{const open=app.unlockedBonus&&app.unlockedBonus[b.id];
   const eta=daysToUnlock(b.threshold,app.points||0);
     return `<div class="level-card ${open?'open':'locked'}" data-deck="${b.id}">
     <div class="level-row">
@@ -790,7 +782,7 @@ function Collection(){
      </div>
      <div class="tally mono"><span class="t-new">${b.threshold}</span></div>
     </div>
-   </div>`}).join('')}
+   </div>`}).join(''):'<div class="empty" style="padding:12px 0;font-size:13px">No bonus decks configured yet.</div>'}
   <p class="faint" style="font-size:12px;margin-top:16px">new · relearning · due</p><div style="height:24px"></div></div>`}
 
 function Deck(){const dk=deck(app.deck);
@@ -813,7 +805,7 @@ function DeckCards(dk){
    `<button class="chip ${app.filter===f?'on':''}" data-filter="${f}">${f}</button>`).join('')}</div>
   ${list.length?list.map(i=>{const c=cards[i.id],st=stateOf(c),[a,b]=face(i),meta=i.deck==='pkmn'?pokemonMeta(i.id):null;
    const dd=c.due===null?null:Math.round((c.due-Date.now())/DAY);
-   const locked=st==='new'&&unknownIn(atomsOf(i))>0;
+  const locked=false;
    return `<div class="row${meta?.shiny?' shiny':''}" data-edit="${i.id}" style="min-height:44px">
     <span style="font-family:var(--f-jp);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a)}<span class="faint" style="font-size:13px"> ${esc(b)}</span>${meta?.shiny?` <span class="tag-shiny">shiny</span>`:''}</span>
     <span class="faint mono" style="font-size:12px">${locked?'locked':st}</span>
@@ -833,7 +825,7 @@ function DeckSettings(dk){
  <p class="faint" style="font-size:13px;line-height:1.7">${dk.kind==='glyph'
   ?'The field stays in romaji here because the target is a sound, not a word: converting would type the question back at you. Romaji and kana are both accepted everywhere.'
   :dk.kind==='kanji'?'Type the reading in romaji or in kana, both are accepted. No isolated on/kun drilling: which reading applies is decided by the word, so readings come from compounds.'
-  :dk.kind==='name'?'A name is only introduced once every katakana it contains has been introduced. Until then it stays locked.'
+  :dk.kind==='name'?'Once this deck is open, all names are in the study pool. Katakana mastery only affects confidence, not card availability.'
     :dk.kind==='bonus'?'Bonus decks unlock when your point total crosses their threshold. They are shells for now: add the theme you want later and keep the same roguelike gate.'
   :'Sentences rotate across repetitions so the word is not memorised as the answer to one sentence.'}</p>
  <div style="height:24px"></div></div>`}
@@ -842,7 +834,6 @@ function DeckStats(dk){
  const cs=deckVisibleItems(dk).map(i=>cards[i.id]);
  const rows=[['new','new'],['relearning','lrn'],['young','young'],['mature','mature']]
   .map(([n,s])=>[n,cs.filter(c=>stateOf(c)===s).length]);
- const locked=deckVisibleItems(dk).filter(i=>cards[i.id].reps===0&&unknownIn(atomsOf(i))>0).length;
  const max=Math.max(1,...rows.map(r=>r[1]));
  return `<div class="scroll pad"><div style="height:20px"></div>
  <div class="row"><span class="muted">stage</span><span class="mono">${info.stage}</span></div>
@@ -851,7 +842,6 @@ function DeckStats(dk){
   <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span class="muted">${n}</span><span class="mono">${v}</span></div>
   <div style="height:6px;background:var(--rule)"><div style="height:6px;width:${v/max*100}%;background:var(--ink)"></div></div></div>`).join('')}
  <hr class="rule">
- ${locked?`<div class="row"><span class="muted">locked by prerequisites</span><span class="mono">${locked}</span></div>`:''}
  <div class="row"><span class="muted">repetitions</span><span class="mono">${cs.reduce((a,c)=>a+c.reps,0)}</span></div>
  <div class="row" style="border:0"><span class="muted">lapses</span><span class="mono">${cs.reduce((a,c)=>a+c.lapses,0)}</span></div></div>`}
 
@@ -870,7 +860,7 @@ function Editor(){const i=item(app.editing);if(!i)return Collection();
  <label class="field"><span class="label">Back</span><input id="e-b" value="${esc(b)}"></label>
  ${at.length?`<p class="label">Prerequisites</p><div class="atoms">${at.map(id=>
   `<span class="${known(id)?'':'new'}">${esc(item(id).glyph)}</span>`).join('')}</div>
-  <p class="note">${unknownIn(at)?unknownIn(at)+' still unknown, so this card stays locked.':'All known.'}</p>`:''}
+  <p class="note">${unknownIn(at)?unknownIn(at)+' still unknown prerequisites.':'All known.'}</p>`:''}
  <hr class="rule"><p class="label" style="margin-bottom:12px">Preview</p>
  <div style="border:1px solid var(--rule);border-radius:var(--radius);padding:16px">${prev}</div>
  <p class="note">reps ${c.reps} · lapses ${c.lapses} · stability ${c.stab.toFixed(1)}d</p>
@@ -912,10 +902,30 @@ function contextFor(c){const i=item(c.id);
  return null}
 /* le contexte n'est retenu que s'il ne contient aucun atome inconnu : c'est le i+1 */
 function faceFor(c,g){const i=item(c.id),usable=!!g&&g.u===0;
- if(i.kind==='lex')return c.reps>0&&c.reps%4===3?'bare':'cloze';
- if(i.kind==='glyph')return c.reps===0?'glyph':c.reps%3===2?'sound':usable?'word':'glyph';
- if(i.kind==='kanji')return c.reps>0&&usable?'comp':'keyword';
- return 'name'}
+ if(i.kind==='lex'){
+  if(c.reps===0)return 'cloze';
+  const m=c.reps%5;
+  if(m===3)return 'bare';
+  if(m===4)return 'lex-write';
+  return 'cloze';
+ }
+ if(i.kind==='glyph'){
+  if(c.reps===0)return 'glyph';
+  const m=c.reps%4;
+  if(m===1)return 'sound';
+  if(m===2)return 'glyph-write';
+  if(m===3)return usable?'word':'glyph';
+  return 'glyph';
+ }
+ if(i.kind==='kanji'){
+  if(c.reps===0)return 'keyword';
+  const m=c.reps%3;
+  if(m===1&&usable)return 'comp';
+  if(m===2)return 'kanji-write';
+  return 'keyword';
+ }
+ return 'name';
+}
 function startSession(id){const q=queueFor(id||null);if(!q.length)return;
  app.sess={queue:q,seen:0,ok:0,t0:Date.now(),st:'typing',typed:'',committed:false,cur:null,face:null,ctx:null,timer:null,startTime:null,feedback:null,fx:null,fxTimer:null,runPoints:0,runCombo:0,runBestCombo:0};
  nextCard();go('session')}
@@ -926,7 +936,7 @@ function nextCard(){const s=app.sess;clearTimeout(s.timer);
  const i=item(s.cur.id),g=contextFor(s.cur);
  s.face=faceFor(s.cur,g);
  s.ctx=['cloze','word','comp'].includes(s.face)?g.x:null;
- s.st=s.face==='keyword'?'ask':'typing';
+ s.st=['keyword','kanji-write','lex-write'].includes(s.face)?'ask':'typing';
  s.startTime=Date.now();
  if(app.route==='session'){render();
   const dk=deck(i.deck);
@@ -935,21 +945,26 @@ function nextCard(){const s=app.sess;clearTimeout(s.timer);
 function promptAudio(s){const i=item(s.cur.id);
  return s.face==='cloze'?s.ctx.segs.map(g=>g.t).join('')
   :s.face==='word'?s.ctx.word:s.face==='comp'?s.ctx.read[0]
+  :s.face==='glyph-write'?(i.deck==='kata'?toKata(i.kana):i.kana)
+  :s.face==='lex-write'?i.read
   :i.kana||i.read||i.ja||i.glyph}
 function acceptedFor(s){const i=item(s.cur.id);
  let a;
  if(s.face==='cloze')a=s.ctx.ans;
  else if(s.face==='bare')a=i.acc;
  else if(s.face==='glyph')a=[i.rom];
+ else if(s.face==='glyph-write')a=[i.deck==='kata'?toKata(i.kana):i.kana];
  else if(s.face==='word')a=[s.ctx.rom];
  else if(s.face==='comp')a=s.ctx.read;
- else if(s.face==='sound')a=[i.kana];
+ else if(s.face==='sound')a=[i.deck==='kata'?toKata(i.kana):i.kana];
+ else if(s.face==='kanji-write')a=[i.glyph];
+ else if(s.face==='lex-write')a=[i.surface,i.read];
  else a=[i.ja];
  if(modeFor(s)==='romaji')a=a.map(x=>isKana(x)?toRomaji(x):x);
  return a}
 /* le format de réponse est une propriété du deck ; seule la carte d'écoute le force,
    puisqu'on y écrit ce qu'on entend, donc forcément en kana */
-function modeFor(s){return s.face==='sound'?'kana':deck(item(s.cur.id).deck).answer}
+function modeFor(s){return ['sound','glyph-write','kanji-write','lex-write'].includes(s.face)?'kana':deck(item(s.cur.id).deck).answer}
 const isKana=s=>/[\u3040-\u30FF]/.test(s);
 function liveFeedback(s){
  const input=String(s.typed||'').trim();
@@ -961,35 +976,47 @@ function liveFeedback(s){
   const target=mode==='kana'?normKana(a):normRom(hasKana(a)?toRomaji(a):a);
   return normalized===target;
  });
- if(match)return {state:'good',text:'Looks right'};
+ if(match)return {state:'good',text:'Correct'};
  const ref=accepted[0];
  const target=mode==='kana'?normKana(ref):normRom(hasKana(ref)?toRomaji(ref):ref);
  const dist=lev(normalized,target);
- return {state:dist<=1?'near':'bad',text:dist<=1?'Almost there':'Keep going'};
+ return {
+  state:dist<=1?'near':'bad',
+  text:dist<=1?'Presque: 1 erreur max':'Continue ('+(mode==='kana'?'kana':'romaji')+')'
+ };
 }
 function syncLiveFeedback(){
- const info=liveFeedback(app.sess);
- if(app.sess)app.sess.feedback=info;
+ const s=app.sess;
  const el=view.querySelector('.feedback');
- if(!el||!app.sess)return;
+ if(!el||!s)return;
+ if(s.st==='typing'){
+  s.feedback=null;
+  el.textContent='';
+  el.className='note feedback';
+  return;
+ }
+ const info=liveFeedback(s);
+ s.feedback=info;
  el.textContent=info?info.text:'';
  el.className='note feedback'+(info?` ${info.state}`:'');
 }
 function feedbackFor(s){
  if(!s)return null;
+ if(s.st==='typing')return null;
  if(s.feedback)return s.feedback;
  return liveFeedback(s);
 }
 
 function Session(){
  const s=app.sess,i=item(s.cur.id),dk=deck(i.deck);
- const done=['ok','ko','near','shown'].includes(s.st);
+ const done=['ok','ko','near','shown','skip'].includes(s.st);
+ const answerToneClass=s.st==='ok'?'good':(s.st==='ko'||s.st==='near'||s.st==='skip'?'bad':'');
  const mode=modeFor(s),ime=mode==='kana';
  /* seuls les glyphes isolés (kana/kanji) portent un type de script identifiable */
  const scriptTag=i.kind==='glyph'?(i.deck==='kata'?'katakana':'hiragana'):i.kind==='kanji'?'kanji':null;
  let body='',note='',atoms=null,gloss=['',''];
  const feedback=feedbackFor(s);
- const feedbackHtml=(feedback&&['typing','ok','near','ko'].includes(s.st))?`<div class="feedback note ${feedback.state}">${feedback.text}</div>`:'<div class="feedback note"></div>';
+ const feedbackHtml=(feedback&&['ok','near','ko','skip'].includes(s.st))?`<div class="feedback note ${feedback.state}">${feedback.text}</div>`:'<div class="feedback note"></div>';
  if(s.face==='cloze'){
   const cell=`<span class="cell${done?' on':''}" id="cell">${esc(done?s.ctx.ans[0]:toKana(s.typed))}</span>`;
   const furi=dk.furi==='always'||(dk.furi==='hidden'&&done);
@@ -1021,6 +1048,15 @@ function Session(){
   body=`<div class="solo-row${shiny?' shiny':''}"><div class="solo lat">${esc(i.en)}</div>${shiny?'<span class="tag-shiny">shiny</span>':''}</div>`;
   gloss=[`#${i.num} · ${i.type}`,`#${i.num} · ${i.type}`];
   atoms=atomsOf(i);
+ }else if(s.face==='glyph-write'){
+  body=`<div class="solo lat">${esc(i.rom)}</div>`;
+  gloss=[i.deck==='kata'?'katakana':'hiragana',`write in ${i.deck==='kata'?'katakana':'hiragana'}`];
+ }else if(s.face==='kanji-write'){
+  body=`<div class="solo lat" style="font-size:34px;font-weight:500">${esc(i.keyword)}</div>`;
+  gloss=[i.glyph,'think of the kanji, then reveal'];
+ }else if(s.face==='lex-write'){
+  body=`<div class="solo lat" style="font-size:28px;font-weight:500">${esc(i.gloss)}</div>`;
+  gloss=[i.surface,'think of the japanese word, then reveal'];
  }else{
   body=`<div class="solo-row"><div class="solo">${esc(i.glyph)}</div>${done&&scriptTag?`<span class="tag-script">${scriptTag}</span>`:''}</div>`;
   gloss=[i.keyword,'what does it mean?'];
@@ -1033,54 +1069,74 @@ function Session(){
   body+=`<div class="gloss${(done||upfront)?' on':''}${s.face==='cloze'?' left':''}">${esc(gtxt)}</div>`;
  let rev='<div class="reveal">';
  if(done){
-  if(s.face!=='keyword'){
-   const form=s.face==='cloze'?s.ctx.segs[s.ctx.ti].t
-    :s.face==='word'?(i.deck==='kata'?toKata(s.ctx.word):s.ctx.word)
-    :s.face==='comp'?s.ctx.word:(i.surface||i.glyph||i.ja);
-  const read=s.face==='cloze'
-   ?{jp:s.ctx.ans[0],rom:toRomaji(s.ctx.ans[0])}
-   :s.face==='word'
-    ?{jp:(i.deck==='kata'?toKata(s.ctx.word):s.ctx.word),rom:s.ctx.rom}
-    :s.face==='comp'
-    ?{jp:s.ctx.read.join(' / '),rom:s.ctx.read.map(x=>toRomaji(x)).join(' / ')}
-    :i.kind==='glyph'
-     ?{jp:(i.deck==='kata'?toKata(i.kana):i.kana),rom:i.rom}
-     :i.kind==='lex'
-      ?{jp:i.read,rom:toRomaji(i.read)}
-      :{jp:i.ja||'',rom:i.ja?toRomaji(i.ja):''};
-   const mean=s.face==='cloze'?i.gloss
-    :s.face==='word'?s.ctx.en:s.face==='comp'?s.ctx.en+' · '+i.keyword
-    :i.kind==='glyph'?(i.deck==='kata'?'katakana':'hiragana')
-    :i.kind==='lex'?i.gloss:'#'+i.num+' · '+i.type;
-   /* pour glyph, le gros caractère et son tag de script sont déjà affichés au-dessus :
-      la révélation ne montre alors que la réponse (lecture), sans les répéter. */
-   const skipForm=s.face==='glyph';
-   const skipMean=s.face==='glyph'||s.face==='sound';
-   rev+=`<div class="ans">${skipForm?'':`<span class="af">${esc(form)}</span>`}<span class="ar">${esc(read.jp)}</span>${read.rom&&read.rom!==read.jp?`<span class="ar-rom">${esc(read.rom)}</span>`:''}`
-     +(!skipForm&&scriptTag?`<span class="tag-script">${scriptTag}</span>`:'')
-     +(dk.audio!=='never'?`<button class="spk" data-speak="${esc(promptAudio(s))}" aria-label="play">${speakerIcon()}</button>`:'')+`</div>`;
-   if(!skipMean)rev+=`<div class="am">${esc(mean)}</div>`;
-   if(s.face==='name'&&s.st==='ok'&&/[\u3041-\u3096]/.test(toKana(s.typed)))
-    rev+=`<div class="note">written in katakana</div>`;
-  }else{
-   rev+=`<div class="ans"><span class="ar">${esc(i.keyword)}</span>`
-     +(dk.audio!=='never'?`<button class="spk" data-speak="${esc(i.glyph)}" aria-label="play">${speakerIcon()}</button>`:'')+`</div>`;
+  let itemText='',answerMain='',mean='',speakSrc='',skipForm=false,skipMean=false;
+  if(s.face==='cloze'){
+   itemText=s.ctx.segs[s.ctx.ti].t;
+   answerMain=mode==='romaji'?toRomaji(s.ctx.ans[0]):s.ctx.ans[0];
+   mean=i.gloss;speakSrc=s.ctx.segs.map(g=>g.t).join('');
+  }else if(s.face==='word'){
+   const wjp=i.deck==='kata'?toKata(s.ctx.word):s.ctx.word;
+   itemText=wjp;
+   answerMain=mode==='romaji'?s.ctx.rom:wjp;
+   mean=s.ctx.en;speakSrc=s.ctx.word;
+  }else if(s.face==='comp'){
+   itemText=s.ctx.word;
+   answerMain=mode==='romaji'?s.ctx.read.map(x=>toRomaji(x)).join(' / '):s.ctx.read.join(' / ');
+   mean=s.ctx.en+' · '+i.keyword;speakSrc=s.ctx.read[0];
+  }else if(s.face==='glyph'){
+   itemText=i.glyph;
+   answerMain=mode==='romaji'?i.rom:(i.deck==='kata'?toKata(i.kana):i.kana);
+   mean=i.deck==='kata'?'katakana':'hiragana';speakSrc=i.kana;
+   skipForm=true;skipMean=true;
+  }else if(s.face==='sound'){
+   itemText=i.rom;
+   answerMain=i.deck==='kata'?toKata(i.kana):i.kana;
+   mean=i.deck==='kata'?'katakana':'hiragana';speakSrc=i.kana;skipMean=true;
+  }else if(s.face==='glyph-write'){
+   itemText=i.rom;
+   answerMain=i.deck==='kata'?toKata(i.kana):i.kana;
+   mean=i.deck==='kata'?'katakana':'hiragana';speakSrc=i.kana;
+  }else if(s.face==='bare'){
+   itemText=i.surface;
+   answerMain=mode==='romaji'?toRomaji(i.read):i.read;
+   mean=i.gloss;speakSrc=i.read;
+  }else if(s.face==='keyword'){
+   itemText=i.glyph;answerMain=i.keyword;
+   speakSrc=i.glyph;skipForm=true;skipMean=true;
+  }else if(s.face==='kanji-write'){
+   itemText=i.keyword;answerMain=i.glyph;
+   speakSrc=i.glyph;
+  }else if(s.face==='lex-write'){
+   itemText=i.gloss;answerMain=i.surface;
+   mean=i.read;speakSrc=i.read;
+  }else if(s.face==='name'){
+   itemText=i.en;answerMain=i.ja;
+   mean='#'+i.num+' · '+i.type;speakSrc=i.ja;
   }
+  rev+=`<div class="ans">${skipForm?'':`<span class="af ${answerToneClass}">${esc(itemText)}</span><span class="ans-sep" aria-hidden="true">→</span>`}<span class="ar ${answerToneClass}">${esc(answerMain)}</span>`
+   +(!skipForm&&scriptTag?`<span class="tag-script">${scriptTag}</span>`:'')
+   +(dk.audio!=='never'&&speakSrc?`<button class="spk" data-speak="${esc(speakSrc)}" aria-label="play">${speakerIcon()}</button>`:'')+`</div>`;
+  if(!skipMean&&mean)rev+=`<div class="am">${esc(mean)}</div>`;
+  if(s.face==='name'&&s.st==='ok'&&/[\u3041-\u3096]/.test(toKana(s.typed)))
+   rev+=`<div class="note">written in katakana</div>`;
   const cb=ctxBlockFor(i,s.face);
-  if(cb)rev+=`<div class="ctx"><div class="cj">${ctxHTML(cb.ja)}</div>`
-    +(cb.kana?`<div class="cr">${esc(cb.kana)}</div>`:'')
+  if(cb){
+   const plainJa=String(cb.ja||'').replace(/\u0001|\u0002/g,'');
+   const showKana=cb.kana&&cb.kana!==plainJa;
+   rev+=`<div class="ctx"><div class="cj">${ctxHTML(cb.ja)}</div>`
+    +(showKana?`<div class="cr">${esc(cb.kana)}</div>`:'')
     +(cb.rom&&cb.rom!==cb.kana?`<div class="cro">${esc(cb.rom)}</div>`:'')
     +`<div class="ce">${esc(cb.en)}</div></div>`;
+  }
   if(atoms&&atoms.length>1)rev+=`<div class="atoms">${atoms.map(id=>
    `<span class="${known(id)?'':'new'}">${esc(item(id).glyph)}</span>`).join('')}</div>`;
-  rev+=(s.st==='near'||app.detailed||dk.grading==='self')
+  rev+=(s.st==='near'||s.st==='shown'||app.detailed||dk.grading==='self')
    ?`<div class="grade"><button class="g0" data-grade="0">Again</button><button class="g1" data-grade="1">Got it</button></div>`
    :`<div class="go">tap to continue &rsaquo;</div>`;
  }
  rev+='</div>';
  const input=s.st==='typing'
-  ?`<div class="s-input"><input id="f" class="${ime?'':'lat'}" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" lang="${ime?'ja':'fr'}" inputmode="${app.kb?'none':'text'}"${app.kb?' readonly':''} placeholder="${ime?'romaji':'ka'}" value="${esc(s.typed)}">
-    <div id="typed-preview" class="typed-preview ${s.typed?'':'empty'}">${esc(s.typed||'Type your answer here')}</div>
+  ?`<div class="s-input"><input id="f" class="${ime?'':'lat'}" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" lang="${ime?'ja':'fr'}" inputmode="${app.kb?'none':'text'}"${app.kb?' readonly':''} placeholder="${ime?'':'ka'}" value="${esc(s.typed)}">
     <div class="s-actions"><button type="button" class="s-act check" data-validate="">Check</button><button type="button" class="s-act idk" data-dontknow="">I don't know</button></div></div>`
   :s.st==='ask'
    ?`<div class="s-input"><button class="btn" data-reveal="">Reveal</button><div style="height:44px"></div></div>`
@@ -1093,13 +1149,9 @@ function Session(){
     <div class="s-body${done?' done':''}"${done&&s.st!=='near'&&!app.detailed&&dk.grading!=='self'?' data-next=""':''}>${s.fx?`<div class="score-fx ${s.fx.kind}${s.fx.boost?' boost':''}"><span class="pts">${s.fx.delta>0?'+':''}${s.fx.delta}</span></div>`:''}${body}${rev}</div>${input}
   <div id="kb" class="${app.kb&&s.st==='typing'?'on':''}">${app.kb?KB(mode):''}</div></div>`}
 function KB(mode){
- const frRows=['azertyuiop','qsdfghjklm','wxcvbn'];
- const kanaRows=[['あ','い','う','え','お'],['か','き','く','け','こ'],['さ','し','す','せ','そ'],['た','ち','つ','て','と']];
- const rowHtml=mode==='kana'
-  ?kanaRows.map(r=>`<div class="kr">${r.map(k=>`<button class="kk" type="button" data-kb="${k}">${k}</button>`).join('')}</div>`).join('')
-  :frRows.map(r=>`<div class="kr">${[...r].map(k=>`<button class="kk" type="button" data-kb="${k}">${k}</button>`).join('')}</div>`).join('');
- const mid=mode==='kana'?'かな':'espace';
- return rowHtml+`<div class="kr"><button class="kk w" type="button" data-kb="backspace">⌫</button><button class="kk sp" type="button" data-kb="space">${mid}</button><button class="kk w go" type="button" data-kb="enter">go</button></div>`;
+ const rows=['azertyuiop','qsdfghjklm','wxcvbn'];
+ const rowHtml=rows.map(r=>`<div class="kr">${[...r].map(k=>`<button class="kk" type="button" data-kb="${k}">${k}</button>`).join('')}</div>`).join('');
+ return rowHtml+`<div class="kr"><button class="kk w" type="button" data-kb="backspace">⌫</button><button class="kk sp" type="button" data-kb="space">espace</button><button class="kk w go" type="button" data-kb="enter">go</button></div>`;
 }
 function validate(){const s=app.sess,dk=deck(item(s.cur.id).deck);
  const {r}=judge(s.typed,acceptedFor(s),modeFor(s));
@@ -1110,9 +1162,11 @@ function validate(){const s=app.sess,dk=deck(item(s.cur.id).deck);
  if(r==='ok'){s.st='ok';if(!app.detailed)commit('good',elapsed)}
  else if(r==='near')s.st='near';
  else{s.st='ko';if(!app.detailed)commit('wrong',elapsed)}
+ s.revealAt=Date.now();
+ saveState();
  render()}
 function skipCard(){const s=app.sess;if(!s||s.st!=='typing')return;
- s.typed='';s.feedback={state:'skip',text:'Skipped'};s.st='skip';commit('skip',Date.now()-s.startTime);render();}
+ s.typed='';s.feedback={state:'skip',text:'Skipped'};s.st='skip';commit('skip',Date.now()-s.startTime);s.revealAt=Date.now();render();}
 function commit(outcome,elapsed){const s=app.sess;if(s.committed)return;s.committed=true;
  const good=outcome==='good';
  const combo=good?s.runCombo+1:0;
@@ -1198,11 +1252,20 @@ function bind(){
    syncViewportHeight();
    stopKeyboardGuard();
   });
-  f.oninput=()=>{app.sess.typed=f.value;const c=view.querySelector('#cell');
-   if(c)c.textContent=toKana(f.value);syncLiveFeedback()};
+  f.oninput=()=>{
+   const s=app.sess;
+   if(modeFor(s)==='kana'){
+    const kana=toKana(f.value);
+    if(kana!==f.value){f.value=kana;f.setSelectionRange(kana.length,kana.length);}
+   }
+   s.typed=f.value;
+   const c=view.querySelector('#cell');
+   if(c)c.textContent=toKana(f.value);
+   syncLiveFeedback();
+  };
   f.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();e.stopPropagation();validate()}}}
  const nx=view.querySelector('[data-next]');
- if(nx)nx.onclick=e=>{if(!e.target.closest('[data-speak]'))advance()};
+ if(nx)nx.onclick=e=>{if(e.target.closest('[data-speak]'))return;const s=app.sess;if(s&&s.revealAt&&Date.now()-s.revealAt<500)return;advance()};
  const rs=view.querySelector('input.res');
  if(rs)rs.focus({preventScroll:true});
  const dv=view.querySelector('[data-validate]');
@@ -1221,13 +1284,9 @@ function bind(){
   if(key==='backspace')s.typed=s.typed.slice(0,-1);
   else if(key==='space')s.typed+=' ';
   else s.typed+=key;
+  if(modeFor(s)==='kana')s.typed=toKana(s.typed);
   const input=view.querySelector('#f');
   if(input)input.value=s.typed;
-  const preview=view.querySelector('#typed-preview');
-  if(preview){
-   preview.textContent=s.typed||'Type your answer here';
-   preview.classList.toggle('empty',!s.typed);
-  }
   const c=view.querySelector('#cell');
   if(c)c.textContent=toKana(s.typed);
   syncLiveFeedback();
@@ -1253,7 +1312,7 @@ function bind(){
   if(action==='pull')await runSync('pull');
   if(action==='push')await runSync('push');
  });
- q('[data-grade]').forEach(e=>e.onclick=()=>{commit(e.dataset.grade==='1');advance()});
+ q('[data-grade]').forEach(e=>e.onclick=()=>{commit(e.dataset.grade==='1'?'good':'wrong');advance()});
  const qt=view.querySelector('[data-quit]');
  if(qt)qt.onclick=()=>{
   const quit=()=>{clearTimeout(app.sess.timer);if(tts.ok)speechSynthesis.cancel();

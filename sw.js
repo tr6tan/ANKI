@@ -1,5 +1,5 @@
-const CACHE_NAME = 'study-deck-cache-v16';
-const APP_SHELL = ['./', './index.html', './tmp_script.js?v=20260806-8', './manifest.json'];
+const CACHE_NAME = 'study-deck-cache-v44';
+const APP_SHELL = ['./', './index.html', './tmp_script.js?v=20260806-16', './manifest.json', './apple-touch-icon-v3.png', './icon-192-v36.png', './icon-512-v36.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
   self.skipWaiting();
