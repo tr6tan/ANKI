@@ -1148,10 +1148,12 @@ function bind(){
    if(sess)sess.scrollTop=0;
    resetWindowScroll();
    syncViewportHeight();
+   startKeyboardGuard();
   });
   f.addEventListener('blur',()=>{
    resetWindowScroll();
    syncViewportHeight();
+   stopKeyboardGuard();
   });
   f.oninput=()=>{app.sess.typed=f.value;const c=view.querySelector('#cell');
    if(c)c.textContent=toKana(f.value);syncLiveFeedback()};
@@ -1200,15 +1202,31 @@ function resetWindowScroll(){
  document.documentElement.scrollTop=0;
  document.body.scrollTop=0;
 }
+let keyboardGuardTimer=null;
+function stopKeyboardGuard(){
+ if(keyboardGuardTimer){clearInterval(keyboardGuardTimer);keyboardGuardTimer=null}
+}
+function startKeyboardGuard(){
+ stopKeyboardGuard();
+ let ticks=0;
+ keyboardGuardTimer=setInterval(()=>{
+  syncViewportHeight();
+  resetWindowScroll();
+  ticks++;
+  if(ticks>=24)stopKeyboardGuard();
+ },50);
+}
 function syncViewportHeight(){
  const viewport=window.visualViewport;
  const layoutHeight=window.innerHeight||document.documentElement.clientHeight;
  const keyboardOpen=!!(viewport&&layoutHeight-viewport.height>120);
+ const viewportOffsetTop=viewport?Math.max(0,Math.round(viewport.offsetTop||0)):0;
  const keyboardInset=keyboardOpen&&viewport
-  ?Math.max(0,Math.round(layoutHeight-viewport.height-(viewport.offsetTop||0)))
+  ?Math.max(0,Math.round(layoutHeight-viewport.height-viewportOffsetTop))
   :0;
  document.documentElement.style.setProperty('--app-height',Math.round(layoutHeight)+'px');
  document.documentElement.style.setProperty('--keyboard-inset',keyboardInset+'px');
+ document.documentElement.style.setProperty('--viewport-offset-top',viewportOffsetTop+'px');
  document.documentElement.dataset.displayMode=isStandaloneDisplay()?'standalone':'browser';
  document.documentElement.dataset.keyboard=keyboardOpen?'open':'closed';
  if(keyboardOpen&&app.route==='session')resetWindowScroll();
@@ -1221,6 +1239,7 @@ document.addEventListener('keydown',e=>{
 window.addEventListener('resize',syncViewportHeightDebounced);
 window.addEventListener('orientationchange',syncViewportHeight);
 if(window.visualViewport)visualViewport.addEventListener('resize',syncViewportHeightDebounced);
+if(window.visualViewport)visualViewport.addEventListener('scroll',syncViewportHeightDebounced);
 document.addEventListener('visibilitychange',()=>{
  if(document.visibilityState==='hidden')flushState();
 });
