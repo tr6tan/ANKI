@@ -173,6 +173,8 @@ rt{font-size:.5em;font-family:var(--f-jp);color:var(--ink-muted);transition:opac
 .play{width:88px;height:88px;border-radius:44px;border:1px solid var(--grid);display:flex;align-items:center;justify-content:center;font-size:28px;margin:var(--s5) auto 0;color:var(--ink)}
 .play.sm{width:44px;height:44px;font-size:14px;margin:12px 0 0}
 .s-input{position:absolute;left:0;right:0;bottom:var(--keyboard-inset);padding:8px var(--s3) max(var(--s2),var(--safe-bottom));background:var(--paper);z-index:4}
+#sess.kb-on .s-input{bottom:275px}
+#sess.kb-on .s-body{bottom:calc(var(--session-bottom) + 275px)}
 .s-input input{width:100%;height:52px;background:transparent;border:0;border-bottom:1px solid var(--grid);font-size:20px;font-family:var(--f-jp);outline:none;padding:0 2px}
 .s-input input.lat{font-family:var(--f-lat);letter-spacing:.04em}
 .s-input input:focus{border-bottom-color:var(--ink)}
@@ -202,6 +204,6 @@ rt{font-size:.5em;font-family:var(--f-jp);color:var(--ink-muted);transition:opac
     <div id="view"></div>
     <nav id="nav"></nav>
   </div>
-  <script src="tmp_script.js?v=20260806-5"></script>
+  <script src="tmp_script.js?v=20260806-6"></script>
 </body>
 </html>

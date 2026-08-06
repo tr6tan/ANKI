@@ -1049,7 +1049,7 @@ function Session(){
    ?`<div class="s-input"><button class="btn" data-reveal="">Reveal</button><div style="height:44px"></div></div>`
     :`<div class="s-input"><input class="res ${s.st==='ok'?'good':s.st==='skip'?'skip':'bad'} ${ime?'':'lat'}" readonly value="${
       esc((ime?toKana(s.typed):s.typed)||'—')}"><div style="height:44px"></div></div>`;
- return `<div id="sess">
+ return `<div id="sess" class="${app.kb&&s.st==='typing'?'kb-on':''}">
   <div class="s-top"><div class="s-chrome"><button class="x${s.confirmQuit?' warn':''}" data-quit="">${s.confirmQuit?'quit?':'✕'}</button>
    <span class="ct mono">${s.seen+1} / ${s.seen+s.queue.length}</span>
    <button class="mu${app.mute?' off':''}" data-mute="" aria-label="sound">${app.mute?muteIcon(18):speakerIcon(18)}</button></div><div class="s-feedback">${feedbackHtml}</div></div>
@@ -1188,6 +1188,8 @@ function bind(){
  };
  q('[data-kb]').forEach(e=>{
   e.addEventListener('pointerdown',handleKbPress);
+  e.addEventListener('touchstart',handleKbPress,{passive:false});
+  e.addEventListener('mousedown',handleKbPress);
   e.addEventListener('click',ev=>ev.preventDefault());
  });
  q('[data-sync]').forEach(e=>e.onclick=async()=>{
