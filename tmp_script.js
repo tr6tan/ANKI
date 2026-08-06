@@ -962,7 +962,7 @@ function Session(){
  const scriptTag=i.kind==='glyph'?(i.deck==='kata'?'katakana':'hiragana'):i.kind==='kanji'?'kanji':null;
  let body='',note='',atoms=null,gloss=['',''];
  const feedback=feedbackFor(s);
- const feedbackHtml=(feedback&&['typing','ok','near','ko'].includes(s.st))?`<div class="feedback note ${feedback.state}">${feedback.text}</div>`:'';
+ const feedbackHtml=(feedback&&['typing','ok','near','ko'].includes(s.st))?`<div class="feedback note ${feedback.state}">${feedback.text}</div>`:'<div class="feedback note"></div>';
  if(s.face==='cloze'){
   const cell=`<span class="cell${done?' on':''}" id="cell">${esc(done?s.ctx.ans[0]:toKana(s.typed))}</span>`;
   const furi=dk.furi==='always'||(dk.furi==='hidden'&&done);
@@ -1044,15 +1044,15 @@ function Session(){
  rev+='</div>';
  const input=s.st==='typing'
   ?`<div class="s-input"><input id="f" class="${ime?'':'lat'}" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" placeholder="${ime?'romaji':'ka'}" value="${esc(s.typed)}">
-    <button class="dk" data-validate="">Check</button><button class="dk" data-dontknow="">I don't know</button></div>${feedbackHtml}`
+    <button class="dk" data-validate="">Check</button><button class="dk" data-dontknow="">I don't know</button></div>`
   :s.st==='ask'
    ?`<div class="s-input"><button class="btn" data-reveal="">Reveal</button><div style="height:44px"></div></div>`
     :`<div class="s-input"><input class="res ${s.st==='ok'?'good':s.st==='skip'?'skip':'bad'} ${ime?'':'lat'}" readonly value="${
       esc((ime?toKana(s.typed):s.typed)||'—')}"><div style="height:44px"></div></div>`;
  return `<div id="sess">
-  <div class="s-chrome"><button class="x${s.confirmQuit?' warn':''}" data-quit="">${s.confirmQuit?'quit?':'✕'}</button>
+  <div class="s-top"><div class="s-chrome"><button class="x${s.confirmQuit?' warn':''}" data-quit="">${s.confirmQuit?'quit?':'✕'}</button>
    <span class="ct mono">${s.seen+1} / ${s.seen+s.queue.length}</span>
-   <button class="mu${app.mute?' off':''}" data-mute="" aria-label="sound">${app.mute?muteIcon(18):speakerIcon(18)}</button></div>
+   <button class="mu${app.mute?' off':''}" data-mute="" aria-label="sound">${app.mute?muteIcon(18):speakerIcon(18)}</button></div><div class="s-feedback">${feedbackHtml}</div></div>
     <div class="s-body${done?' done':''}"${done&&s.st!=='near'&&!app.detailed&&dk.grading!=='self'?' data-next=""':''}>${s.fx?`<div class="score-fx ${s.fx.kind}${s.fx.boost?' boost':''}"><span class="pts">${s.fx.delta>0?'+':''}${s.fx.delta}</span></div>`:''}${body}${rev}</div>${input}
   <div id="kb" class="${app.kb&&s.st==='typing'?'on':''}">${app.kb?KB():''}</div></div>`}
 function KB(){const rows=['azertyuiop','qsdfghjklm','wxcvbn'];
@@ -1142,7 +1142,11 @@ function bind(){
    else front?i.glyph=el.value:i.rom=el.value.trim();
    render()},250)});
  const f=view.querySelector('#f');
- if(f){f.focus();
+ if(f){f.focus({preventScroll:true});
+  f.addEventListener('focus',()=>{
+   const sess=view.querySelector('.s-body');
+   if(sess)sess.scrollTop=0;
+  });
   f.oninput=()=>{app.sess.typed=f.value;const c=view.querySelector('#cell');
    if(c)c.textContent=toKana(f.value);syncLiveFeedback()};
   f.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();e.stopPropagation();validate()}}}
