@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260807-08";
+const BUILD_VERSION = "20260807-1312";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -1160,7 +1160,14 @@ const deckVisibleItems = (dk) => {
   const items = allDeckItems(dk.id)
     .slice()
     .sort((a, b) => a.idx - b.idx);
-  return info.limit >= items.length ? items : items.slice(0, info.limit);
+  const limited =
+    info.limit >= items.length ? items : items.slice(0, info.limit);
+  // Pokémon only enter the pool once their kana prerequisites are genuinely mastered
+  if (dk.id === "pkmn")
+    return limited.filter(
+      (i) => !!(app.pokemonUnlocks && app.pokemonUnlocks[i.id]),
+    );
+  return limited;
 };
 const POKEMON_SHINY_RATE = 1 / 32;
 function pokemonUnlockedByKana(i) {
@@ -1339,6 +1346,7 @@ function saveState() {
           detailed: app.detailed,
           kb: app.kb,
           sync: app.sync,
+          auth: app.auth || null,
         },
         decks,
         progress: {
@@ -1776,6 +1784,15 @@ function hash(s) {
   for (let n = 0; n < s.length; n++) h = (h * 31 + s.charCodeAt(n)) | 0;
   return h;
 }
+// FNV-1a — used for password hashing on login
+function simpleHash(s) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = (h * 0x01000193) >>> 0;
+  }
+  return h.toString(16).padStart(8, "0");
+}
 const ctxHTML = (t) =>
   esc(t).split("\u0001").join("<em>").split("\u0002").join("</em>");
 const SYNC_DEFAULT = {
@@ -1808,6 +1825,9 @@ const app = {
   totalRuns: 0,
   unlockedBonus: {},
   sync: { ...SYNC_DEFAULT },
+  auth: null,
+  loginError: "",
+  loginUser: "",
 };
 const view = document.getElementById("view"),
   navEl = document.getElementById("nav");
@@ -1829,22 +1849,25 @@ function go(r, o = {}) {
   render();
 }
 function render() {
+  if (!app.auth) app.route = "login";
   document.documentElement.dataset.theme = app.theme;
   const inSess = app.route === "session" || app.route === "summary";
+  const inLogin = app.route === "login";
   if (navEl) {
-    navEl.className = inSess ? "hide" : "";
-    navEl.innerHTML = inSess
-      ? ""
-      : [
-          ["home", "学", "Study"],
-          ["collection", "集", "Collection"],
-          ["settings", "設", "Settings"],
-        ]
-          .map(
-            ([r, g, l]) =>
-              `<button data-go="${r}" class="${app.route === r || (r === "collection" && ["deck", "editor"].includes(app.route)) ? "on" : ""}"><span class="ic">${g}</span>${l}</button>`,
-          )
-          .join("");
+    navEl.className = inSess || inLogin ? "hide" : "";
+    navEl.innerHTML =
+      inSess || inLogin
+        ? ""
+        : [
+            ["home", "学", "Study"],
+            ["collection", "集", "Collection"],
+            ["settings", "設", "Settings"],
+          ]
+            .map(
+              ([r, g, l]) =>
+                `<button data-go="${r}" class="${app.route === r || (r === "collection" && ["deck", "editor"].includes(app.route)) ? "on" : ""}"><span class="ic">${g}</span>${l}</button>`,
+            )
+            .join("");
   }
   if (view) {
     view.innerHTML = {
@@ -1855,12 +1878,28 @@ function render() {
       settings: Settings,
       session: Session,
       summary: Summary,
+      login: Login,
     }[app.route]();
     bind();
   }
 }
 
 /* ===================== écrans ===================== */
+function Login() {
+  const err = app.loginError || "";
+  return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--s3);min-height:100%;box-sizing:border-box">
+    <div style="font-size:72px;line-height:1;margin-bottom:10px;font-family:var(--f-jp)">学</div>
+    <p class="muted" style="font-size:12px;margin:0 0 44px;letter-spacing:.12em">JLPT STUDY</p>
+    <div style="width:100%;max-width:300px">
+      <label class="field"><span class="label">Username</span>
+        <input id="login-u" autocapitalize="none" autocorrect="off" autocomplete="username" value="${esc(app.loginUser || "")}"></label>
+      <label class="field"><span class="label">Password</span>
+        <input id="login-p" type="password" autocomplete="current-password"></label>
+      ${err ? `<p style="color:var(--shu);font-size:13px;margin:6px 0 0">${esc(err)}</p>` : ""}
+      <button class="btn" data-login="" style="margin-top:20px">Sign in</button>
+    </div>
+  </div>`;
+}
 function Home() {
   const due = queueFor().length;
   const d = new Date().toLocaleDateString("en-GB", {
@@ -2153,6 +2192,8 @@ function Settings() {
  <p class="faint" style="font-size:12px;line-height:1.6">Path used in Firebase: /anki-sync/{sync-user-id}. For secured rules, pass a Firebase auth token.</p>
  <p class="faint" style="font-size:13px;line-height:1.7">${tts.ok ? (tts.voice ? "Japanese voice detected: " + esc(tts.voice.name) : "No Japanese voice installed on this system. Playback will be silent or wrong.") : "Speech synthesis unavailable in this browser."}</p>
  <p class="faint" style="font-size:13px;line-height:1.7;margin-top:16px">Progress is now saved locally in this browser. Deck settings and review history persist across reloads. Romaji conversion uses a demo table. Pokémon names are trademarks of The Pokémon Company, used here for personal study only.</p>
+ <hr class="rule">
+ <button class="btn ghost" data-logout="" style="height:44px">Log out (${esc(app.auth?.user || "")})</button>
  <hr class="rule">
  <button class="btn ghost" style="border-color:var(--shu);color:var(--shu);margin-top:4px" data-reset="">Reset all progress</button>
  <div style="height:24px"></div></div>`;
@@ -3057,6 +3098,31 @@ function bind() {
         if (action === "push") await runSync("push");
       }),
   );
+  const logoutBtn = view.querySelector("[data-logout]");
+  if (logoutBtn) logoutBtn.onclick = () => {
+    app.auth = null; app.loginError = ''; saveState(); go('login');
+  };
+  const loginBtn = view.querySelector("[data-login]");
+  if (loginBtn) {
+    const doLogin = () => {
+      const u = (view.querySelector('#login-u')?.value || '').trim();
+      const p = view.querySelector('#login-p')?.value || '';
+      if (!u || !p) { app.loginError = 'Fill in both fields.'; app.loginUser = u; render(); return; }
+      const h = simpleHash(u + p);
+      if (app.auth && app.auth.hash !== h) { app.loginError = 'Wrong credentials.'; app.loginUser = u; render(); return; }
+      app.auth = {user: u, hash: h};
+      app.loginError = ''; app.loginUser = '';
+      app.sync.userId = u;
+      saveState();
+      go('home');
+      if (syncReady()) runSync('pull').then(() => render());
+    };
+    loginBtn.onclick = doLogin;
+    const pu = view.querySelector('#login-u');
+    const pp = view.querySelector('#login-p');
+    if (pu) pu.onkeydown = e => { if (e.key === 'Enter') pp?.focus(); };
+    if (pp) pp.onkeydown = e => { if (e.key === 'Enter') doLogin(); };
+  }
   const resetBtn = view.querySelector("[data-reset]");
   if (resetBtn)
     resetBtn.onclick = () => {
