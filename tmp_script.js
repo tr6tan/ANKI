@@ -148,17 +148,46 @@ const toHira = (s) =>
 // Dakuten / handakuten modifier maps (hiragana + katakana)
 const VOICED_MAP = (() => {
   const m = {};
-  [['か','が'],['き','ぎ'],['く','ぐ'],['け','げ'],['こ','ご'],
-   ['さ','ざ'],['し','じ'],['す','ず'],['せ','ぜ'],['そ','ぞ'],
-   ['た','だ'],['ち','ぢ'],['つ','づ'],['て','で'],['と','ど'],
-   ['は','ば'],['ひ','び'],['ふ','ぶ'],['へ','べ'],['ほ','ぼ'],['う','ゔ']
-  ].forEach(([h,v])=>{m[h]=v;m[toKata(h)]=toKata(v);});
+  [
+    ["か", "が"],
+    ["き", "ぎ"],
+    ["く", "ぐ"],
+    ["け", "げ"],
+    ["こ", "ご"],
+    ["さ", "ざ"],
+    ["し", "じ"],
+    ["す", "ず"],
+    ["せ", "ぜ"],
+    ["そ", "ぞ"],
+    ["た", "だ"],
+    ["ち", "ぢ"],
+    ["つ", "づ"],
+    ["て", "で"],
+    ["と", "ど"],
+    ["は", "ば"],
+    ["ひ", "び"],
+    ["ふ", "ぶ"],
+    ["へ", "べ"],
+    ["ほ", "ぼ"],
+    ["う", "ゔ"],
+  ].forEach(([h, v]) => {
+    m[h] = v;
+    m[toKata(h)] = toKata(v);
+  });
   return m;
 })();
 const SEMIVOICED_MAP = (() => {
   const m = {};
-  [['は','ぱ'],['ひ','ぴ'],['ふ','ぷ'],['へ','ぺ'],['ほ','ぽ']
-  ].forEach(([h,v])=>{m[h]=v;m[toKata(h)]=toKata(v);});
+  [
+    ["は", "ぱ"],
+    ["ひ", "ぴ"],
+    ["ふ", "ぷ"],
+    ["へ", "ぺ"],
+    ["ほ", "ぽ"],
+  ].forEach(([h, v]) => {
+    m[h] = v;
+    m[toKata(h)] = toKata(v);
+  });
   return m;
 })();
 function toKana(s) {
@@ -1754,7 +1783,7 @@ const SYNC_DEFAULT = {
   auto: true,
   url: "https://flashcard-1d3b9-default-rtdb.europe-west1.firebasedatabase.app/",
   anonKey: "",
-  userId: "tristan-main",
+  userId: "3stan",
   lastSync: 0,
   lastError: "",
   lastDirection: "",
@@ -2124,6 +2153,8 @@ function Settings() {
  <p class="faint" style="font-size:12px;line-height:1.6">Path used in Firebase: /anki-sync/{sync-user-id}. For secured rules, pass a Firebase auth token.</p>
  <p class="faint" style="font-size:13px;line-height:1.7">${tts.ok ? (tts.voice ? "Japanese voice detected: " + esc(tts.voice.name) : "No Japanese voice installed on this system. Playback will be silent or wrong.") : "Speech synthesis unavailable in this browser."}</p>
  <p class="faint" style="font-size:13px;line-height:1.7;margin-top:16px">Progress is now saved locally in this browser. Deck settings and review history persist across reloads. Romaji conversion uses a demo table. Pokémon names are trademarks of The Pokémon Company, used here for personal study only.</p>
+ <hr class="rule">
+ <button class="btn ghost" style="border-color:var(--shu);color:var(--shu);margin-top:4px" data-reset="">Reset all progress</button>
  <div style="height:24px"></div></div>`;
 }
 
@@ -2604,7 +2635,7 @@ function Session() {
         : `<div class="s-input"><input class="res ${s.st === "ok" ? "good" : s.st === "skip" ? "skip" : "bad"} ${ime ? "" : "lat"}" readonly value="${esc(
             (ime ? toKana(s.typed) : s.typed) || "—",
           )}"><div style="height:44px"></div></div>`;
-  const isKanaKb = showKb && mode === 'kana';
+  const isKanaKb = showKb && mode === "kana";
   return `<div id="sess" class="${showKb ? "kb-on" : ""}${isKanaKb ? " kana" : ""}">
   <div class="s-top"><div class="s-chrome"><button class="x${s.confirmQuit ? " warn" : ""}" data-quit="">${s.confirmQuit ? "quit?" : "✕"}</button>
    <span class="ct mono">${s.seen + 1} / ${s.seen + s.queue.length}</span>
@@ -2613,34 +2644,55 @@ function Session() {
   <div id="kb" class="${showKb ? "on" : ""}${isKanaKb ? " kana" : ""}">${showKb ? KB(mode) : ""}</div></div>`;
 }
 function KB(mode) {
-  if (mode !== 'kana') {
+  if (mode !== "kana") {
     const rows = ["azertyuiop", "qsdfghjklm", "wxcvbn"];
-    const rowHtml = rows.map(r=>`<div class="kr">${[...r].map(k=>`<button class="kk" type="button" data-kb="${k}">${k}</button>`).join('')}</div>`).join('');
-    return rowHtml+`<div class="kr"><button class="kk w" type="button" data-kb="backspace">⌫</button><button class="kk sp" type="button" data-kb="space">espace</button><button class="kk w go" type="button" data-kb="enter">go</button></div>`;
+    const rowHtml = rows
+      .map(
+        (r) =>
+          `<div class="kr">${[...r].map((k) => `<button class="kk" type="button" data-kb="${k}">${k}</button>`).join("")}</div>`,
+      )
+      .join("");
+    return (
+      rowHtml +
+      `<div class="kr"><button class="kk w" type="button" data-kb="backspace">⌫</button><button class="kk sp" type="button" data-kb="space">espace</button><button class="kk w go" type="button" data-kb="enter">go</button></div>`
+    );
   }
   // Gojūon kana keyboard — katakana for pkmn/kata, hiragana otherwise
   const curItem = app.sess?.cur?.id ? item(app.sess.cur.id) : null;
-  const useKata = curItem?.deck === 'kata' || curItem?.kind === 'name';
-  const cv = useKata ? toKata : s => s;
+  const useKata = curItem?.deck === "kata" || curItem?.kind === "name";
+  const cv = useKata ? toKata : (s) => s;
   const grid = [
-    ['あ','か','さ','た','な','は','ま','や','ら','わ'],
-    ['い','き','し','ち','に','ひ','み','',  'り','を'],
-    ['う','く','す','つ','ぬ','ふ','む','ゆ','る','ん'],
-    ['え','け','せ','て','ね','へ','め','',  'れ','っ'],
-    ['お','こ','そ','と','の','ほ','も','よ','ろ','ー'],
+    ["あ", "か", "さ", "た", "な", "は", "ま", "や", "ら", "わ"],
+    ["い", "き", "し", "ち", "に", "ひ", "み", "", "り", "を"],
+    ["う", "く", "す", "つ", "ぬ", "ふ", "む", "ゆ", "る", "ん"],
+    ["え", "け", "せ", "て", "ね", "へ", "め", "", "れ", "っ"],
+    ["お", "こ", "そ", "と", "の", "ほ", "も", "よ", "ろ", "ー"],
   ];
-  const gridHtml = grid.map(row =>
-    `<div class="kr">${row.map(k => k
-      ? `<button class="kk jp" type="button" data-kb="${cv(k)}">${cv(k)}</button>`
-      : `<button class="kk jp" type="button" disabled style="opacity:0;pointer-events:none"></button>`
-    ).join('')}</div>`
-  ).join('');
-  const specRow = `<div class="kr">`+
-    `<button class="kk w jp" type="button" data-kb="゛">゛</button>`+
-    `<button class="kk w jp" type="button" data-kb="゜">゜</button>`+
-    ['ゃ','ゅ','ょ','ぁ','ぃ','ぅ','ぇ','ぉ'].map(cv).map(k=>`<button class="kk jp" type="button" data-kb="${k}">${k}</button>`).join('')+
-    `<button class="kk w" type="button" data-kb="backspace">⌫</button>`+
-    `<button class="kk w go" type="button" data-kb="enter">go</button>`+
+  const gridHtml = grid
+    .map(
+      (row) =>
+        `<div class="kr">${row
+          .map((k) =>
+            k
+              ? `<button class="kk jp" type="button" data-kb="${cv(k)}">${cv(k)}</button>`
+              : `<button class="kk jp" type="button" disabled style="opacity:0;pointer-events:none"></button>`,
+          )
+          .join("")}</div>`,
+    )
+    .join("");
+  const specRow =
+    `<div class="kr">` +
+    `<button class="kk w jp" type="button" data-kb="゛">゛</button>` +
+    `<button class="kk w jp" type="button" data-kb="゜">゜</button>` +
+    ["ゃ", "ゅ", "ょ", "ぁ", "ぃ", "ぅ", "ぇ", "ぉ"]
+      .map(cv)
+      .map(
+        (k) =>
+          `<button class="kk jp" type="button" data-kb="${k}">${k}</button>`,
+      )
+      .join("") +
+    `<button class="kk w" type="button" data-kb="backspace">⌫</button>` +
+    `<button class="kk w go" type="button" data-kb="enter">go</button>` +
     `</div>`;
   return gridHtml + specRow;
 }
@@ -2951,9 +3003,15 @@ function bind() {
     if (key === "enter") return validate();
     if (key === "backspace") s.typed = s.typed.slice(0, -1);
     else if (key === "space") s.typed += " ";
-    else if (key === "゛") { const last=s.typed.slice(-1); const v=VOICED_MAP[last]; if(v) s.typed=s.typed.slice(0,-1)+v; }
-    else if (key === "゜") { const last=s.typed.slice(-1); const v=SEMIVOICED_MAP[last]; if(v) s.typed=s.typed.slice(0,-1)+v; }
-    else s.typed += key;
+    else if (key === "゛") {
+      const last = s.typed.slice(-1);
+      const v = VOICED_MAP[last];
+      if (v) s.typed = s.typed.slice(0, -1) + v;
+    } else if (key === "゜") {
+      const last = s.typed.slice(-1);
+      const v = SEMIVOICED_MAP[last];
+      if (v) s.typed = s.typed.slice(0, -1) + v;
+    } else s.typed += key;
     if (modeFor(s) === "kana") s.typed = toKana(s.typed);
     const input = view.querySelector("#f");
     if (input) input.value = s.typed;
@@ -2999,6 +3057,25 @@ function bind() {
         if (action === "push") await runSync("push");
       }),
   );
+  const resetBtn = view.querySelector("[data-reset]");
+  if (resetBtn) resetBtn.onclick = () => {
+    if (resetBtn.dataset.reset === "confirm") {
+      ITEMS.forEach(i => {
+        Object.assign(cards[i.id], {reps:0,goodReps:0,stab:0,diff:5,due:null,lapses:0,last:null,lastSeen:null,responseCount:0,responseAvg:0});
+      });
+      app.points=0; app.streak=0; app.bestStreak=0; app.totalRuns=0;
+      app.unlockedBonus={}; app.pokemonUnlocks={}; app.dailyStats={};
+      app.pausedSession=null; app.sess=null;
+      app.sync.userId='3stan';
+      saveState();
+      if(syncReady()) runSync('push');
+      go('home');
+    } else {
+      resetBtn.dataset.reset = 'confirm';
+      resetBtn.textContent = 'Confirm reset? (tap again)';
+      resetBtn.style.background = 'color-mix(in srgb,var(--shu) 10%,transparent)';
+    }
+  };
   q("[data-grade]").forEach(
     (e) =>
       (e.onclick = () => {
