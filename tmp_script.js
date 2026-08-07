@@ -162,10 +162,6 @@ const SEMIVOICED_MAP = (() => {
   return m;
 })();
 function toKana(s) {
-  s.replace(/[\u30A1-\u30F6]/g, (c) =>
-    String.fromCharCode(c.charCodeAt(0) - 0x60),
-  );
-function toKana(s) {
   s = (s || "").toLowerCase();
   let o = "",
     i = 0;
