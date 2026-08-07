@@ -1184,17 +1184,17 @@ function pokemonMeta(id) {
   return (app.pokemonUnlocks && app.pokemonUnlocks[id]) || null;
 }
 function syncPokemonUnlocks() {
-  const items = allDeckItems("pkmn")
-    .filter(pokemonUnlockedByKana)
-    .sort((a, b) => a.idx - b.idx);
   if (!app.pokemonUnlocks) app.pokemonUnlocks = {};
+  const validIds = new Set(allDeckItems("pkmn").filter(pokemonUnlockedByKana).map(i => i.id));
   let changed = false;
-  for (const i of items) {
-    if (!app.pokemonUnlocks[i.id]) {
-      app.pokemonUnlocks[i.id] = {
-        unlockedAt: Date.now(),
-        shiny: Math.random() < POKEMON_SHINY_RATE,
-      };
+  // Revoke unlocks whose condition is no longer met
+  for (const id in app.pokemonUnlocks) {
+    if (!validIds.has(id)) { delete app.pokemonUnlocks[id]; changed = true; }
+  }
+  // Add new unlocks
+  for (const id of validIds) {
+    if (!app.pokemonUnlocks[id]) {
+      app.pokemonUnlocks[id] = { unlockedAt: Date.now(), shiny: Math.random() < POKEMON_SHINY_RATE };
       changed = true;
     }
   }
@@ -1261,16 +1261,6 @@ function loadState() {
     if (stored?.cards) {
       for (const id in stored.cards) {
         if (cards[id]) Object.assign(cards[id], stored.cards[id]);
-      }
-      // Migration: backfill goodReps for cards saved before the goodReps field existed
-      for (const id in cards) {
-        if (
-          stored.cards[id] &&
-          !("goodReps" in stored.cards[id]) &&
-          cards[id].reps > 0
-        ) {
-          cards[id].goodReps = cards[id].reps;
-        }
       }
     }
     if (stored?.app) {
@@ -3058,24 +3048,43 @@ function bind() {
       }),
   );
   const resetBtn = view.querySelector("[data-reset]");
-  if (resetBtn) resetBtn.onclick = () => {
-    if (resetBtn.dataset.reset === "confirm") {
-      ITEMS.forEach(i => {
-        Object.assign(cards[i.id], {reps:0,goodReps:0,stab:0,diff:5,due:null,lapses:0,last:null,lastSeen:null,responseCount:0,responseAvg:0});
-      });
-      app.points=0; app.streak=0; app.bestStreak=0; app.totalRuns=0;
-      app.unlockedBonus={}; app.pokemonUnlocks={}; app.dailyStats={};
-      app.pausedSession=null; app.sess=null;
-      app.sync.userId='3stan';
-      saveState();
-      if(syncReady()) runSync('push');
-      go('home');
-    } else {
-      resetBtn.dataset.reset = 'confirm';
-      resetBtn.textContent = 'Confirm reset? (tap again)';
-      resetBtn.style.background = 'color-mix(in srgb,var(--shu) 10%,transparent)';
-    }
-  };
+  if (resetBtn)
+    resetBtn.onclick = () => {
+      if (resetBtn.dataset.reset === "confirm") {
+        ITEMS.forEach((i) => {
+          Object.assign(cards[i.id], {
+            reps: 0,
+            goodReps: 0,
+            stab: 0,
+            diff: 5,
+            due: null,
+            lapses: 0,
+            last: null,
+            lastSeen: null,
+            responseCount: 0,
+            responseAvg: 0,
+          });
+        });
+        app.points = 0;
+        app.streak = 0;
+        app.bestStreak = 0;
+        app.totalRuns = 0;
+        app.unlockedBonus = {};
+        app.pokemonUnlocks = {};
+        app.dailyStats = {};
+        app.pausedSession = null;
+        app.sess = null;
+        app.sync.userId = "3stan";
+        saveState();
+        if (syncReady()) runSync("push");
+        go("home");
+      } else {
+        resetBtn.dataset.reset = "confirm";
+        resetBtn.textContent = "Confirm reset? (tap again)";
+        resetBtn.style.background =
+          "color-mix(in srgb,var(--shu) 10%,transparent)";
+      }
+    };
   q("[data-grade]").forEach(
     (e) =>
       (e.onclick = () => {
