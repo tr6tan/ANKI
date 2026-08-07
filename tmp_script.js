@@ -1217,6 +1217,16 @@ function loadState() {
       for (const id in stored.cards) {
         if (cards[id]) Object.assign(cards[id], stored.cards[id]);
       }
+      // Migration: backfill goodReps for cards saved before the goodReps field existed
+      for (const id in cards) {
+        if (
+          stored.cards[id] &&
+          !("goodReps" in stored.cards[id]) &&
+          cards[id].reps > 0
+        ) {
+          cards[id].goodReps = cards[id].reps;
+        }
+      }
     }
     if (stored?.app) {
       Object.assign(app, stored.app);
@@ -1250,6 +1260,16 @@ function loadState() {
     }
     const backfilled = syncPokemonUnlocks();
     if (backfilled) saveState();
+    // Restore paused session if one was saved
+    if (stored?.sessQueue?.length) {
+      const q = stored.sessQueue.map((id) => cards[id]).filter(Boolean);
+      if (q.length)
+        app.pausedSession = {
+          queue: q,
+          seen: stored.sessSeen || 0,
+          ok: stored.sessOk || 0,
+        };
+    }
   } catch (e) {
     console.warn("Failed to load state", e);
   }
@@ -1285,6 +1305,9 @@ function saveState() {
         },
         dailyStats: app.dailyStats || {},
         pokemonUnlocks: app.pokemonUnlocks || {},
+        sessQueue: app.sess ? app.sess.queue.map((c) => c.id) : null,
+        sessSeen: app.sess ? app.sess.seen : undefined,
+        sessOk: app.sess ? app.sess.ok : undefined,
       }),
     );
   } catch (e) {
@@ -1818,7 +1841,9 @@ function Home() {
      )
      .join("")}
   </div>
-  <button class="btn" data-start="">Start</button><hr class="rule">
+  <button class="btn" data-start="">Start</button>
+  ${app.pausedSession?.queue?.length ? `<div style="height:10px"></div><button class="btn ghost" data-start="resume" style="color:var(--seiji);border-color:var(--seiji)">Resume session (${app.pausedSession.queue.length} cards left)</button>` : ""}
+  <hr class="rule">
   ${due ? `` : `<div class="empty" style="padding:24px 0 12px">Nothing to review.<br>Come back in a few hours.</div>`}
   <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px">
    <span class="label">progress</span>
@@ -2123,6 +2148,36 @@ function faceFor(c, g) {
   return "name";
 }
 function startSession(id) {
+  // Resume paused session if no specific deck was requested
+  if (!id && app.pausedSession?.queue?.length) {
+    const ps = app.pausedSession;
+    app.pausedSession = null;
+    app.sess = {
+      queue: ps.queue,
+      seen: ps.seen,
+      ok: ps.ok,
+      t0: Date.now(),
+      st: "typing",
+      typed: "",
+      committed: false,
+      cur: null,
+      face: null,
+      ctx: null,
+      kanaChoices: null,
+      timer: null,
+      startTime: null,
+      feedback: null,
+      fx: null,
+      fxTimer: null,
+      runPoints: 0,
+      runCombo: 0,
+      runBestCombo: 0,
+    };
+    nextCard();
+    go("session");
+    return;
+  }
+  app.pausedSession = null;
   const q = queueFor(id || null);
   if (!q.length) return;
   app.sess = {
@@ -2692,7 +2747,11 @@ function bind() {
     .querySelectorAll("[data-go]")
     .forEach((e) => (e.onclick = () => go(e.dataset.go)));
   q("[data-start]").forEach(
-    (e) => (e.onclick = () => startSession(e.dataset.start || null)),
+    (e) =>
+      (e.onclick = () => {
+        const v = e.dataset.start || null;
+        startSession(v === "resume" ? null : v);
+      }),
   );
   q("[data-deck]").forEach(
     (e) =>
