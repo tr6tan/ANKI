@@ -2069,7 +2069,7 @@ function Editor() {
      ? `<p class="label">Prerequisites</p><div class="atoms">${at
          .map(
            (id) =>
-             `<span class="${known(id) ? "" : "new"}">${esc(item(id).glyph)}</span>`,
+             `<span class="${known(id) ? "known" : "new"}">${esc(item(id).glyph)}</span>`,
          )
          .join("")}</div>
   <p class="note">${unknownIn(at) ? unknownIn(at) + " still unknown prerequisites." : "All known."}</p>`
@@ -2560,7 +2560,7 @@ function Session() {
       rev += `<div class="atoms">${atoms
         .map(
           (id) =>
-            `<span class="${known(id) ? "" : "new"}">${esc(item(id).glyph)}</span>`,
+            `<span class="${known(id) ? "known" : "new"}">${esc(item(id).glyph)}</span>`,
         )
         .join("")}</div>`;
     rev +=
