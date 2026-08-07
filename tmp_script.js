@@ -927,7 +927,7 @@ function faceFor(c,g){const i=item(c.id),usable=!!g&&g.u===0;
  return 'name';
 }
 function startSession(id){const q=queueFor(id||null);if(!q.length)return;
- app.sess={queue:q,seen:0,ok:0,t0:Date.now(),st:'typing',typed:'',committed:false,cur:null,face:null,ctx:null,timer:null,startTime:null,feedback:null,fx:null,fxTimer:null,runPoints:0,runCombo:0,runBestCombo:0};
+ app.sess={queue:q,seen:0,ok:0,t0:Date.now(),st:'typing',typed:'',committed:false,cur:null,face:null,ctx:null,kanaChoices:null,timer:null,startTime:null,feedback:null,fx:null,fxTimer:null,runPoints:0,runCombo:0,runBestCombo:0};
  nextCard();go('session')}
 function nextCard(){const s=app.sess;clearTimeout(s.timer);
  clearTimeout(s.fxTimer);s.fx=null;
@@ -936,6 +936,7 @@ function nextCard(){const s=app.sess;clearTimeout(s.timer);
  const i=item(s.cur.id),g=contextFor(s.cur);
  s.face=faceFor(s.cur,g);
  s.ctx=['cloze','word','comp'].includes(s.face)?g.x:null;
+ s.kanaChoices=kanaChoicesForSession(s);
  s.st=['keyword','kanji-write','lex-write'].includes(s.face)?'ask':'typing';
  s.startTime=Date.now();
  if(app.route==='session'){render();
@@ -965,6 +966,32 @@ function acceptedFor(s){const i=item(s.cur.id);
 /* le format de réponse est une propriété du deck ; seule la carte d'écoute le force,
    puisqu'on y écrit ce qu'on entend, donc forcément en kana */
 function modeFor(s){return ['sound','glyph-write','kanji-write','lex-write'].includes(s.face)?'kana':deck(item(s.cur.id).deck).answer}
+function kanaChoicePoolForFace(s){
+ const i=item(s.cur.id);
+ if(!i)return [];
+ if(s.face==='sound'||s.face==='glyph-write'){
+  const useKata=i.deck==='kata';
+  return ITEMS.filter(x=>x.deck===i.deck).map(x=>useKata?toKata(x.kana):x.kana);
+ }
+ return [];
+}
+function kanaChoicesForSession(s){
+ if(!s||modeFor(s)!=='kana')return null;
+ if(!['sound','glyph-write'].includes(s.face))return null;
+ const accepted=acceptedFor(s).map(x=>String(x||'').trim()).filter(Boolean);
+ if(!accepted.length)return null;
+ const correctNorm=new Set(accepted.map(x=>normKana(x)));
+ const uniq=[];
+ const seen=new Set();
+ for(const v of kanaChoicePoolForFace(s)){
+  const n=normKana(v);
+  if(!n||correctNorm.has(n)||seen.has(n))continue;
+  seen.add(n);
+  uniq.push(v);
+ }
+ const distractors=shuffle(uniq).slice(0,9);
+ return shuffle([accepted[0],...distractors]).slice(0,10);
+}
 const isKana=s=>/[\u3040-\u30FF]/.test(s);
 function liveFeedback(s){
  const input=String(s.typed||'').trim();
@@ -1135,8 +1162,12 @@ function Session(){
    :`<div class="go">tap to continue &rsaquo;</div>`;
  }
  rev+='</div>';
+ const kanaOptions=(s.kanaChoices&&s.kanaChoices.length)
+  ?`<div class="chips" style="margin-top:10px;gap:8px">${s.kanaChoices.map(v=>`<button type="button" class="chip" data-optkana="${esc(v)}" style="height:38px;font-family:var(--f-jp);font-size:18px;color:var(--ink)">${esc(v)}</button>`).join('')}</div>`
+  :'';
  const input=s.st==='typing'
   ?`<div class="s-input"><input id="f" class="${ime?'':'lat'}" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" lang="${ime?'ja':'fr'}" inputmode="${app.kb?'none':'text'}"${app.kb?' readonly':''} placeholder="${ime?'':'ka'}" value="${esc(s.typed)}">
+    ${kanaOptions}
     <div class="s-actions"><button type="button" class="s-act check" data-validate="">Check</button><button type="button" class="s-act idk" data-dontknow="">I don't know</button></div></div>`
   :s.st==='ask'
    ?`<div class="s-input"><button class="btn" data-reveal="">Reveal</button><div style="height:44px"></div></div>`
@@ -1294,6 +1325,16 @@ function bind(){
  q('[data-kb]').forEach(e=>{
   e.addEventListener(primaryTouchEvent,handleKbPress,{passive:false});
   e.addEventListener('click',ev=>ev.preventDefault());
+ });
+ q('[data-optkana]').forEach(e=>e.onclick=()=>{
+  const s=app.sess;if(!s||s.st!=='typing')return;
+  s.typed=e.dataset.optkana||'';
+  const input=view.querySelector('#f');
+  if(input)input.value=s.typed;
+  const c=view.querySelector('#cell');
+  if(c)c.textContent=toKana(s.typed);
+  syncLiveFeedback();
+  validate();
  });
  q('[data-sync]').forEach(e=>e.onclick=async()=>{
   const action=e.dataset.sync;
