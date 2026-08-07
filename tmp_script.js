@@ -145,6 +145,26 @@ const toHira = (s) =>
   s.replace(/[\u30A1-\u30F6]/g, (c) =>
     String.fromCharCode(c.charCodeAt(0) - 0x60),
   );
+// Dakuten / handakuten modifier maps (hiragana + katakana)
+const VOICED_MAP = (() => {
+  const m = {};
+  [['か','が'],['き','ぎ'],['く','ぐ'],['け','げ'],['こ','ご'],
+   ['さ','ざ'],['し','じ'],['す','ず'],['せ','ぜ'],['そ','ぞ'],
+   ['た','だ'],['ち','ぢ'],['つ','づ'],['て','で'],['と','ど'],
+   ['は','ば'],['ひ','び'],['ふ','ぶ'],['へ','べ'],['ほ','ぼ'],['う','ゔ']
+  ].forEach(([h,v])=>{m[h]=v;m[toKata(h)]=toKata(v);});
+  return m;
+})();
+const SEMIVOICED_MAP = (() => {
+  const m = {};
+  [['は','ぱ'],['ひ','ぴ'],['ふ','ぷ'],['へ','ぺ'],['ほ','ぽ']
+  ].forEach(([h,v])=>{m[h]=v;m[toKata(h)]=toKata(v);});
+  return m;
+})();
+function toKana(s) {
+  s.replace(/[\u30A1-\u30F6]/g, (c) =>
+    String.fromCharCode(c.charCodeAt(0) - 0x60),
+  );
 function toKana(s) {
   s = (s || "").toLowerCase();
   let o = "",
@@ -2588,25 +2608,45 @@ function Session() {
         : `<div class="s-input"><input class="res ${s.st === "ok" ? "good" : s.st === "skip" ? "skip" : "bad"} ${ime ? "" : "lat"}" readonly value="${esc(
             (ime ? toKana(s.typed) : s.typed) || "—",
           )}"><div style="height:44px"></div></div>`;
-  return `<div id="sess" class="${showKb ? "kb-on" : ""}">
+  const isKanaKb = showKb && mode === 'kana';
+  return `<div id="sess" class="${showKb ? "kb-on" : ""}${isKanaKb ? " kana" : ""}">
   <div class="s-top"><div class="s-chrome"><button class="x${s.confirmQuit ? " warn" : ""}" data-quit="">${s.confirmQuit ? "quit?" : "✕"}</button>
    <span class="ct mono">${s.seen + 1} / ${s.seen + s.queue.length}</span>
    <button class="mu${app.mute ? " off" : ""}" data-mute="" aria-label="sound">${app.mute ? muteIcon(18) : speakerIcon(18)}</button></div><div class="s-feedback">${feedbackHtml}</div></div>
     <div class="s-body${done ? " done" : ""}"${done && s.st !== "near" && !app.detailed && dk.grading !== "self" ? ' data-next=""' : ""}>${s.fx ? `<div class="score-fx ${s.fx.kind}${s.fx.boost ? " boost" : ""}"><span class="pts">${s.fx.delta > 0 ? "+" : ""}${s.fx.delta}</span></div>` : ""}${body}${rev}</div>${input}
-  <div id="kb" class="${showKb ? "on" : ""}">${showKb ? KB(mode) : ""}</div></div>`;
+  <div id="kb" class="${showKb ? "on" : ""}${isKanaKb ? " kana" : ""}">${showKb ? KB(mode) : ""}</div></div>`;
 }
 function KB(mode) {
-  const rows = ["azertyuiop", "qsdfghjklm", "wxcvbn"];
-  const rowHtml = rows
-    .map(
-      (r) =>
-        `<div class="kr">${[...r].map((k) => `<button class="kk" type="button" data-kb="${k}">${k}</button>`).join("")}</div>`,
-    )
-    .join("");
-  return (
-    rowHtml +
-    `<div class="kr"><button class="kk w" type="button" data-kb="backspace">⌫</button><button class="kk sp" type="button" data-kb="space">espace</button><button class="kk w go" type="button" data-kb="enter">go</button></div>`
-  );
+  if (mode !== 'kana') {
+    const rows = ["azertyuiop", "qsdfghjklm", "wxcvbn"];
+    const rowHtml = rows.map(r=>`<div class="kr">${[...r].map(k=>`<button class="kk" type="button" data-kb="${k}">${k}</button>`).join('')}</div>`).join('');
+    return rowHtml+`<div class="kr"><button class="kk w" type="button" data-kb="backspace">⌫</button><button class="kk sp" type="button" data-kb="space">espace</button><button class="kk w go" type="button" data-kb="enter">go</button></div>`;
+  }
+  // Gojūon kana keyboard — katakana for pkmn/kata, hiragana otherwise
+  const curItem = app.sess?.cur?.id ? item(app.sess.cur.id) : null;
+  const useKata = curItem?.deck === 'kata' || curItem?.kind === 'name';
+  const cv = useKata ? toKata : s => s;
+  const grid = [
+    ['あ','か','さ','た','な','は','ま','や','ら','わ'],
+    ['い','き','し','ち','に','ひ','み','',  'り','を'],
+    ['う','く','す','つ','ぬ','ふ','む','ゆ','る','ん'],
+    ['え','け','せ','て','ね','へ','め','',  'れ','っ'],
+    ['お','こ','そ','と','の','ほ','も','よ','ろ','ー'],
+  ];
+  const gridHtml = grid.map(row =>
+    `<div class="kr">${row.map(k => k
+      ? `<button class="kk jp" type="button" data-kb="${cv(k)}">${cv(k)}</button>`
+      : `<button class="kk jp" type="button" disabled style="opacity:0;pointer-events:none"></button>`
+    ).join('')}</div>`
+  ).join('');
+  const specRow = `<div class="kr">`+
+    `<button class="kk w jp" type="button" data-kb="゛">゛</button>`+
+    `<button class="kk w jp" type="button" data-kb="゜">゜</button>`+
+    ['ゃ','ゅ','ょ','ぁ','ぃ','ぅ','ぇ','ぉ'].map(cv).map(k=>`<button class="kk jp" type="button" data-kb="${k}">${k}</button>`).join('')+
+    `<button class="kk w" type="button" data-kb="backspace">⌫</button>`+
+    `<button class="kk w go" type="button" data-kb="enter">go</button>`+
+    `</div>`;
+  return gridHtml + specRow;
 }
 function validate() {
   const s = app.sess,
@@ -2915,6 +2955,8 @@ function bind() {
     if (key === "enter") return validate();
     if (key === "backspace") s.typed = s.typed.slice(0, -1);
     else if (key === "space") s.typed += " ";
+    else if (key === "゛") { const last=s.typed.slice(-1); const v=VOICED_MAP[last]; if(v) s.typed=s.typed.slice(0,-1)+v; }
+    else if (key === "゜") { const last=s.typed.slice(-1); const v=SEMIVOICED_MAP[last]; if(v) s.typed=s.typed.slice(0,-1)+v; }
     else s.typed += key;
     if (modeFor(s) === "kana") s.typed = toKana(s.typed);
     const input = view.querySelector("#f");
