@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260808-1134";
+const BUILD_VERSION = "20260808-1135";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -2165,40 +2165,32 @@ function DeckStats(dk) {
   const successRate = attempts ? Math.round((successes / attempts) * 100) : 0;
   const masteryRate = total ? Math.round((mastered / total) * 100) : 0;
   const rows = [
-    [
-      "Mastered",
-      mastered,
-      `${MASTERY_REPS} successful reviews completed.`,
-      "mastered",
-    ],
-    ["In progress", learning, "Studied, but not mastered yet.", "learning"],
-    ["Not started", notStarted, "Never shown in a session.", "new"],
+    ["Mastered", `${MASTERY_REPS} successful reviews`, mastered, "t-due"],
+    ["In progress", "Studied, not mastered", learning, "t-lrn"],
+    ["Not started", "Never shown", notStarted, "muted"],
   ];
   return `<div class="scroll pad"><div style="height:20px"></div>
- <div class="stats-hero">
-  <div><strong class="mono">${mastered}/${total}</strong><span>cards mastered</span></div>
-  <div class="collection-progress"><span style="width:${masteryRate}%"></span></div>
-  <p>${masteryRate}% of this deck completed</p>
+ <div style="display:flex;justify-content:center;margin:12px 0 10px">
+  <div class="sq" style="width:132px"><span class="mono" style="font-size:36px">${mastered}<span class="faint" style="font-size:16px">/${total}</span></span></div>
  </div>
- <div class="stats-status-list">${rows
+ <p class="muted" style="text-align:center;font-size:13px;margin:0 0 28px">mastered · ${masteryRate}% complete</p>
+ <div class="label" style="margin-bottom:6px">Progress</div>
+ ${rows
    .map(
-     ([label, value, help, tone]) => `<div class="stats-status ${tone}">
-   <span class="stats-dot"></span><div><strong>${label}</strong><small>${help}</small></div><b class="mono">${value}</b>
+     ([label, help, value, tone]) => `<div class="row">
+   <div><div style="font-size:14px">${label}</div><div class="faint" style="font-size:12px;margin-top:3px">${help}</div></div>
+   <span class="mono ${tone}" style="font-size:18px">${value}</span>
   </div>`,
    )
-   .join("")}</div>
- <div class="stats-review">
-  <div><span class="label">TO DO NOW</span><strong class="mono">${dueNow}</strong></div>
-  <p>${dueNow ? `${dueNow} card${dueNow === 1 ? " is" : "s are"} ready to appear in your next session.` : "No card needs review right now."}</p>
- </div>
- <p class="stats-schedule">A correct card leaves the current session. The 5 successful reviews typically span about 12 days, with gaps near 1, 2, 3 and 6 days. Mistakes shorten the next gap.</p>
- <div class="label" style="margin:24px 0 8px">Practice history</div>
- <div class="stats-history">
-  <div><strong class="mono">${attempts}</strong><span>answers</span></div>
-  <div><strong class="mono">${successRate}%</strong><span>correct</span></div>
-  <div><strong class="mono">${mistakes}</strong><span>mistakes</span></div>
- </div>
- ${info.open ? "" : `<p class="stats-lock">Deck locked: ${esc(info.need || "complete the previous step")}.</p>`}
+   .join("")}
+ <div class="label" style="margin:26px 0 6px">Next session</div>
+ <div class="row"><div><div style="font-size:14px">Ready to review</div><div class="faint" style="font-size:12px;margin-top:3px">${dueNow ? "Will appear in the next session" : "Nothing due right now"}</div></div><span class="mono t-due" style="font-size:18px">${dueNow}</span></div>
+ <p class="faint" style="font-size:12px;line-height:1.6;margin:12px 0 0">A correct card leaves the session. Five successful reviews usually span about 12 days, with gaps near 1, 2, 3 and 6 days. Mistakes shorten the next gap.</p>
+ <div class="label" style="margin:26px 0 6px">History</div>
+ <div class="row"><span class="muted">Answers</span><span class="mono">${attempts}</span></div>
+ <div class="row"><span class="muted">Correct</span><span class="mono">${successRate}%</span></div>
+ <div class="row"><span class="muted">Mistakes</span><span class="mono">${mistakes}</span></div>
+ ${info.open ? "" : `<p class="faint" style="font-size:12px;margin-top:16px">Deck locked: ${esc(info.need || "complete the previous step")}.</p>`}
  <div style="height:24px"></div></div>`;
 }
 

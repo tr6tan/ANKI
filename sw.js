@@ -1,8 +1,8 @@
-const CACHE_NAME = "study-deck-cache-v59";
+const CACHE_NAME = "study-deck-cache-v60";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./tmp_script.js?v=20260808-1134",
+  "./tmp_script.js?v=20260808-1135",
   "./manifest.json",
   "./apple-touch-icon-v3.png",
   "./icon-192-v36.png",
