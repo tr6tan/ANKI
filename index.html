@@ -402,6 +402,117 @@
         padding: 10px 16px;
         border-top: 1px solid var(--rule);
       }
+      .stats-hero {
+        border: 1px solid var(--rule);
+        border-radius: var(--radius);
+        padding: 16px;
+        background: var(--surface);
+      }
+      .stats-hero > div:first-child {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .stats-hero strong {
+        font-size: 28px;
+      }
+      .stats-hero span,
+      .stats-hero p {
+        color: var(--ink-muted);
+        font-size: 12px;
+      }
+      .stats-hero p {
+        margin: 10px 0 0;
+      }
+      .stats-status-list {
+        margin-top: 18px;
+        border-top: 1px solid var(--rule);
+      }
+      .stats-status {
+        display: grid;
+        grid-template-columns: 10px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 12px;
+        min-height: 64px;
+        border-bottom: 1px solid var(--rule);
+      }
+      .stats-status > div {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .stats-status strong {
+        font-size: 14px;
+      }
+      .stats-status small {
+        color: var(--ink-muted);
+        font-size: 12px;
+      }
+      .stats-status b {
+        font-size: 18px;
+      }
+      .stats-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ink-faint);
+      }
+      .stats-status.mastered .stats-dot {
+        background: var(--seiji);
+      }
+      .stats-status.learning .stats-dot {
+        background: var(--shu);
+      }
+      .stats-review {
+        margin-top: 20px;
+        padding: 14px 16px;
+        border-left: 3px solid var(--seiji);
+        background: color-mix(in srgb, var(--seiji) 8%, var(--surface));
+      }
+      .stats-review > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .stats-review strong {
+        font-size: 28px;
+      }
+      .stats-review p,
+      .stats-lock {
+        margin: 4px 0 0;
+        color: var(--ink-muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .stats-history {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border: 1px solid var(--rule);
+        border-radius: var(--radius);
+        background: var(--surface);
+      }
+      .stats-history div {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 14px 10px;
+        text-align: center;
+      }
+      .stats-history div + div {
+        border-left: 1px solid var(--rule);
+      }
+      .stats-history strong {
+        font-size: 20px;
+      }
+      .stats-history span {
+        color: var(--ink-muted);
+        font-size: 11px;
+      }
+      .stats-lock {
+        margin-top: 16px;
+      }
       .hdr {
         flex: none;
         height: 56px;
@@ -1345,6 +1456,6 @@
       <div id="view"></div>
       <nav id="nav"></nav>
     </div>
-    <script src="tmp_script.js?v=20260808-1122"></script>
+    <script src="tmp_script.js?v=20260808-1132"></script>
   </body>
 </html>

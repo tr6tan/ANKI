@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260808-1122";
+const BUILD_VERSION = "20260808-1132";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -1237,9 +1237,7 @@ function levelRowsHtml() {
         const deckItems = allDeckItems(dk.id);
         const cs = deckItems.map((i) => cards[i.id]);
         const mastered = deckItems.filter((i) => known(i.id)).length;
-        const learning = cs.filter(
-          (c) => c.reps > 0 && !known(c.id),
-        ).length;
+        const learning = cs.filter((c) => c.reps > 0 && !known(c.id)).length;
         const due = cs.filter(
           (c) => c.due !== null && c.due <= Date.now(),
         ).length;
@@ -1971,9 +1969,7 @@ function face(i) {
 function Collection() {
   const pkmn = pokemonUnlockInfo();
   const studied = ITEMS.filter((i) => cards[i.id].reps > 0).length;
-  const mastered = ITEMS.filter(
-    (i) => i.deck !== "pkmn" && known(i.id),
-  ).length;
+  const mastered = ITEMS.filter((i) => i.deck !== "pkmn" && known(i.id)).length;
   const shinyCount = app.pokemonUnlocks
     ? Object.values(app.pokemonUnlocks).filter((x) => x.shiny).length
     : 0;
@@ -2036,9 +2032,10 @@ function DeckCards(dk) {
   const F = {
     all: () => true,
     new: (c) => stateOf(c) === "new",
-    relearning: (c) => stateOf(c) === "lrn",
+    learning: (c) => c.reps > 0 && !known(c.id),
     due: (c) => c.due !== null && c.due <= Date.now(),
   };
+  if (!F[app.filter]) app.filter = "all";
   const info = deckUnlockInfo(dk);
   // For pkmn, show all 151 items so the user can see which kana they still need
   const baseItems =
@@ -2066,14 +2063,14 @@ function DeckCards(dk) {
   return `<div class="scroll pad">
   <div class="field" style="margin:12px 0"><input id="q" placeholder="Search" value="${esc(app.q)}"></div>
   <div class="chips" style="margin-bottom:8px">${[
-    "all",
-    "new",
-    "relearning",
-    "due",
+    ["all", "All"],
+    ["new", "Not started"],
+    ["learning", "In progress"],
+    ["due", "Review now"],
   ]
     .map(
-      (f) =>
-        `<button class="chip ${app.filter === f ? "on" : ""}" data-filter="${f}">${f}</button>`,
+      ([value, label]) =>
+        `<button class="chip ${app.filter === value ? "on" : ""}" data-filter="${value}">${label}</button>`,
     )
     .join("")}</div>
   ${
@@ -2081,9 +2078,13 @@ function DeckCards(dk) {
       ? list
           .map((i) => {
             const c = cards[i.id],
-              st = stateOf(c),
               [a, b] = face(i),
               meta = i.deck === "pkmn" ? pokemonMeta(i.id) : null;
+            const status = known(i.id)
+              ? "mastered"
+              : c.reps > 0
+                ? "in progress"
+                : "not started";
             const dd =
               c.due === null ? null : Math.round((c.due - Date.now()) / DAY);
             const locked = false;
@@ -2099,8 +2100,8 @@ function DeckCards(dk) {
       <div style="font-family:var(--f-jp);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a)}<span class="faint" style="font-size:13px"> ${esc(b)}</span>${meta?.shiny ? ` <span class="tag-shiny">shiny</span>` : ""}</div>
       ${prereqHtml}
     </div>
-    <span class="faint mono" style="font-size:12px;padding-top:2px">${i.deck === "pkmn" ? (pkmnUnlocked ? "✓" : "🔒") : st}</span>
-    <span class="faint mono" style="font-size:12px;min-width:40px;text-align:right;padding-top:2px">${dd === null ? "—" : dd <= 0 ? "due" : "d+" + dd}</span></div>`;
+    <span class="faint" style="font-size:12px;padding-top:2px">${i.deck === "pkmn" ? (pkmnUnlocked ? "unlocked" : "locked") : status}</span>
+    <span class="faint mono" style="font-size:12px;min-width:58px;text-align:right;padding-top:2px">${dd === null ? "—" : dd <= 0 ? "review now" : "in " + dd + "d"}</span></div>`;
           })
           .join("")
       : '<div class="empty">No cards match this filter.</div>'
@@ -2151,27 +2152,50 @@ function DeckSettings(dk) {
 }
 function DeckStats(dk) {
   const info = deckUnlockInfo(dk);
-  const cs = deckVisibleItems(dk).map((i) => cards[i.id]);
+  const deckItems = allDeckItems(dk.id);
+  const cs = deckItems.map((i) => cards[i.id]);
+  const total = cs.length;
+  const mastered = deckItems.filter((i) => known(i.id)).length;
+  const learning = cs.filter((c) => c.reps > 0 && !known(c.id)).length;
+  const notStarted = total - mastered - learning;
+  const dueNow = cs.filter(
+    (c) => c.due !== null && c.due <= Date.now(),
+  ).length;
+  const attempts = cs.reduce((sum, c) => sum + c.reps, 0);
+  const successes = cs.reduce((sum, c) => sum + (c.goodReps || 0), 0);
+  const mistakes = cs.reduce((sum, c) => sum + (c.lapses || 0), 0);
+  const successRate = attempts ? Math.round((successes / attempts) * 100) : 0;
+  const masteryRate = total ? Math.round((mastered / total) * 100) : 0;
   const rows = [
-    ["new", "new"],
-    ["relearning", "lrn"],
-    ["young", "young"],
-    ["mature", "mature"],
-  ].map(([n, s]) => [n, cs.filter((c) => stateOf(c) === s).length]);
-  const max = Math.max(1, ...rows.map((r) => r[1]));
+    ["Mastered", mastered, `Answered correctly at least ${MASTERY_REPS} times.`, "mastered"],
+    ["In progress", learning, "Studied, but not mastered yet.", "learning"],
+    ["Not started", notStarted, "Never shown in a session.", "new"],
+  ];
   return `<div class="scroll pad"><div style="height:20px"></div>
- <div class="row"><span class="muted">stage</span><span class="mono">${info.stage}</span></div>
- <div class="row"><span class="muted">unlock</span><span class="mono">${info.open ? "open" : esc(info.need || "locked")}</span></div>
- ${rows
+ <div class="stats-hero">
+  <div><strong class="mono">${mastered}/${total}</strong><span>cards mastered</span></div>
+  <div class="collection-progress"><span style="width:${masteryRate}%"></span></div>
+  <p>${masteryRate}% of this deck completed</p>
+ </div>
+ <div class="stats-status-list">${rows
    .map(
-     ([n, v]) => `<div style="margin-bottom:14px">
-  <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span class="muted">${n}</span><span class="mono">${v}</span></div>
-  <div style="height:6px;background:var(--rule)"><div style="height:6px;width:${(v / max) * 100}%;background:var(--ink)"></div></div></div>`,
+     ([label, value, help, tone]) => `<div class="stats-status ${tone}">
+   <span class="stats-dot"></span><div><strong>${label}</strong><small>${help}</small></div><b class="mono">${value}</b>
+  </div>`,
    )
-   .join("")}
- <hr class="rule">
- <div class="row"><span class="muted">repetitions</span><span class="mono">${cs.reduce((a, c) => a + c.reps, 0)}</span></div>
- <div class="row" style="border:0"><span class="muted">lapses</span><span class="mono">${cs.reduce((a, c) => a + c.lapses, 0)}</span></div></div>`;
+   .join("")}</div>
+ <div class="stats-review">
+  <div><span class="label">TO DO NOW</span><strong class="mono">${dueNow}</strong></div>
+  <p>${dueNow ? `${dueNow} card${dueNow === 1 ? " is" : "s are"} ready to appear in your next session.` : "No card needs review right now."}</p>
+ </div>
+ <div class="label" style="margin:24px 0 8px">Practice history</div>
+ <div class="stats-history">
+  <div><strong class="mono">${attempts}</strong><span>answers</span></div>
+  <div><strong class="mono">${successRate}%</strong><span>correct</span></div>
+  <div><strong class="mono">${mistakes}</strong><span>mistakes</span></div>
+ </div>
+ ${info.open ? "" : `<p class="stats-lock">Deck locked: ${esc(info.need || "complete the previous step")}.</p>`}
+ <div style="height:24px"></div></div>`;
 }
 
 function Editor() {
