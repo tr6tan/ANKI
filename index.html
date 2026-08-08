@@ -339,6 +339,69 @@
       .deck-link.locked {
         opacity: 0.72;
       }
+      .deck-progress-main {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+      }
+      .deck-progress-main strong {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .deck-progress-main small {
+        color: var(--ink-muted);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+      .deck-chevron {
+        flex: none;
+        color: var(--ink-faint);
+        font-size: 24px;
+      }
+      .collection-progress {
+        width: 100%;
+        height: 5px;
+        overflow: hidden;
+        border-radius: 3px;
+        background: var(--rule);
+      }
+      .collection-progress span {
+        display: block;
+        height: 100%;
+        background: var(--seiji);
+      }
+      .collection-overview {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border: 1px solid var(--rule);
+        border-radius: var(--radius);
+        margin: 12px 0 20px;
+        background: var(--surface);
+      }
+      .collection-overview > div {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 14px 16px;
+      }
+      .collection-overview > div + div {
+        border-left: 1px solid var(--rule);
+      }
+      .collection-overview strong {
+        font-size: 24px;
+      }
+      .collection-overview span,
+      .collection-overview p {
+        color: var(--ink-muted);
+        font-size: 12px;
+      }
+      .collection-overview p {
+        grid-column: 1 / -1;
+        margin: 0;
+        padding: 10px 16px;
+        border-top: 1px solid var(--rule);
+      }
       .hdr {
         flex: none;
         height: 56px;
@@ -1282,6 +1345,6 @@
       <div id="view"></div>
       <nav id="nav"></nav>
     </div>
-    <script src="tmp_script.js?v=20260807-1343"></script>
+    <script src="tmp_script.js?v=20260808-1122"></script>
   </body>
 </html>

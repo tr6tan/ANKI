@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260807-1343";
+const BUILD_VERSION = "20260808-1122";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -598,7 +598,7 @@ const LEVELS = [
   {
     id: "n5",
     label: "N5",
-    deckIds: ["hira", "kata", "kanji", "vocab", "pkmn"],
+    deckIds: ["hira", "kata", "kanji", "vocab"],
     prereq: null,
     open: true,
   },
@@ -1221,26 +1221,31 @@ function levelRowsHtml() {
   return LEVELS.map((l) => {
     const info = levelUnlockInfo(l.id);
     const decks = decksForLevel(l.id);
-    const count = decks.length
-      ? decks.reduce((n, dk) => n + deckVisibleItems(dk).length, 0)
-      : 0;
+    const levelItems = decks.flatMap((dk) => allDeckItems(dk.id));
+    const mastered = levelItems.filter((i) => known(i.id)).length;
+    const total = levelItems.length;
     const subtitle =
       l.id === "n5"
-        ? "Hiragana, Katakana, Kanji N5, Sentences N5, Pokémon 151"
-        : `Locked until ${info.need}`;
-    const progress = l.id === "n5" ? Math.round(info.progress * 100) : 0;
+        ? "Hiragana, Katakana, Kanji and vocabulary"
+        : info.open
+          ? "Available"
+          : `Locked: ${info.need}`;
+    const progress = total ? Math.round((mastered / total) * 100) : 0;
     const deckList = decks
       .map((dk) => {
         const dkInfo = deckUnlockInfo(dk);
-        const cs = deckVisibleItems(dk).map((i) => cards[i.id]);
-        const nw = cs.filter((c) => stateOf(c) === "new").length,
-          lrn = cs.filter((c) => stateOf(c) === "lrn").length;
+        const deckItems = allDeckItems(dk.id);
+        const cs = deckItems.map((i) => cards[i.id]);
+        const mastered = deckItems.filter((i) => known(i.id)).length;
+        const learning = cs.filter(
+          (c) => c.reps > 0 && !known(c.id),
+        ).length;
         const due = cs.filter(
           (c) => c.due !== null && c.due <= Date.now(),
         ).length;
         return `<div class="deck-link ${dkInfo.open ? "open" : "locked"}" data-deck="${dk.id}">
-       <span>${esc(dk.name)}</span>
-       <span class="tally mono"><span class="chip ${dkInfo.open ? "on" : "locked"}" style="height:22px;padding:0 8px;font-size:10px">${dkInfo.stage}</span><span class="t-new">${nw}</span><span class="t-lrn">${lrn}</span><span class="t-due">${due}</span></span>
+       <span class="deck-progress-main"><strong>${esc(dk.name)}</strong><small>${dkInfo.open ? `${mastered}/${deckItems.length} mastered · ${learning} learning · ${due} due` : `Locked · ${esc(dkInfo.need || "Complete the previous step")}`}</small></span>
+       <span class="deck-chevron">›</span>
       </div>`;
       })
       .join("");
@@ -1249,9 +1254,9 @@ function levelRowsHtml() {
     <div class="level-main">
      <div class="level-top"><span class="level-pill">${l.label}</span><span class="level-title">${l.label} Collection</span></div>
      <div class="level-sub">${esc(subtitle)}</div>
-     <div class="level-sub">${l.id === "n5" ? `${progress}% mastered` : info.open ? "open" : "locked"}</div>
+     <div class="collection-progress"><span style="width:${progress}%"></span></div>
+     <div class="level-sub"><strong>${mastered}/${total}</strong> mastered (${progress}%)</div>
     </div>
-    <div class="tally mono"><span class="t-new">${count}</span></div>
    </div>
    ${deckList ? `<div class="level-decks">${deckList}</div>` : ""}
   </div>`;
@@ -1965,20 +1970,30 @@ function face(i) {
 }
 function Collection() {
   const pkmn = pokemonUnlockInfo();
+  const studied = ITEMS.filter((i) => cards[i.id].reps > 0).length;
+  const mastered = ITEMS.filter(
+    (i) => i.deck !== "pkmn" && known(i.id),
+  ).length;
   const shinyCount = app.pokemonUnlocks
     ? Object.values(app.pokemonUnlocks).filter((x) => x.shiny).length
     : 0;
   return `<div class="hdr"><h1>Collection</h1></div><div class="scroll pad">
+  <div class="collection-overview">
+   <div><strong class="mono">${studied}</strong><span>studied</span></div>
+   <div><strong class="mono">${mastered}</strong><span>mastered</span></div>
+   <p>A card is mastered after ${MASTERY_REPS} successful answers.</p>
+  </div>
   <div class="label" style="margin:12px 0 10px">JLPT collections</div>
   ${levelRowsHtml()}
+  <div class="label" style="margin:22px 0 10px">Pokémon collection</div>
   <div class="level-card ${pkmn.open ? "open" : "locked"}" data-deck="pkmn">
    <div class="level-row">
     <div class="level-main">
-     <div class="level-top"><span class="level-pill">${pkmn.open ? "✓" : "★"}</span><span class="level-title">Pokémon 151</span></div>
-     <div class="level-sub">${pkmn.unlocked}/${pkmn.total} unlocked${shinyCount ? ` · ${shinyCount} shiny` : ""}</div>
-      <div class="level-sub">Each Pokémon opens when every kana in its Japanese name is mastered.</div>
+     <div class="level-top"><span class="level-pill">151</span><span class="level-title">Pokémon</span></div>
+     <div class="level-sub"><strong>${pkmn.unlocked}/${pkmn.total}</strong> unlocked${shinyCount ? ` · ${shinyCount} shiny` : ""}</div>
+      <div class="level-sub">Unlock condition: master every katakana in the Japanese name.</div>
     </div>
-    <div class="tally mono"><span class="t-new">${pkmn.unlocked}</span></div>
+    <span class="deck-chevron">›</span>
    </div>
   </div>
   <div class="label" style="margin:22px 0 10px">Bonus decks</div>
@@ -1999,7 +2014,7 @@ function Collection() {
         }).join("")
       : '<div class="empty" style="padding:12px 0;font-size:13px">No bonus decks configured yet.</div>'
   }
-  <p class="faint" style="font-size:12px;margin-top:16px">new · relearning · due</p><div style="height:24px"></div></div>`;
+  <div style="height:24px"></div></div>`;
 }
 
 function Deck() {
