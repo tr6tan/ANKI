@@ -467,17 +467,60 @@ function prepareSpeechText(text) {
   const base = !hasJa && looksRomaji ? toKana(raw) : raw;
   return base.replace(/\s*\/\s*/g, "、").replace(/·/g, "、");
 }
-function speak(text, rate) {
-  if (!tts.ok || app.mute || !text) return;
-  speechSynthesis.cancel();
-  const speakText = prepareSpeechText(text);
-  if (!speakText) return;
-  const u = new SpeechSynthesisUtterance(speakText);
+/* Les petits kana d'un yōon ne portent pas de more, ils se fondent dans le kana
+   qui précède : きゃ vaut une more, pas deux. っ et ー en portent une chacun. */
+const YOON = "ゃゅょャュョぁぃぅぇぉァィゥェォ";
+const SPEECH_PUNCT = "、。・/·";
+const SHORT_MORA_MAX = 2;
+function moraCount(text) {
+  let n = 0;
+  for (const c of String(text || "")) {
+    if (YOON.includes(c) || SPEECH_PUNCT.includes(c)) continue;
+    if (/[ぁ-ヿー]/.test(c)) n += 1;
+    else if (/[㐀-鿿]/.test(c)) n += 2; /* un kanji vaut ~2 mores */
+    else if (/\S/.test(c)) n += 1;
+  }
+  return n;
+}
+/* Un énoncé d'une more dure ~300 ms, et les moteurs TTS rognent l'attaque le
+   temps d'ouvrir le flux audio : sur あ, c'est un tiers du signal qui saute. On
+   encadre donc l'énoncé de pauses — la troncature tombe sur le silence — et on
+   répète les énoncés courts au lieu de les ralentir. Descendre le débit sous 0.6
+   n'allonge pas la voyelle, ça déforme les formants ; et comme la longueur
+   vocalique est phonémique en japonais (おばさん / おばあさん), étirer une more
+   apprendrait à l'oreille une durée fausse. */
+function paddedSpeech(text) {
+  return "、" + text + "、";
+}
+let speechSeq = 0;
+function utter(text, rate) {
+  const u = new SpeechSynthesisUtterance(text);
   u.lang = "ja-JP";
   if (tts.voice) u.voice = tts.voice;
   u.rate = rate || 0.9;
   u.pitch = 1.0;
   speechSynthesis.speak(u);
+}
+function speak(text, rate, opts) {
+  if (!tts.ok || app.mute || !text) return;
+  const speakText = prepareSpeechText(text);
+  if (!speakText) return;
+  const o = opts || {};
+  const repeat =
+    o.repeat === undefined
+      ? moraCount(speakText) <= SHORT_MORA_MAX
+      : !!o.repeat;
+  const padded = paddedSpeech(speakText);
+  const seq = ++speechSeq;
+  speechSynthesis.cancel();
+  /* cancel() est asynchrone : enchaîner speak() dans le même tick laisse Chrome
+     vider la file après coup, et l'énoncé part en silence. Un tick suffit, et le
+     jeton seq garantit qu'une demande plus récente prenne la main sur celle-ci. */
+  setTimeout(() => {
+    if (seq !== speechSeq) return;
+    utter(padded, rate);
+    if (repeat) utter(padded, rate);
+  }, 0);
 }
 
 /* ===================== decks : la politique est une propriété du deck ===================== */
@@ -2391,7 +2434,9 @@ function nextCard() {
   if (app.route === "session") {
     render();
     const dk = deck(i.deck);
-    if (s.face === "sound") speak(i.kana, 0.7);
+    /* la face « sound » est la seule où l'énoncé EST la consigne : on répète
+       toujours, quelle que soit la longueur de l'item */
+    if (s.face === "sound") speak(i.kana, 0.7, { repeat: true });
     else if (dk.audio === "always") speak(promptAudio(s), 0.8);
   }
 }
@@ -2586,7 +2631,7 @@ function Session() {
     gloss = [s.ctx.en + " · " + i.keyword, `type the reading in ${mode}`];
     atoms = s.ctx.kanji.map((k) => KIDX.kanji[k]);
   } else if (s.face === "sound") {
-    body = `<button class="play" data-speak="${esc(i.kana)}">▶</button>`;
+    body = `<button class="play" data-speak="${esc(i.kana)}" data-speak-repeat="" aria-label="replay">▶</button>`;
     gloss = [
       i.rom,
       `write what you hear in ${i.deck === "kata" ? "katakana" : "hiragana"}`,
@@ -2976,7 +3021,13 @@ function bind() {
     (e) => (e.onclick = () => go("editor", { editing: e.dataset.edit })),
   );
   q("[data-speak]").forEach(
-    (e) => (e.onclick = () => speak(e.dataset.speak, 0.75)),
+    (e) =>
+      (e.onclick = () =>
+        speak(
+          e.dataset.speak,
+          0.75,
+          e.dataset.speakRepeat === undefined ? undefined : { repeat: true },
+        )),
   );
   q("[data-tg]").forEach(
     (e) =>
