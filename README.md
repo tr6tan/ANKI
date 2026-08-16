@@ -27,3 +27,11 @@ Build a mobile-first, single-page Japanese spaced repetition app with a clean pa
 - Local in-memory progress state with deck statistics and session summary.
 
 Use the prototype and spec as a reference for the exact UI, spacing, and behaviour.
+
+## Tests
+
+Run the critical behavior suite with:
+
+```sh
+node --test critical_tests.cjs
+```

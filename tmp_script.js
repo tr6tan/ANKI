@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260808-1135";
+const BUILD_VERSION = "20260809-0001";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -659,28 +659,28 @@ const LEVELS = [
     id: "n4",
     label: "N4",
     deckIds: ["kanji-n4"],
-    prereq: "N5 fully memorized",
+    prereq: "N5 entièrement maîtrisé",
     open: false,
   },
   {
     id: "n3",
     label: "N3",
     deckIds: ["kanji-n3"],
-    prereq: "N4 fully memorized",
+    prereq: "N4 entièrement maîtrisé",
     open: false,
   },
   {
     id: "n2",
     label: "N2",
     deckIds: ["kanji-n2"],
-    prereq: "N3 fully memorized",
+    prereq: "N3 entièrement maîtrisé",
     open: false,
   },
   {
     id: "n1",
     label: "N1",
     deckIds: ["kanji-n1"],
-    prereq: "N2 fully memorized",
+    prereq: "N2 entièrement maîtrisé",
     open: false,
   },
 ];
@@ -720,7 +720,7 @@ function levelUnlockInfo(levelId) {
   const progress = prev ? levelProgress(prev.id) : 0;
   return {
     open: progress >= 0.95,
-    need: prev ? `${prev.label} foundation fully memorized` : "",
+    need: prev ? `Fondations ${prev.label} entièrement maîtrisées` : "",
     progress,
   };
 }
@@ -1195,7 +1195,7 @@ function deckUnlockInfo(dk) {
       limit: kanaReady && kanjiReady ? totalCount("vocab") : 0,
       label: "Sentences N5",
       need: kanaReady
-        ? `${masteredCount("kanji")}/10 kanji mastery`
+        ? `${masteredCount("kanji")}/10 kanji maîtrisés`
         : `${Math.min(hira, 30)}/30 hira · ${Math.min(kata, 30)}/30 kata`,
     };
   if (dk.id === "kanji")
@@ -1224,7 +1224,7 @@ const deckVisibleItems = (dk) => {
 };
 const POKEMON_SHINY_RATE = 1 / 32;
 function pokemonUnlockedByKana(i) {
-  return kanaUnits(i.ja).every((u) => known(KIDX.kata[u]));
+  return atomsOf(i).every(known);
 }
 function pokemonUnlockInfo() {
   const items = allDeckItems("pkmn");
@@ -1235,7 +1235,7 @@ function pokemonUnlockInfo() {
     open: true,
     limit: total,
     label: "Pokémon 151",
-    need: `${unlocked}/${total} unlocked by kana`,
+    need: `${unlocked}/${total} débloqués par les kana`,
     total,
     unlocked,
   };
@@ -1279,10 +1279,10 @@ function levelRowsHtml() {
     const total = levelItems.length;
     const subtitle =
       l.id === "n5"
-        ? "Hiragana, Katakana, Kanji and vocabulary"
+        ? "Hiragana, katakana, kanji et vocabulaire"
         : info.open
-          ? "Available"
-          : `Locked: ${info.need}`;
+          ? "Disponible"
+          : `Verrouillé : ${info.need}`;
     const progress = total ? Math.round((mastered / total) * 100) : 0;
     const deckList = decks
       .map((dk) => {
@@ -1295,7 +1295,7 @@ function levelRowsHtml() {
           (c) => c.due !== null && c.due <= Date.now(),
         ).length;
         return `<div class="deck-link ${dkInfo.open ? "open" : "locked"}" data-deck="${dk.id}">
-       <span class="deck-progress-main"><strong>${esc(dk.name)}</strong><small>${dkInfo.open ? `${mastered}/${deckItems.length} mastered · ${learning} learning · ${due} due` : `Locked · ${esc(dkInfo.need || "Complete the previous step")}`}</small></span>
+      <span class="deck-progress-main"><strong>${esc(dk.name)}</strong><small>${dkInfo.open ? `${mastered}/${deckItems.length} maîtrisées · ${learning} en cours · ${due} à réviser` : `Verrouillé · ${esc(dkInfo.need || "Terminez l'étape précédente")}`}</small></span>
        <span class="deck-chevron">›</span>
       </div>`;
       })
@@ -1303,27 +1303,43 @@ function levelRowsHtml() {
     return `<div class="level-card ${info.open ? "open" : "locked"}">
    <div class="level-row">
     <div class="level-main">
-     <div class="level-top"><span class="level-pill">${l.label}</span><span class="level-title">${l.label} Collection</span></div>
+    <div class="level-top"><span class="level-pill">${l.label}</span><span class="level-title">Collection ${l.label}</span></div>
      <div class="level-sub">${esc(subtitle)}</div>
      <div class="collection-progress"><span style="width:${progress}%"></span></div>
-     <div class="level-sub"><strong>${mastered}/${total}</strong> mastered (${progress}%)</div>
+    <div class="level-sub"><strong>${mastered}/${total}</strong> maîtrisées (${progress} %)</div>
     </div>
    </div>
    ${deckList ? `<div class="level-decks">${deckList}</div>` : ""}
   </div>`;
   }).join("");
 }
+const SMALL_KANA_BASE = {
+  ぁ: "あ",
+  ぃ: "い",
+  ぅ: "う",
+  ぇ: "え",
+  ぉ: "お",
+  ァ: "ア",
+  ィ: "イ",
+  ゥ: "ウ",
+  ェ: "エ",
+  ォ: "オ",
+};
+function kanaPrerequisiteIds(text, index) {
+  const ids = kanaUnits(text).flatMap((unit) => {
+    if (index[unit]) return [index[unit]];
+    return [...unit]
+      .filter((char) => /[ぁ-ゖァ-ヶ]/.test(char))
+      .map((char) => index[SMALL_KANA_BASE[char] || char])
+      .filter(Boolean);
+  });
+  return [...new Set(ids)];
+}
 function atomsOf(i) {
   if (i.kind === "glyph") return [];
   if (i.kind === "kanji") return [];
-  if (i.kind === "lex")
-    return kanaUnits(i.read)
-      .map((u) => KIDX.hira[u])
-      .filter(Boolean);
-  if (i.kind === "name")
-    return kanaUnits(i.ja)
-      .map((u) => KIDX.kata[u])
-      .filter(Boolean);
+  if (i.kind === "lex") return kanaPrerequisiteIds(i.read, KIDX.hira);
+  if (i.kind === "name") return kanaPrerequisiteIds(i.ja, KIDX.kata);
   return [];
 }
 const unknownIn = (ids) => ids.filter((id) => !known(id)).length;
@@ -1341,10 +1357,15 @@ function loadState() {
       Object.assign(app, stored.app);
       app.sync = { ...SYNC_DEFAULT, ...(stored.app.sync || {}) };
       if (!app.sync.url) app.sync.url = SYNC_DEFAULT.url;
-      if (!app.sync.userId) app.sync.userId = SYNC_DEFAULT.userId;
       if (typeof app.sync.enabled !== "boolean")
         app.sync.enabled = SYNC_DEFAULT.enabled;
     }
+    app.dataUpdatedAt =
+      app.dataUpdatedAt ||
+      Math.max(
+        0,
+        ...Object.values(cards).map((c) => c.modifiedAt || c.lastSeen || 0),
+      );
     app.sessionDay =
       stored?.sessionDay === today
         ? today
@@ -1410,7 +1431,9 @@ function saveState() {
           detailed: app.detailed,
           kb: app.kb,
           sync: app.sync,
-          auth: app.auth || null,
+          dataUpdatedAt: app.dataUpdatedAt || 0,
+          sessionUpdatedAt: app.sessionUpdatedAt || 0,
+          dailyPlan: app.dailyPlan || null,
         },
         sessionDay: app.sessionDay || null,
         decks,
@@ -1445,20 +1468,18 @@ function syncBaseUrl() {
   return raw.replace(/\/+$/, "");
 }
 function syncUserKey() {
-  return String((app.sync && app.sync.userId) || "")
-    .trim()
-    .replace(/[.#$\[\]\/]/g, "_");
+  return app.auth?.uid || "";
 }
-function syncRequestUrl() {
+async function syncRequestUrl() {
   const base = syncBaseUrl();
   const key = syncUserKey();
-  const token = ((app.sync && app.sync.anonKey) || "").trim();
-  const q = token ? `?auth=${encodeURIComponent(token)}` : "";
-  return `${base}/anki-sync/${encodeURIComponent(key)}.json${q}`;
+  const token = await firebaseAuth?.currentUser?.getIdToken();
+  if (!token) throw new Error("Firebase authentication required");
+  return `${base}/anki-sync/${encodeURIComponent(key)}.json?auth=${encodeURIComponent(token)}`;
 }
 function syncReady() {
   const s = app.sync || {};
-  return !!(s.enabled && syncBaseUrl() && syncUserKey());
+  return !!(app.auth?.uid && s.enabled && syncBaseUrl() && syncUserKey());
 }
 function localPayload() {
   const decks = DECKS.map((dk) => ({
@@ -1470,7 +1491,7 @@ function localPayload() {
     newPerDay: dk.newPerDay,
   }));
   return {
-    version: 1,
+    version: 2,
     cards,
     decks,
     progress: {
@@ -1482,28 +1503,83 @@ function localPayload() {
     },
     dailyStats: app.dailyStats || {},
     pokemonUnlocks: app.pokemonUnlocks || {},
+    dailyPlan: app.dailyPlan || null,
+    session: {
+      day: app.sessionDay || null,
+      queue:
+        app.pausedSession?.queue?.map((c) => c.id) ||
+        (app.sess ? app.sess.queue.map((c) => c.id) : []),
+      seen: app.pausedSession?.seen ?? app.sess?.seen ?? 0,
+      ok: app.pausedSession?.ok ?? app.sess?.ok ?? 0,
+      updatedAt: app.sessionUpdatedAt || 0,
+    },
+    dataUpdatedAt: app.dataUpdatedAt || 0,
     updatedAt: new Date().toISOString(),
   };
+}
+function validRemoteCard(id, remote) {
+  if (!cards[id] || !remote || remote.id !== id) return false;
+  const nonNegative = ["reps", "goodReps", "lapses", "stab"];
+  if (
+    nonNegative.some(
+      (key) => !Number.isFinite(remote[key] || 0) || (remote[key] || 0) < 0,
+    )
+  )
+    return false;
+  if ((remote.goodReps || 0) > (remote.reps || 0)) return false;
+  if (
+    remote.due !== null &&
+    remote.due !== undefined &&
+    !Number.isFinite(remote.due)
+  )
+    return false;
+  return true;
 }
 function applyPayload(payload) {
   if (!payload || !payload.cards) return false;
   for (const id in payload.cards) {
-    if (cards[id]) Object.assign(cards[id], payload.cards[id]);
+    const remote = payload.cards[id];
+    if (!validRemoteCard(id, remote)) continue;
+    const localChanged = cards[id].modifiedAt || cards[id].lastSeen || 0;
+    const remoteChanged = remote.modifiedAt || remote.lastSeen || 0;
+    if (remoteChanged >= localChanged) Object.assign(cards[id], remote);
   }
-  if (payload.progress) {
+  const remoteUpdated =
+    payload.dataUpdatedAt || Date.parse(payload.updatedAt) || 0;
+  if (payload.progress && remoteUpdated >= (app.dataUpdatedAt || 0)) {
     app.points = payload.progress.points || 0;
     app.streak = payload.progress.streak || 0;
     app.bestStreak = payload.progress.bestStreak || 0;
     app.totalRuns = payload.progress.totalRuns || 0;
     app.unlockedBonus = payload.progress.unlockedBonus || {};
+    app.dailyStats = payload.dailyStats || {};
+    app.dataUpdatedAt = remoteUpdated;
   }
-  app.dailyStats = payload.dailyStats || {};
   app.pokemonUnlocks = payload.pokemonUnlocks || {};
+  if (
+    payload.dailyPlan?.day === dayKey() &&
+    (payload.dailyPlan.createdAt || 0) >= (app.dailyPlan?.createdAt || 0)
+  )
+    app.dailyPlan = payload.dailyPlan;
   if (Array.isArray(payload.decks)) {
     for (const dk of payload.decks) {
       const target = DECKS.find((d) => d.id === dk.id);
       if (target) Object.assign(target, dk);
     }
+  }
+  const remoteSession = payload.session;
+  if (
+    remoteSession?.day === dayKey() &&
+    (remoteSession.updatedAt || 0) >= (app.sessionUpdatedAt || 0)
+  ) {
+    const queue = (remoteSession.queue || [])
+      .map((id) => cards[id])
+      .filter(Boolean);
+    app.sessionDay = remoteSession.day;
+    app.sessionUpdatedAt = remoteSession.updatedAt || 0;
+    app.pausedSession = queue.length
+      ? { queue, seen: remoteSession.seen || 0, ok: remoteSession.ok || 0 }
+      : null;
   }
   app.unlockedBonus = bonusUnlocksForPoints(app.points || 0);
   syncPokemonUnlocks();
@@ -1518,7 +1594,7 @@ async function cloudPush() {
     payload,
     updated_at: new Date().toISOString(),
   };
-  const res = await fetch(syncRequestUrl(), {
+  const res = await fetch(await syncRequestUrl(), {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -1531,7 +1607,7 @@ async function cloudPush() {
 }
 async function cloudPull() {
   if (!syncReady()) throw new Error("Sync config incomplete");
-  const res = await fetch(syncRequestUrl());
+  const res = await fetch(await syncRequestUrl());
   if (!res.ok) throw new Error(`Pull failed (${res.status})`);
   const row = await res.json();
   if (!row || !row.payload) return false;
@@ -1544,6 +1620,7 @@ async function cloudPull() {
 }
 let syncBusy = false;
 let lastAutoPushAt = 0;
+let syncHydrated = false;
 async function runSync(dir) {
   if (syncBusy) return;
   syncBusy = true;
@@ -1556,11 +1633,12 @@ async function runSync(dir) {
     saveState();
     render();
   } finally {
+    if (dir === "pull") syncHydrated = true;
     syncBusy = false;
   }
 }
 function maybeAutoPush() {
-  if (!syncReady() || !(app.sync && app.sync.auto)) return;
+  if (!syncHydrated || !syncReady() || !(app.sync && app.sync.auto)) return;
   const now = Date.now();
   if (now - lastAutoPushAt < 45000) return;
   lastAutoPushAt = now;
@@ -1588,13 +1666,57 @@ function stateOf(c) {
   if (c.lapses && c.stab < 1) return "lrn";
   return c.stab >= 21 ? "mature" : "young";
 }
+const fsrsScheduler = globalThis.FSRS
+  ? globalThis.FSRS.fsrs({
+      request_retention: 0.9,
+      enable_short_term: false,
+      enable_fuzz: true,
+    })
+  : null;
+function fsrsCard(c, now) {
+  const isNew = !c.reps;
+  return {
+    due: new Date(c.due || now),
+    stability: isNew ? 0 : Math.max(0.001, c.stab || 0.001),
+    difficulty: isNew ? 0 : Math.min(10, Math.max(1, c.diff || 5)),
+    elapsed_days: c.fsrsElapsedDays || 0,
+    scheduled_days: c.fsrsScheduledDays || Math.max(0, Math.round(c.stab || 0)),
+    reps: c.reps || 0,
+    lapses: c.lapses || 0,
+    learning_steps: 0,
+    state: isNew ? globalThis.FSRS.State.New : globalThis.FSRS.State.Review,
+    last_review: c.lastSeen ? new Date(c.lastSeen) : undefined,
+  };
+}
 function grade(c, good, elapsed, skip) {
-  c.reps++;
+  const reviewedAt = new Date();
   if (good) c.goodReps = (c.goodReps || 0) + 1;
-  c.lastSeen = Date.now();
+  c.lastSeen = reviewedAt.getTime();
+  c.modifiedAt = c.lastSeen;
   c.responseCount = (c.responseCount || 0) + 1;
   c.responseAvg =
     ((c.responseAvg || 0) * (c.responseCount - 1) + elapsed) / c.responseCount;
+  if (fsrsScheduler) {
+    const rating = good
+      ? globalThis.FSRS.Rating.Good
+      : globalThis.FSRS.Rating.Again;
+    const next = fsrsScheduler.next(
+      fsrsCard(c, reviewedAt),
+      reviewedAt,
+      rating,
+    ).card;
+    c.reps = next.reps;
+    c.lapses = next.lapses;
+    c.stab = next.stability;
+    c.diff = next.difficulty;
+    c.due = next.due.getTime();
+    c.fsrsElapsedDays = next.elapsed_days;
+    c.fsrsScheduledDays = next.scheduled_days;
+    c.fsrsState = next.state;
+    saveState();
+    return;
+  }
+  c.reps++;
   const speed = elapsed <= 8000 ? 1 : elapsed <= 15000 ? 0.92 : 0.8;
   if (good) {
     c.diff = Math.max(1, c.diff - 0.12 * speed);
@@ -1632,6 +1754,15 @@ function bonusUnlocksForPoints(points) {
 }
 function dayKey(d = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+function normalizeDailyState() {
+  const today = dayKey();
+  if (app.dailyPlan?.day !== today) app.dailyPlan = null;
+  if (app.sessionDay && app.sessionDay !== today && !app.sess) {
+    app.sessionDay = null;
+    app.pausedSession = null;
+    app.sessionUpdatedAt = Date.now();
+  }
 }
 function dailyDefault() {
   return { points: 0, attempts: 0, good: 0, wrong: 0, skip: 0 };
@@ -1680,6 +1811,69 @@ function heatmapClass(stats, max, future) {
    mais ses lectures sont en hiragana — donc pas de nouveau kanji tant que la base
    hiragana n'est pas raisonnablement en place. */
 const KANJI_UNLOCK_HIRA = 10;
+function validateDeckData() {
+  const errors = [];
+  const seenIds = new Set();
+  const seenContent = new Set();
+  const deckIds = new Set(DECKS.map((dk) => dk.id));
+  const required = {
+    glyph: ["glyph", "kana", "rom"],
+    kanji: ["glyph", "keyword"],
+    lex: ["surface", "read", "gloss"],
+    name: ["ja", "en", "type"],
+  };
+
+  for (const i of ITEMS) {
+    if (seenIds.has(i.id)) errors.push(`Identifiant dupliqué : ${i.id}`);
+    seenIds.add(i.id);
+    if (!deckIds.has(i.deck))
+      errors.push(`${i.id} référence le deck inconnu ${i.deck}`);
+    if (!required[i.kind]) errors.push(`${i.id} a un type inconnu : ${i.kind}`);
+    for (const field of required[i.kind] || []) {
+      if (typeof i[field] !== "string" || !i[field].trim())
+        errors.push(`${i.id} n'a pas de valeur ${field}`);
+    }
+    const primary = i.glyph || i.surface || i.ja;
+    const contentKey = `${i.deck}:${i.kind}:${primary}`;
+    if (seenContent.has(contentKey))
+      errors.push(`Contenu dupliqué dans ${i.deck} : ${primary}`);
+    seenContent.add(contentKey);
+  }
+
+  for (const dk of DECKS) {
+    if (!LEVELS.some((l) => l.id === dk.level))
+      errors.push(`${dk.id} référence le niveau inconnu ${dk.level}`);
+    if (!ITEMS.some((i) => i.deck === dk.id))
+      errors.push(`${dk.id} ne contient aucune carte`);
+    if (!Number.isInteger(dk.newPerDay) || dk.newPerDay <= 0)
+      errors.push(`${dk.id} a un quota quotidien invalide`);
+  }
+  for (const l of LEVELS) {
+    for (const deckId of l.deckIds) {
+      if (!deckIds.has(deckId))
+        errors.push(`${l.id} référence le deck inconnu ${deckId}`);
+    }
+  }
+
+  const unlockThresholds = { hira: 30, kata: 30, kanji: 10 };
+  for (const [deckId, threshold] of Object.entries(unlockThresholds)) {
+    const count = ITEMS.filter((i) => i.deck === deckId).length;
+    if (count < threshold)
+      errors.push(`${deckId} ne permet pas d'atteindre le seuil ${threshold}`);
+  }
+  for (const i of ITEMS.filter((entry) => entry.deck === "pkmn")) {
+    for (const unit of kanaUnits(i.ja)) {
+      const kana = [...unit].filter((char) => /[ァ-ヶ]/.test(char));
+      if (
+        kana.length &&
+        !KIDX.kata[unit] &&
+        kana.some((char) => !KIDX.kata[SMALL_KANA_BASE[char] || char])
+      )
+        errors.push(`${i.id} utilise le kana non mappé ${unit}`);
+    }
+  }
+  return errors;
+}
 function unseenPool(dk) {
   let pool = deckVisibleItems(dk).filter((i) => cards[i.id].reps === 0);
   if (dk.ordered) pool.sort((a, b) => a.idx - b.idx);
@@ -1738,6 +1932,17 @@ function allocateNewBudget(remaining) {
   return alloc;
 }
 const DAILY_BUDGET = 30;
+function ensureDailyPlan(dueCount) {
+  const today = dayKey();
+  if (app.dailyPlan?.day === today) return app.dailyPlan;
+  const alloc = allocateNewBudget(Math.max(0, DAILY_BUDGET - dueCount));
+  const newIds = [];
+  for (const dk of DECKS)
+    newIds.push(...newFor(dk, alloc[dk.id]).map((c) => c.id));
+  app.dailyPlan = { day: today, newIds, createdAt: Date.now() };
+  saveState();
+  return app.dailyPlan;
+}
 function queueFor(id) {
   const now = Date.now(),
     out = [];
@@ -1751,8 +1956,12 @@ function queueFor(id) {
   if (id) {
     out.push(...newFor(deck(id)));
   } else {
-    const alloc = allocateNewBudget(Math.max(0, DAILY_BUDGET - out.length));
-    for (const dk of DECKS) out.push(...newFor(dk, alloc[dk.id]));
+    const plan = ensureDailyPlan(out.length);
+    const existing = new Set(out.map((c) => c.id));
+    for (const cardId of plan.newIds) {
+      const card = cards[cardId];
+      if (card && card.reps === 0 && !existing.has(cardId)) out.push(card);
+    }
   }
   return shuffle(out);
 }
@@ -1852,23 +2061,21 @@ function hash(s) {
   for (let n = 0; n < s.length; n++) h = (h * 31 + s.charCodeAt(n)) | 0;
   return h;
 }
-// FNV-1a — used for password hashing on login
-function simpleHash(s) {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = (h * 0x01000193) >>> 0;
-  }
-  return h.toString(16).padStart(8, "0");
-}
 const ctxHTML = (t) =>
   esc(t).split("\u0001").join("<em>").split("\u0002").join("</em>");
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCXUHF_DMUni9dUnhK8VitdpouFLuqMUFU",
+  authDomain: "flashcard-1d3b9.firebaseapp.com",
+  databaseURL:
+    "https://flashcard-1d3b9-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "flashcard-1d3b9",
+  appId: "1:688878772243:web:30063782e65f6641c05fe6",
+};
+let firebaseAuth = null;
 const SYNC_DEFAULT = {
   enabled: true,
   auto: true,
   url: "https://flashcard-1d3b9-default-rtdb.europe-west1.firebasedatabase.app/",
-  anonKey: "",
-  userId: "3stan",
   lastSync: 0,
   lastError: "",
   lastDirection: "",
@@ -1895,8 +2102,10 @@ const app = {
   sync: { ...SYNC_DEFAULT },
   auth: null,
   loginError: "",
-  loginUser: "",
   sessionDay: null,
+  sessionUpdatedAt: 0,
+  dataUpdatedAt: 0,
+  dailyPlan: null,
 };
 const view = document.getElementById("view"),
   navEl = document.getElementById("nav");
@@ -1928,9 +2137,9 @@ function render() {
       inSess || inLogin
         ? ""
         : [
-            ["home", "学", "Study"],
+            ["home", "学", "Étudier"],
             ["collection", "集", "Collection"],
-            ["settings", "設", "Settings"],
+            ["settings", "設", "Réglages"],
           ]
             .map(
               ([r, g, l]) =>
@@ -1960,23 +2169,27 @@ function Login() {
     <div style="font-size:72px;line-height:1;margin-bottom:10px;font-family:var(--f-jp)">学</div>
     <p class="muted" style="font-size:12px;margin:0 0 44px;letter-spacing:.12em">JLPT STUDY</p>
     <div style="width:100%;max-width:300px">
-      <label class="field"><span class="label">Username</span>
-        <input id="login-u" autocapitalize="none" autocorrect="off" autocomplete="username" value="${esc(app.loginUser || "")}"></label>
-      <label class="field"><span class="label">Password</span>
-        <input id="login-p" type="password" autocomplete="current-password"></label>
       ${err ? `<p style="color:var(--shu);font-size:13px;margin:6px 0 0">${esc(err)}</p>` : ""}
-      <button class="btn" data-login="" style="margin-top:20px">Sign in</button>
+      <button class="btn" data-login="" style="margin-top:20px">Continuer avec Google</button>
     </div>
   </div>`;
 }
 function Home() {
+  normalizeDailyState();
   const today = dayKey();
   const lockedToday = app.sessionDay === today;
   const hasPausedSession = !!app.pausedSession?.queue?.length;
   const resumeToday = lockedToday && hasPausedSession;
-  const due = resumeToday ? app.pausedSession.queue.length : queueFor().length;
   const canStart = !lockedToday && !hasPausedSession;
-  const d = new Date().toLocaleDateString("en-GB", {
+  const sessionQueue = resumeToday
+    ? app.pausedSession.queue
+    : canStart
+      ? queueFor()
+      : [];
+  const remaining = sessionQueue.length;
+  const newCount = sessionQueue.filter((c) => c.reps === 0).length;
+  const reviewCount = remaining - newCount;
+  const d = new Date().toLocaleDateString("fr-FR", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -1985,13 +2198,14 @@ function Home() {
   const maxPts = Math.max(1, ...days.map((x) => x.stats.points || 0));
   return `<div class="scroll pad" style="position:relative"><span class="mono faint" style="position:absolute;top:10px;right:0;font-size:11px;letter-spacing:.04em">v${BUILD_VERSION}</span><p class="label" style="margin-top:24px">${esc(d)}</p>
   <div style="display:flex;justify-content:center;margin:36px 0 12px">
-   <div class="sq" style="width:146px"><span class="mono" style="font-size:60px">${due}</span></div></div>
-  <p class="muted" style="text-align:center;font-size:14px;margin:0 0 32px">cards to review</p>
+    <div class="sq" style="width:146px"><span class="mono" style="font-size:60px">${remaining}</span></div></div>
+    <p class="muted" style="text-align:center;font-size:14px;margin:0 0 24px">${resumeToday ? "cartes restantes" : lockedToday ? "session terminée" : "cartes dans la session"}</p>
+    ${remaining ? `<div class="row"><span class="muted">Nouvelles cartes</span><span class="mono">${newCount}</span></div><div class="row" style="margin-bottom:18px"><span class="muted">Révisions</span><span class="mono">${reviewCount}</span></div>` : ""}
   <div style="display:flex;gap:12px;margin:0 0 18px">
    ${[
      ["points", app.points || 0],
-     ["streak", app.streak || 0],
-     ["best", app.bestStreak || 0],
+     ["série", app.streak || 0],
+     ["record", app.bestStreak || 0],
    ]
      .map(
        ([l, v]) =>
@@ -1999,17 +2213,17 @@ function Home() {
      )
      .join("")}
   </div>
-    ${canStart ? `<button class="btn" data-start="">Start</button>` : ""}
-  ${resumeToday ? `<div style="height:10px"></div><button class="btn ghost" data-start="resume" style="color:var(--seiji);border-color:var(--seiji)">Resume session (${app.pausedSession.queue.length} cards left)</button>` : ""}
-  ${lockedToday && !resumeToday ? `<div class="empty" style="padding:12px 0 0">Session finished for today. Come back after midnight.</div>` : ""}
+    ${canStart && remaining ? `<button class="btn" data-start="">Commencer</button>` : ""}
+  ${resumeToday ? `<button class="btn" data-start="resume">Reprendre · ${remaining} restantes</button>` : ""}
+  ${lockedToday && !resumeToday ? `<div class="empty" style="padding:12px 0 0">Nouvelle session disponible demain à 00:00.</div>` : ""}
+  ${canStart && !remaining ? `<div class="empty" style="padding:12px 0 0">Aucune carte disponible actuellement.</div>` : ""}
   <hr class="rule">
-  ${due ? `` : `<div class="empty" style="padding:24px 0 12px">Nothing to review.<br>Come back in a few hours.</div>`}
   <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px">
-   <span class="label">progress</span>
-   <span class="faint" style="font-size:12px">${POINTS_PER_DAY_ESTIMATE} pts/day target</span>
+   <span class="label">Progression</span>
+   <span class="faint" style="font-size:12px">objectif ${POINTS_PER_DAY_ESTIMATE} pts/jour</span>
   </div>
   <div class="hm-wrap"><div class="hm" aria-label="daily progress heatmap">${days.map(({ key, stats, future }) => `<span class="${heatmapClass(stats, maxPts, future)}" title="${key} · ${stats.points || 0} pts · ${stats.attempts || 0} tries"></span>`).join("")}</div></div>
-  <div style="display:flex;justify-content:space-between;margin-top:8px"><span class="faint" style="font-size:12px">less</span><span class="faint" style="font-size:12px">more</span></div>
+  <div style="display:flex;justify-content:space-between;margin-top:8px"><span class="faint" style="font-size:12px">moins</span><span class="faint" style="font-size:12px">plus</span></div>
   <div style="height:24px"></div></div>`;
 }
 
@@ -2028,24 +2242,24 @@ function Collection() {
     : 0;
   return `<div class="hdr"><h1>Collection</h1></div><div class="scroll pad">
   <div class="collection-overview">
-   <div><strong class="mono">${studied}</strong><span>studied</span></div>
-   <div><strong class="mono">${mastered}</strong><span>mastered</span></div>
-   <p>A card is mastered after ${MASTERY_REPS} successful answers.</p>
+  <div><strong class="mono">${studied}</strong><span>étudiées</span></div>
+  <div><strong class="mono">${mastered}</strong><span>maîtrisées</span></div>
+  <p>Une carte est maîtrisée après ${MASTERY_REPS} réponses réussies.</p>
   </div>
-  <div class="label" style="margin:12px 0 10px">JLPT collections</div>
+  <div class="label" style="margin:12px 0 10px">Collections JLPT</div>
   ${levelRowsHtml()}
   <div class="label" style="margin:22px 0 10px">Pokémon collection</div>
   <div class="level-card ${pkmn.open ? "open" : "locked"}" data-deck="pkmn">
    <div class="level-row">
     <div class="level-main">
      <div class="level-top"><span class="level-pill">151</span><span class="level-title">Pokémon</span></div>
-     <div class="level-sub"><strong>${pkmn.unlocked}/${pkmn.total}</strong> unlocked${shinyCount ? ` · ${shinyCount} shiny` : ""}</div>
-      <div class="level-sub">Unlock condition: master every katakana in the Japanese name.</div>
+    <div class="level-sub"><strong>${pkmn.unlocked}/${pkmn.total}</strong> débloqués${shinyCount ? ` · ${shinyCount} chromatique${shinyCount > 1 ? "s" : ""}` : ""}</div>
+     <div class="level-sub">Condition : maîtriser chaque katakana du nom japonais.</div>
     </div>
     <span class="deck-chevron">›</span>
    </div>
   </div>
-  <div class="label" style="margin:22px 0 10px">Bonus decks</div>
+  <div class="label" style="margin:22px 0 10px">Decks bonus</div>
   ${
     BONUS_DECKS.length
       ? BONUS_DECKS.map((b) => {
@@ -2055,13 +2269,13 @@ function Collection() {
     <div class="level-row">
      <div class="level-main">
       <div class="level-top"><span class="level-pill">${open ? "✓" : "★"}</span><span class="level-title">${esc(b.name)}</span></div>
-      <div class="level-sub">${open ? `Unlocked at ${b.threshold} points` : `${esc(b.theme)} · ${b.threshold} points to unlock · ~${eta} day${eta === 1 ? "" : "s"} left`}</div>
+      <div class="level-sub">${open ? `Débloqué à ${b.threshold} points` : `${esc(b.theme)} · ${b.threshold} points requis · environ ${eta} jour${eta === 1 ? "" : "s"}`}</div>
      </div>
      <div class="tally mono"><span class="t-new">${b.threshold}</span></div>
     </div>
    </div>`;
         }).join("")
-      : '<div class="empty" style="padding:12px 0;font-size:13px">No bonus decks configured yet.</div>'
+      : '<div class="empty" style="padding:12px 0;font-size:13px">Aucun deck bonus configuré.</div>'
   }
   <div style="height:24px"></div></div>`;
 }
@@ -2070,9 +2284,9 @@ function Deck() {
   const dk = deck(app.deck);
   return `<div class="hdr"><button class="back" data-go="collection">←</button><h1>${esc(dk.name)}</h1></div>
  <div class="tabs">${[
-   ["cards", "Cards"],
-   ["settings", "Settings"],
-   ["stats", "Stats"],
+   ["cards", "Cartes"],
+   ["settings", "Réglages"],
+   ["stats", "Statistiques"],
  ]
    .map(
      ([t, l]) =>
@@ -2080,6 +2294,15 @@ function Deck() {
    )
    .join("")}</div>
  ${{ cards: DeckCards, settings: DeckSettings, stats: DeckStats }[app.tab](dk)}`;
+}
+function reviewTimingLabel(c) {
+  if (c.due === null) return "pas encore planifiée";
+  const remaining = c.due - Date.now();
+  if (remaining <= 0) return "à réviser maintenant";
+  const hours = Math.ceil(remaining / 36e5);
+  if (hours < 24) return `dans ${hours} h`;
+  const days = Math.ceil(remaining / DAY);
+  return `dans ${days} j`;
 }
 function DeckCards(dk) {
   const F = {
@@ -2107,19 +2330,19 @@ function DeckCards(dk) {
   if (dk.kind === "bonus")
     return `<div class="scroll pad"><div style="height:12px"></div><div class="empty">${
       info.open
-        ? `Unlocked. This bonus deck is a shell for your next theme.`
-        : `Locked for now.<br>${esc(info.need || "Keep pushing the point total higher.")}.
+        ? `Débloqué. Ce deck bonus est prêt à recevoir son prochain thème.`
+        : `Verrouillé pour le moment.<br>${esc(info.need || "Continuez à gagner des points.")}.
 `
     }</div><div style="height:24px"></div></div>`;
   if (!info.open)
-    return `<div class="scroll pad"><div style="height:12px"></div><div class="empty">Locked for now.<br>${esc(info.need || "Keep memorizing the base decks first.")}.</div><div style="height:24px"></div></div>`;
+    return `<div class="scroll pad"><div style="height:12px"></div><div class="empty">Verrouillé pour le moment.<br>${esc(info.need || "Maîtrisez d'abord les decks de base.")}.</div><div style="height:24px"></div></div>`;
   return `<div class="scroll pad">
-  <div class="field" style="margin:12px 0"><input id="q" placeholder="Search" value="${esc(app.q)}"></div>
+  <div class="field" style="margin:12px 0"><input id="q" placeholder="Rechercher" value="${esc(app.q)}"></div>
   <div class="chips" style="margin-bottom:8px">${[
-    ["all", "All"],
-    ["new", "Not started"],
-    ["learning", "In progress"],
-    ["due", "Review now"],
+    ["all", "Toutes"],
+    ["new", "Pas commencées"],
+    ["learning", "En cours"],
+    ["due", "À réviser"],
   ]
     .map(
       ([value, label]) =>
@@ -2134,12 +2357,10 @@ function DeckCards(dk) {
               [a, b] = face(i),
               meta = i.deck === "pkmn" ? pokemonMeta(i.id) : null;
             const status = known(i.id)
-              ? "mastered"
+              ? "maîtrisée"
               : c.reps > 0
-                ? "in progress"
-                : "not started";
-            const dd =
-              c.due === null ? null : Math.round((c.due - Date.now()) / DAY);
+                ? `${c.goodReps || 0}/${MASTERY_REPS} réussites`
+                : "pas commencée";
             const locked = false;
             // For pkmn, show prerequisite kana with mastery coloring
             const prereqs = i.deck === "pkmn" ? atomsOf(i) : [];
@@ -2153,11 +2374,11 @@ function DeckCards(dk) {
       <div style="font-family:var(--f-jp);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a)}<span class="faint" style="font-size:13px"> ${esc(b)}</span>${meta?.shiny ? ` <span class="tag-shiny">shiny</span>` : ""}</div>
       ${prereqHtml}
     </div>
-    <span class="faint" style="font-size:12px;padding-top:2px">${i.deck === "pkmn" ? (pkmnUnlocked ? "unlocked" : "locked") : status}</span>
-    <span class="faint mono" style="font-size:12px;min-width:58px;text-align:right;padding-top:2px">${dd === null ? "—" : dd <= 0 ? "review now" : "in " + dd + "d"}</span></div>`;
+    <span class="faint" style="font-size:12px;padding-top:2px">${i.deck === "pkmn" ? (pkmnUnlocked ? "débloqué" : "verrouillé") : status}</span>
+    <span class="faint mono" style="font-size:11px;min-width:92px;text-align:right;padding-top:2px">${reviewTimingLabel(c)}</span></div>`;
           })
           .join("")
-      : '<div class="empty">No cards match this filter.</div>'
+      : '<div class="empty">Aucune carte ne correspond à ce filtre.</div>'
   }
   <div style="height:24px"></div></div>`;
 }
@@ -2170,36 +2391,36 @@ function DeckSettings(dk) {
       )
       .join("")}</select></label>`;
   return `<div class="scroll pad"><div style="height:12px"></div>
- ${sel({ label: "Input display", key: "answer" }, [
-   ["kana", "converts to kana as you type"],
-   ["romaji", "stays in romaji"],
+ ${sel({ label: "Saisie", key: "answer" }, [
+   ["kana", "conversion en kana pendant la saisie"],
+   ["romaji", "conserver les romaji"],
  ])}
- ${sel({ label: "Grading", key: "grading" }, [
-   ["typed", "typed answer"],
-   ["self", "self-assessed"],
+ ${sel({ label: "Évaluation", key: "grading" }, [
+   ["typed", "réponse saisie"],
+   ["self", "auto-évaluation"],
  ])}
  ${sel({ label: "Audio", key: "audio" }, [
-   ["reveal", "on reveal"],
-   ["always", "prompt and reveal"],
-   ["never", "never"],
+   ["reveal", "à l'affichage de la réponse"],
+   ["always", "question et réponse"],
+   ["never", "jamais"],
  ])}
  ${sel({ label: "Furigana", key: "furi" }, [
-   ["hidden", "revealed with answer"],
-   ["always", "always visible"],
-   ["never", "never"],
+   ["hidden", "affichés avec la réponse"],
+   ["always", "toujours visibles"],
+   ["never", "jamais"],
  ])}
- <label class="field"><span class="label">New per day</span>
+ <label class="field"><span class="label">Nouvelles cartes par jour</span>
   <input type="number" min="0" max="50" value="${dk.newPerDay}" data-dk="newPerDay"></label>
  <p class="faint" style="font-size:13px;line-height:1.7">${
    dk.kind === "glyph"
-     ? "The field stays in romaji here because the target is a sound, not a word: converting would type the question back at you. Answers are checked against the expected reading and accepted in kana or romaji when equivalent."
+     ? "La saisie reste en romaji car la cible est un son. Les réponses équivalentes sont acceptées en kana ou en romaji."
      : dk.kind === "kanji"
-       ? "Type the reading in romaji or in kana, both are accepted. No isolated on/kun drilling: which reading applies is decided by the word, so readings come from compounds."
+       ? "Saisissez la lecture en romaji ou en kana. La lecture pertinente est apprise dans les mots composés."
        : dk.kind === "name"
-         ? "Once this deck is open, all names are in the study pool. Katakana mastery only affects confidence, not card availability."
+         ? "Chaque nom rejoint les sessions quand tous les katakana nécessaires sont maîtrisés."
          : dk.kind === "bonus"
-           ? "Bonus decks unlock when your point total crosses their threshold. They are shells for now: add the theme you want later and keep the same roguelike gate."
-           : "Sentences rotate across repetitions so the word is not memorised as the answer to one sentence."
+           ? "Les decks bonus se débloquent lorsque votre total de points atteint leur seuil."
+           : "Les phrases changent entre les révisions pour apprendre le mot, pas une réponse figée."
  }</p>
  <div style="height:24px"></div></div>`;
 }
@@ -2218,16 +2439,16 @@ function DeckStats(dk) {
   const successRate = attempts ? Math.round((successes / attempts) * 100) : 0;
   const masteryRate = total ? Math.round((mastered / total) * 100) : 0;
   const rows = [
-    ["Mastered", `${MASTERY_REPS} successful reviews`, mastered, "t-due"],
-    ["In progress", "Studied, not mastered", learning, "t-lrn"],
-    ["Not started", "Never shown", notStarted, "muted"],
+    ["Maîtrisées", `${MASTERY_REPS} réponses réussies`, mastered, "t-due"],
+    ["En cours", "Étudiées, mais pas encore maîtrisées", learning, "t-lrn"],
+    ["Pas commencées", "Jamais affichées", notStarted, "muted"],
   ];
   return `<div class="scroll pad"><div style="height:20px"></div>
  <div style="display:flex;justify-content:center;margin:12px 0 10px">
   <div class="sq" style="width:132px"><span class="mono" style="font-size:36px">${mastered}<span class="faint" style="font-size:16px">/${total}</span></span></div>
  </div>
- <p class="muted" style="text-align:center;font-size:13px;margin:0 0 28px">mastered · ${masteryRate}% complete</p>
- <div class="label" style="margin-bottom:6px">Progress</div>
+ <p class="muted" style="text-align:center;font-size:13px;margin:0 0 28px">maîtrisées · ${masteryRate} % terminé</p>
+ <div class="label" style="margin-bottom:6px">Progression</div>
  ${rows
    .map(
      ([label, help, value, tone]) => `<div class="row">
@@ -2236,14 +2457,14 @@ function DeckStats(dk) {
   </div>`,
    )
    .join("")}
- <div class="label" style="margin:26px 0 6px">Next session</div>
- <div class="row"><div><div style="font-size:14px">Ready to review</div><div class="faint" style="font-size:12px;margin-top:3px">${dueNow ? "Will appear in the next session" : "Nothing due right now"}</div></div><span class="mono t-due" style="font-size:18px">${dueNow}</span></div>
- <p class="faint" style="font-size:12px;line-height:1.6;margin:12px 0 0">A correct card leaves the session. Five successful reviews usually span about 12 days, with gaps near 1, 2, 3 and 6 days. Mistakes shorten the next gap.</p>
- <div class="label" style="margin:26px 0 6px">History</div>
- <div class="row"><span class="muted">Answers</span><span class="mono">${attempts}</span></div>
- <div class="row"><span class="muted">Correct</span><span class="mono">${successRate}%</span></div>
- <div class="row"><span class="muted">Mistakes</span><span class="mono">${mistakes}</span></div>
- ${info.open ? "" : `<p class="faint" style="font-size:12px;margin-top:16px">Deck locked: ${esc(info.need || "complete the previous step")}.</p>`}
+ <div class="label" style="margin:26px 0 6px">Prochaine session</div>
+ <div class="row"><div><div style="font-size:14px">Prêtes à réviser</div><div class="faint" style="font-size:12px;margin-top:3px">${dueNow ? "Présentes dans la prochaine session" : "Aucune révision actuellement"}</div></div><span class="mono t-due" style="font-size:18px">${dueNow}</span></div>
+ <p class="faint" style="font-size:12px;line-height:1.6;margin:12px 0 0">Une réponse correcte retire la carte de la session. Cinq réussites s'étalent généralement sur une douzaine de jours. Une erreur raccourcit le prochain délai.</p>
+ <div class="label" style="margin:26px 0 6px">Historique</div>
+ <div class="row"><span class="muted">Réponses</span><span class="mono">${attempts}</span></div>
+ <div class="row"><span class="muted">Réussite</span><span class="mono">${successRate}%</span></div>
+ <div class="row"><span class="muted">Erreurs</span><span class="mono">${mistakes}</span></div>
+ ${info.open ? "" : `<p class="faint" style="font-size:12px;margin-top:16px">Deck verrouillé : ${esc(info.need || "terminez l'étape précédente")}.</p>`}
  <div style="height:24px"></div></div>`;
 }
 
@@ -2267,25 +2488,25 @@ function Editor() {
    <p class="hint" style="margin-top:12px;font-size:14px">${esc(x.en)}</p>`;
         })()
       : `<div class="solo sm" style="margin:0">${esc(a)}</div><p class="hint mid" style="font-size:14px">${esc(b)}</p>`;
-  return `<div class="hdr"><button class="back" data-go="deck">←</button><h1>Card</h1>
+  return `<div class="hdr"><button class="back" data-go="deck">←</button><h1>Carte</h1>
   <button class="faint" data-speak="${esc(i.kana || i.read || i.ja || i.glyph)}">${speakerIcon(18)}</button></div>
  <div class="scroll pad"><div style="height:16px"></div>
- <label class="field"><span class="label">Front</span><input id="e-a" value="${esc(a)}" style="font-family:var(--f-jp)"></label>
- <label class="field"><span class="label">Back</span><input id="e-b" value="${esc(b)}"></label>
+ <label class="field"><span class="label">Recto</span><input id="e-a" value="${esc(a)}" style="font-family:var(--f-jp)"></label>
+ <label class="field"><span class="label">Verso</span><input id="e-b" value="${esc(b)}"></label>
  ${
    at.length
-     ? `<p class="label">Prerequisites</p><div class="atoms">${at
+     ? `<p class="label">Prérequis</p><div class="atoms">${at
          .map(
            (id) =>
              `<span class="${known(id) ? "known" : "new"}">${esc(item(id).glyph)}</span>`,
          )
          .join("")}</div>
-  <p class="note">${unknownIn(at) ? unknownIn(at) + " still unknown prerequisites." : "All known."}</p>`
+  <p class="note">${unknownIn(at) ? unknownIn(at) + " prérequis encore inconnus." : "Tous maîtrisés."}</p>`
      : ""
  }
- <hr class="rule"><p class="label" style="margin-bottom:12px">Preview</p>
+ <hr class="rule"><p class="label" style="margin-bottom:12px">Aperçu</p>
  <div style="border:1px solid var(--rule);border-radius:var(--radius);padding:16px">${prev}</div>
- <p class="note">reps ${c.reps} · lapses ${c.lapses} · stability ${c.stab.toFixed(1)}d</p>
+ <p class="note">${c.goodReps || 0}/${MASTERY_REPS} réussites · ${c.lapses} erreur${c.lapses === 1 ? "" : "s"} · ${reviewTimingLabel(c)}</p>
  <div style="height:24px"></div></div>`;
 }
 
@@ -2295,31 +2516,27 @@ function Settings() {
   const sync = app.sync || SYNC_DEFAULT;
   const syncStamp = sync.lastSync
     ? new Date(sync.lastSync).toLocaleString("fr-FR")
-    : "never";
-  return `<div class="hdr"><h1>Settings</h1></div><div class="scroll pad"><div style="height:8px"></div>
- ${sw("mute", "Mute", app.mute)}
- ${sw("theme", "Dark theme", app.theme === "dark")}
- ${sw("detailed", "Detailed grading", app.detailed)}
- ${sw("kb", "Simulate software keyboard", app.kb)}
+    : "jamais";
+  return `<div class="hdr"><h1>Réglages</h1></div><div class="scroll pad"><div style="height:8px"></div>
+ ${sw("mute", "Couper le son", app.mute)}
+ ${sw("theme", "Thème sombre", app.theme === "dark")}
+ ${sw("detailed", "Évaluation détaillée", app.detailed)}
+ ${sw("kb", "Simuler le clavier logiciel", app.kb)}
  <hr class="rule">
- ${sw("sync-enabled", "Cloud sync enabled", sync.enabled)}
- ${sw("sync-auto", "Cloud auto push", sync.auto)}
- <label class="field"><span class="label">Firebase DB URL</span><input id="sync-url" value="${esc(sync.url || "")}" placeholder="https://your-project-default-rtdb.firebaseio.com"></label>
- <label class="field"><span class="label">Firebase auth token (optional)</span><input id="sync-key" value="${esc(sync.anonKey || "")}" placeholder="optional"></label>
- <label class="field"><span class="label">Sync user id</span><input id="sync-user" value="${esc(sync.userId || "")}" placeholder="tristan-iphone"></label>
+ ${sw("sync-enabled", "Synchronisation cloud", sync.enabled)}
+ ${sw("sync-auto", "Envoi cloud automatique", sync.auto)}
  <div style="display:flex;gap:10px;margin:8px 0 0">
-  <button class="btn ghost" style="height:44px" data-sync="save">Save cloud config</button>
-  <button class="btn ghost" style="height:44px" data-sync="pull">Pull</button>
-  <button class="btn ghost" style="height:44px" data-sync="push">Push</button>
+  <button class="btn ghost" style="height:44px" data-sync="pull">Récupérer</button>
+  <button class="btn ghost" style="height:44px" data-sync="push">Envoyer</button>
  </div>
- <p class="faint" style="font-size:12px;line-height:1.6;margin-top:10px">Last sync: ${esc(syncStamp)}${sync.lastDirection ? ` · ${esc(sync.lastDirection)}` : ""}${sync.lastError ? ` · error: ${esc(sync.lastError)}` : ""}</p>
- <p class="faint" style="font-size:12px;line-height:1.6">Path used in Firebase: /anki-sync/{sync-user-id}. For secured rules, pass a Firebase auth token.</p>
- <p class="faint" style="font-size:13px;line-height:1.7">${tts.ok ? (tts.voice ? "Japanese voice detected: " + esc(tts.voice.name) : "No Japanese voice installed on this system. Playback will be silent or wrong.") : "Speech synthesis unavailable in this browser."}</p>
- <p class="faint" style="font-size:13px;line-height:1.7;margin-top:16px">Progress is now saved locally in this browser. Deck settings and review history persist across reloads. Romaji conversion uses a demo table. Pokémon names are trademarks of The Pokémon Company, used here for personal study only.</p>
+ <p class="faint" style="font-size:12px;line-height:1.6;margin-top:10px">Dernière synchronisation : ${esc(syncStamp)}${sync.lastDirection ? ` · ${esc(sync.lastDirection)}` : ""}${sync.lastError ? ` · erreur : ${esc(sync.lastError)}` : ""}</p>
+ <p class="faint" style="font-size:12px;line-height:1.6">Compte Google : ${esc(app.auth?.email || "")}</p>
+ <p class="faint" style="font-size:13px;line-height:1.7">${tts.ok ? (tts.voice ? "Voix japonaise détectée : " + esc(tts.voice.name) : "Aucune voix japonaise installée. La lecture audio peut être incorrecte.") : "Synthèse vocale indisponible dans ce navigateur."}</p>
+ <p class="faint" style="font-size:13px;line-height:1.7;margin-top:16px">La progression, les réglages et l'historique sont conservés dans ce navigateur. Les noms Pokémon sont utilisés uniquement pour l'étude personnelle.</p>
  <hr class="rule">
- <button class="btn ghost" data-logout="" style="height:44px">Log out (${esc(app.auth?.user || "")})</button>
+ <button class="btn ghost" data-logout="" style="height:44px">Se déconnecter</button>
  <hr class="rule">
- <button class="btn ghost" style="border-color:var(--shu);color:var(--shu);margin-top:4px" data-reset="">Reset all progress</button>
+ <button class="btn ghost" style="border-color:var(--shu);color:var(--shu);margin-top:4px" data-reset="">Réinitialiser la progression</button>
  <div style="height:24px"></div></div>`;
 }
 
@@ -2360,10 +2577,12 @@ function faceFor(c, g) {
   return "name";
 }
 function startSession(id) {
+  normalizeDailyState();
   // Resume paused session if no specific deck was requested
   if (!id && app.pausedSession?.queue?.length && app.sessionDay === dayKey()) {
     const ps = app.pausedSession;
     app.sessionDay = dayKey();
+    app.sessionUpdatedAt = Date.now();
     app.pausedSession = null;
     app.sess = {
       queue: ps.queue,
@@ -2392,6 +2611,7 @@ function startSession(id) {
   }
   if (!id && app.sessionDay === dayKey()) return;
   app.sessionDay = dayKey();
+  app.sessionUpdatedAt = Date.now();
   app.pausedSession = null;
   const q = queueFor(id || null);
   if (!q.length) return;
@@ -2623,7 +2843,7 @@ function Session() {
     body = `<div class="solo-row"><div class="solo">${esc(i.glyph)}</div>${done && scriptTag ? `<span class="tag-script">${scriptTag}</span>` : ""}</div>`;
     gloss = [
       i.rom + (i.deck === "kata" ? " · katakana" : " · hiragana"),
-      `type the reading in ${mode}`,
+      `saisissez la lecture en ${mode}`,
     ];
   } else if (s.face === "word") {
     const tgt = i.deck === "kata" ? toKata(i.kana) : i.kana;
@@ -2632,19 +2852,19 @@ function Session() {
       `<span class="tgt">${tgt}</span>`,
     );
     body = `<div class="solo md">${w}</div>`;
-    gloss = [s.ctx.en, `read the whole word in ${mode}`];
+    gloss = [s.ctx.en, `lisez le mot entier en ${mode}`];
     atoms = s.ctx.units
       .map((u) => KIDX[i.deck][i.deck === "kata" ? toKata(u) : u])
       .filter(Boolean);
   } else if (s.face === "comp") {
     body = `<div class="solo md">${s.ctx.word.replace(i.glyph, `<span class="tgt">${i.glyph}</span>`)}</div>`;
-    gloss = [s.ctx.en + " · " + i.keyword, `type the reading in ${mode}`];
+    gloss = [s.ctx.en + " · " + i.keyword, `saisissez la lecture en ${mode}`];
     atoms = s.ctx.kanji.map((k) => KIDX.kanji[k]);
   } else if (s.face === "sound") {
     body = `<button class="play" data-speak="${esc(i.kana)}" data-speak-repeat="" aria-label="replay">▶</button>`;
     gloss = [
       i.rom,
-      `write what you hear in ${i.deck === "kata" ? "katakana" : "hiragana"}`,
+      `écrivez ce que vous entendez en ${i.deck === "kata" ? "katakana" : "hiragana"}`,
     ];
   } else if (s.face === "name") {
     const shiny = i.deck === "pkmn" && pokemonMeta(i.id)?.shiny;
@@ -2655,17 +2875,17 @@ function Session() {
     body = `<div class="solo lat">${esc(i.rom)}</div>`;
     gloss = [
       i.deck === "kata" ? "katakana" : "hiragana",
-      `write in ${i.deck === "kata" ? "katakana" : "hiragana"}`,
+      `écrivez en ${i.deck === "kata" ? "katakana" : "hiragana"}`,
     ];
   } else if (s.face === "kanji-write") {
     body = `<div class="solo lat" style="font-size:34px;font-weight:500">${esc(i.keyword)}</div>`;
-    gloss = [i.glyph, "think of the kanji, then reveal"];
+    gloss = [i.glyph, "retrouvez le kanji, puis affichez la réponse"];
   } else if (s.face === "lex-write") {
     body = `<div class="solo lat" style="font-size:28px;font-weight:500">${esc(i.gloss)}</div>`;
-    gloss = [i.surface, "think of the japanese word, then reveal"];
+    gloss = [i.surface, "retrouvez le mot japonais, puis affichez la réponse"];
   } else {
     body = `<div class="solo-row"><div class="solo">${esc(i.glyph)}</div>${done && scriptTag ? `<span class="tag-script">${scriptTag}</span>` : ""}</div>`;
-    gloss = [i.keyword, "what does it mean?"];
+    gloss = [i.keyword, "que signifie ce kanji ?"];
   }
   const upfront = ["cloze", "bare", "name"].includes(s.face);
   const gtxt = done || upfront ? gloss[0] : gloss[1];
@@ -2756,7 +2976,7 @@ function Session() {
         ? `<span class="tag-script">${scriptTag}</span>`
         : "") +
       (dk.audio !== "never" && speakSrc
-        ? `<button class="spk" data-speak="${esc(speakSrc)}" aria-label="play">${speakerIcon()}</button>`
+        ? `<button class="spk" data-speak="${esc(speakSrc)}" aria-label="écouter">${speakerIcon()}</button>`
         : "") +
       `</div>`;
     if (!skipMean && mean) rev += `<div class="am">${esc(mean)}</div>`;
@@ -2765,7 +2985,7 @@ function Session() {
       s.st === "ok" &&
       /[\u3041-\u3096]/.test(toKana(s.typed))
     )
-      rev += `<div class="note">written in katakana</div>`;
+      rev += `<div class="note">écrit en katakana</div>`;
     const cb = ctxBlockFor(i, s.face);
     if (cb) {
       const plainJa = String(cb.ja || "").replace(/\u0001|\u0002/g, "");
@@ -2790,10 +3010,10 @@ function Session() {
       s.st === "shown" ||
       app.detailed ||
       dk.grading === "self"
-        ? `<div class="grade"><button class="g0" data-grade="0">Again</button><button class="g1" data-grade="1">Got it</button></div>`
-        : `<div class="go">tap to continue &rsaquo;</div>`;
-    rev += "</div>";
+        ? `<div class="grade"><button class="g0" data-grade="0">À revoir</button><button class="g1" data-grade="1">Réussi</button></div>`
+        : `<div class="go">touchez pour continuer &rsaquo;</div>`;
   }
+  rev += "</div>";
   const hasKanaOptions = !!(s.kanaChoices && s.kanaChoices.length);
   const showKb = app.kb && s.st === "typing" && !hasKanaOptions;
   const forceChoiceInput = hasKanaOptions && s.st === "typing";
@@ -2804,15 +3024,15 @@ function Session() {
     s.st === "typing"
       ? `<div class="s-input"><input id="f" class="${ime ? "" : "lat"}" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" lang="${ime ? "ja" : "fr"}" inputmode="${showKb || forceChoiceInput ? "none" : "text"}"${showKb || forceChoiceInput ? " readonly" : ""} placeholder="${ime ? "" : "ka"}" value="${esc(s.typed)}">
     ${kanaOptions}
-    <div class="s-actions"><button type="button" class="s-act check" data-validate="">Check</button><button type="button" class="s-act idk" data-dontknow="">I don't know</button></div></div>`
+    <div class="s-actions"><button type="button" class="s-act check" data-validate="">Vérifier</button><button type="button" class="s-act idk" data-dontknow="">Je ne sais pas</button></div></div>`
       : s.st === "ask"
-        ? `<div class="s-input"><button class="btn" data-reveal="">Reveal</button><div style="height:44px"></div></div>`
+        ? `<div class="s-input"><button class="btn" data-reveal="">Afficher</button><div style="height:44px"></div></div>`
         : `<div class="s-input"><input class="res ${s.st === "ok" ? "good" : s.st === "skip" ? "skip" : "bad"} ${ime ? "" : "lat"}" readonly value="${esc(
             (ime ? toKana(s.typed) : s.typed) || "—",
           )}"><div style="height:44px"></div></div>`;
   const isKanaKb = showKb && mode === "kana";
   return `<div id="sess" class="${showKb ? "kb-on" : ""}${isKanaKb ? " kana" : ""}">
-  <div class="s-top"><div class="s-chrome"><button class="x${s.confirmQuit ? " warn" : ""}" data-quit="">${s.confirmQuit ? "quit?" : "✕"}</button>
+  <div class="s-top"><div class="s-chrome"><button class="x${s.confirmQuit ? " warn" : ""}" data-quit="">${s.confirmQuit ? "quitter ?" : "✕"}</button>
    <span class="ct mono">${s.seen + 1} / ${s.seen + s.queue.length}</span>
    <button class="mu${app.mute ? " off" : ""}" data-mute="" aria-label="sound">${app.mute ? muteIcon(18) : speakerIcon(18)}</button></div><div class="s-feedback">${feedbackHtml}</div></div>
     <div class="s-body${done ? " done" : ""}"${done && s.st !== "near" && !app.detailed && dk.grading !== "self" ? ' data-next=""' : ""}>${s.fx ? `<div class="score-fx ${s.fx.kind}${s.fx.boost ? " boost" : ""}"><span class="pts">${s.fx.delta > 0 ? "+" : ""}${s.fx.delta}</span></div>` : ""}${body}${rev}</div>${input}
@@ -2930,6 +3150,8 @@ function commit(outcome, elapsed) {
     s.runBestCombo || 0,
   );
   app.totalRuns = (app.totalRuns || 0) + 1;
+  app.dataUpdatedAt = Date.now();
+  app.sessionUpdatedAt = app.dataUpdatedAt;
   app.unlockedBonus = bonusUnlocksForPoints(app.points);
   noteDailyProgress(delta, outcome);
   if (outcome === "good") grade(s.cur, true, elapsed || 8000);
@@ -2977,9 +3199,9 @@ function Summary() {
   return `<div class="scroll pad"><div style="height:80px"></div>
  <div style="display:flex;gap:12px;text-align:center">
   ${[
-    ["cards", s.seen],
-    ["accuracy", rate + "%"],
-    ["time", m + "'" + String(sec).padStart(2, "0")],
+    ["cartes", s.seen],
+    ["réussite", rate + "%"],
+    ["temps", m + "'" + String(sec).padStart(2, "0")],
   ]
     .map(
       ([l, v]) =>
@@ -2990,16 +3212,16 @@ function Summary() {
  <div style="display:flex;gap:12px;text-align:center">
   ${[
     ["points", s.runPoints || 0],
-    ["best streak", s.runBestCombo || 0],
-    ["total points", app.points || 0],
+    ["meilleure série", s.runBestCombo || 0],
+    ["points totaux", app.points || 0],
   ]
     .map(
       ([l, v]) =>
         `<div style="flex:1"><div class="mono" style="font-size:24px">${v}</div><div class="label" style="margin-top:6px">${l}</div></div>`,
     )
     .join("")}</div>
- <div style="height:56px"></div><button class="btn" data-go="home">Done</button>
- ${queueFor().length ? `<div style="height:10px"></div><button class="btn ghost" data-start="">Continue (${queueFor().length})</button>` : ""}</div>`;
+ <div style="height:56px"></div><button class="btn" data-go="home">Terminer</button>
+ ${queueFor().length ? `<div style="height:10px"></div><button class="btn ghost" data-start="">Continuer (${queueFor().length})</button>` : ""}</div>`;
 }
 
 /* ===================== liaisons ===================== */
@@ -3222,73 +3444,38 @@ function bind() {
     (e) =>
       (e.onclick = async () => {
         const action = e.dataset.sync;
-        if (action === "save") {
-          const url = view.querySelector("#sync-url");
-          const key = view.querySelector("#sync-key");
-          const user = view.querySelector("#sync-user");
-          app.sync.url = ((url && url.value) || "").trim();
-          app.sync.anonKey = ((key && key.value) || "").trim();
-          app.sync.userId = ((user && user.value) || "").trim();
-          app.sync.lastError = "";
-          saveState();
-          render();
-          return;
-        }
         if (action === "pull") await runSync("pull");
         if (action === "push") await runSync("push");
       }),
   );
   const logoutBtn = view.querySelector("[data-logout]");
-  if (logoutBtn)
-    logoutBtn.onclick = () => {
-      app.auth = null;
-      app.loginError = "";
-      saveState();
-      go("login");
-    };
+  if (logoutBtn) logoutBtn.onclick = () => firebaseAuth?.signOut();
   const loginBtn = view.querySelector("[data-login]");
-  if (loginBtn) {
-    const doLogin = () => {
-      const u = (view.querySelector("#login-u")?.value || "").trim();
-      const p = view.querySelector("#login-p")?.value || "";
-      if (!u || !p) {
-        app.loginError = "Fill in both fields.";
-        app.loginUser = u;
-        render();
-        return;
-      }
-      const h = simpleHash(u + p);
-      if (app.auth && app.auth.hash !== h) {
-        app.loginError = "Wrong credentials.";
-        app.loginUser = u;
-        render();
-        return;
-      }
-      app.auth = { user: u, hash: h };
+  if (loginBtn)
+    loginBtn.onclick = async () => {
       app.loginError = "";
-      app.loginUser = "";
-      app.sync.userId = u;
-      saveState();
-      go("home");
-      if (syncReady()) runSync("pull").then(() => render());
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        await firebaseAuth.signInWithPopup(provider);
+      } catch (error) {
+        if (error.code === "auth/popup-blocked") {
+          await firebaseAuth.signInWithRedirect(provider);
+          return;
+        }
+        console.error("Google sign-in failed", error.code);
+        app.loginError =
+          error.code === "auth/popup-closed-by-user"
+            ? "Connexion annulée."
+            : `Connexion Google impossible (${error.code || "erreur inconnue"}).`;
+        render();
+      }
     };
-    loginBtn.onclick = doLogin;
-    const pu = view.querySelector("#login-u");
-    const pp = view.querySelector("#login-p");
-    if (pu)
-      pu.onkeydown = (e) => {
-        if (e.key === "Enter") pp?.focus();
-      };
-    if (pp)
-      pp.onkeydown = (e) => {
-        if (e.key === "Enter") doLogin();
-      };
-  }
   const resetBtn = view.querySelector("[data-reset]");
   if (resetBtn)
     resetBtn.onclick = () => {
       if (resetBtn.dataset.reset === "confirm") {
         ITEMS.forEach((i) => {
+          const resetAt = Date.now();
           Object.assign(cards[i.id], {
             reps: 0,
             goodReps: 0,
@@ -3300,6 +3487,7 @@ function bind() {
             lastSeen: null,
             responseCount: 0,
             responseAvg: 0,
+            modifiedAt: resetAt,
           });
         });
         app.points = 0;
@@ -3309,16 +3497,17 @@ function bind() {
         app.unlockedBonus = {};
         app.pokemonUnlocks = {};
         app.dailyStats = {};
+        app.dataUpdatedAt = Date.now();
         app.pausedSession = null;
         app.sessionDay = null;
+        app.sessionUpdatedAt = app.dataUpdatedAt;
         app.sess = null;
-        app.sync.userId = "3stan";
         saveState();
         if (syncReady()) runSync("push");
         go("home");
       } else {
         resetBtn.dataset.reset = "confirm";
-        resetBtn.textContent = "Confirm reset? (tap again)";
+        resetBtn.textContent = "Confirmer la réinitialisation ?";
         resetBtn.style.background =
           "color-mix(in srgb,var(--shu) 10%,transparent)";
       }
@@ -3336,16 +3525,19 @@ function bind() {
       const quit = () => {
         clearTimeout(app.sess.timer);
         if (tts.ok) speechSynthesis.cancel();
-        // Persist remaining queue so the user can resume later
-        if (app.sess.queue.length > 0) {
+        const sameDay = app.sessionDay === dayKey();
+        if (sameDay && app.sess.queue.length > 0) {
           app.pausedSession = {
             queue: app.sess.queue,
             seen: app.sess.seen,
             ok: app.sess.ok,
           };
+        } else {
+          app.pausedSession = null;
         }
-        app.sessionDay = dayKey();
+        app.sessionUpdatedAt = Date.now();
         app.sess = null;
+        normalizeDailyState();
         saveState();
         go("home");
       };
@@ -3459,15 +3651,40 @@ if ("serviceWorker" in navigator) {
     .register("./sw.js")
     .catch((err) => console.warn("Service worker registration failed", err));
 }
-try {
+async function initializeApp() {
   syncViewportHeight();
+  const deckErrors = validateDeckData();
+  if (deckErrors.length) console.error("Deck validation failed", deckErrors);
   loadState();
+  app.auth = null;
   render();
-  loadState();
-  render();
-  render();
-  if (syncReady()) runSync("pull");
-} catch (e) {
+  if (!globalThis.firebase) {
+    app.loginError = "Firebase Auth n'a pas pu être chargé.";
+    syncHydrated = true;
+    render();
+    return;
+  }
+  const firebaseApp = firebase.apps.length
+    ? firebase.app()
+    : firebase.initializeApp(FIREBASE_CONFIG);
+  firebaseAuth = firebaseApp.auth();
+  firebaseAuth.onAuthStateChanged(async (user) => {
+    app.auth = user
+      ? {
+          uid: user.uid,
+          email: user.email || "",
+          name: user.displayName || "",
+          photoURL: user.photoURL || "",
+        }
+      : null;
+    app.loginError = "";
+    app.route = user ? (app.route === "login" ? "home" : app.route) : "login";
+    render();
+    if (user && syncReady()) await runSync("pull");
+    else syncHydrated = true;
+  });
+}
+initializeApp().catch((e) => {
   console.error("Initialization error", e);
   try {
     const v = document.getElementById("view");
@@ -3480,4 +3697,4 @@ try {
   } catch (_) {
     /* ignore */
   }
-}
+});

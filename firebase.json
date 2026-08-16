@@ -1,4 +1,7 @@
 {
+  "database": {
+    "rules": "database.rules.json"
+  },
   "hosting": {
     "public": ".",
     "ignore": [
@@ -8,6 +11,9 @@
       ".github/**",
       "README.md",
       "SPEC.md",
+      "critical_tests.cjs",
+      "database.rules.json",
+      "deploy.sh",
       "**/*.py"
     ],
     "cleanUrls": true,
