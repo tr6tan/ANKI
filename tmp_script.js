@@ -3454,19 +3454,34 @@ function bind() {
   if (loginBtn)
     loginBtn.onclick = async () => {
       app.loginError = "";
+      /* initializeApp() renseigne firebaseAuth de façon asynchrone, et renonce
+         si le SDK n'a pas été chargé. Sans ce garde, le clic appelle une
+         méthode sur null : un TypeError, qui n'a pas de .code et se lisait donc
+         « Google sign-in failed undefined » — un message qui ne désigne rien. */
+      if (!firebaseAuth) {
+        app.loginError = globalThis.firebase
+          ? "Connexion en cours d'initialisation, réessaie dans un instant."
+          : "Firebase Auth n'a pas pu être chargé. Vide le cache du site et recharge.";
+        render();
+        return;
+      }
+      /* déclaré hors du try : le catch en a besoin pour le repli par
+         redirection, et un const de bloc n'y serait pas visible */
+      const provider = new firebase.auth.GoogleAuthProvider();
       try {
-        const provider = new firebase.auth.GoogleAuthProvider();
         await firebaseAuth.signInWithPopup(provider);
       } catch (error) {
         if (error.code === "auth/popup-blocked") {
           await firebaseAuth.signInWithRedirect(provider);
           return;
         }
-        console.error("Google sign-in failed", error.code);
+        /* l'erreur entière, pas seulement .code : ce qui n'est pas une erreur
+           Firebase n'en porte pas, et c'est justement ce qu'on veut voir */
+        console.error("Google sign-in failed", error);
         app.loginError =
           error.code === "auth/popup-closed-by-user"
             ? "Connexion annulée."
-            : `Connexion Google impossible (${error.code || "erreur inconnue"}).`;
+            : `Connexion Google impossible (${error.code || error.message || "erreur inconnue"}).`;
         render();
       }
     };
