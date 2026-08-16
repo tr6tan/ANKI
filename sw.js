@@ -9,8 +9,23 @@ const APP_SHELL = [
   "./icon-512-v36.png",
 ];
 self.addEventListener("install", (event) => {
+  /* addAll() est atomique : une seule URL en échec fait échouer l'installation
+     entière. Or APP_SHELL fige la version de tmp_script.js, que deploy.sh
+     resynchronise par substitution — si ce bump rate, le service worker
+     précache une URL morte et l'app perd son mode hors ligne sans rien
+     signaler. Entrée par entrée, on garde tout ce qui répond. */
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)),
+    caches
+      .open(CACHE_NAME)
+      .then((cache) =>
+        Promise.all(
+          APP_SHELL.map((url) =>
+            cache
+              .add(url)
+              .catch((err) => console.warn("[sw] précache ignoré :", url, err)),
+          ),
+        ),
+      ),
   );
   self.skipWaiting();
 });

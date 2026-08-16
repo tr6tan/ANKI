@@ -1,0 +1,2 @@
+# cache local de déploiement Firebase, régénéré à chaque deploy
+.firebase/
