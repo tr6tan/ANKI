@@ -511,15 +511,25 @@ function speak(text, rate, opts) {
       ? moraCount(speakText) <= SHORT_MORA_MAX
       : !!o.repeat;
   const padded = paddedSpeech(speakText);
-  const seq = ++speechSeq;
-  speechSynthesis.cancel();
-  /* cancel() est asynchrone : enchaîner speak() dans le même tick laisse Chrome
-     vider la file après coup, et l'énoncé part en silence. Un tick suffit, et le
-     jeton seq garantit qu'une demande plus récente prenne la main sur celle-ci. */
-  setTimeout(() => {
-    if (seq !== speechSeq) return;
+  const run = () => {
     utter(padded, rate);
     if (repeat) utter(padded, rate);
+  };
+  const seq = ++speechSeq;
+  /* Rien en cours : parler tout de suite. iOS Safari n'autorise le premier
+     speak() que dans la pile d'appel du geste utilisateur — le différer, même
+     d'un tick, le fait bloquer en silence. Il n'y a alors rien à annuler. */
+  if (!speechSynthesis.speaking && !speechSynthesis.pending) {
+    run();
+    return;
+  }
+  /* Quelque chose parle déjà : l'audio est donc débloqué et on peut différer
+     sans risque. Il le faut, car cancel() est asynchrone et enchaîner speak()
+     dans le même tick laisse Chrome vider la file après coup. Le jeton seq
+     garantit qu'une demande plus récente prenne la main sur celle-ci. */
+  speechSynthesis.cancel();
+  setTimeout(() => {
+    if (seq === speechSeq) run();
   }, 0);
 }
 
