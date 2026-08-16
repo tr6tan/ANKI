@@ -22,12 +22,19 @@ jobs:
       # login? », message qui envoie chercher une session locale alors que la
       # cause est ailleurs. Quatre déploiements ont échoué ainsi sans que rien
       # ne le dise.
+      # L'issue est publiée en sortie d'étape : le contexte `secrets` n'est pas
+      # utilisable dans un `if:` d'étape, contrairement à `steps`.
       - name: Vérifier la présence d'un identifiant
+        id: creds
         env:
           SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
-          if [ -z "$SERVICE_ACCOUNT" ] && [ -z "$FIREBASE_TOKEN" ]; then
+          if [ -n "$SERVICE_ACCOUNT" ]; then
+            echo "mode=service_account" >> "$GITHUB_OUTPUT"
+          elif [ -n "$FIREBASE_TOKEN" ]; then
+            echo "mode=token" >> "$GITHUB_OUTPUT"
+          else
             echo "::error::Aucun identifiant de déploiement"
             echo "Définir l'un des deux dans Settings > Secrets and variables > Actions :"
             echo
@@ -48,7 +55,7 @@ jobs:
       # GOOGLE_APPLICATION_CREDENTIALS. umask 077 pour que le fichier ne soit
       # lisible que par le job.
       - name: Écrire la clé de compte de service
-        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
+        if: steps.creds.outputs.mode == 'service_account'
         env:
           SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
