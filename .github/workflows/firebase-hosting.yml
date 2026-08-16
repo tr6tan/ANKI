@@ -16,13 +16,60 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
+
+      # Sans ce contrôle, un secret absent donne « Failed to authenticate, have
+      # you run firebase login? » — un message qui envoie chercher le problème
+      # du mauvais côté. Les trois derniers déploiements ont échoué ainsi.
+      - name: Vérifier la présence des secrets
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          if [ -z "$PROJECT_ID" ]; then
+            echo "::error::Secret manquant : FIREBASE_PROJECT_ID"
+            echo "À définir dans Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          if [ -z "$SERVICE_ACCOUNT" ] && [ -z "$TOKEN" ]; then
+            echo "::error::Aucun identifiant : définir FIREBASE_SERVICE_ACCOUNT ou FIREBASE_TOKEN."
+            echo "Méthode recommandée — FIREBASE_SERVICE_ACCOUNT prend le contenu"
+            echo "intégral du fichier JSON de compte de service (console Firebase >"
+            echo "Paramètres du projet > Comptes de service > Générer une clé privée)."
+            echo "Les jetons firebase login:ci sont en fin de vie chez Google."
+            exit 1
+          fi
 
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
+      # Le CLI lit la clé depuis le fichier désigné par
+      # GOOGLE_APPLICATION_CREDENTIALS. Le compte de service prime sur le jeton
+      # lorsque les deux sont présents.
+      - name: Écrire la clé de compte de service
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          umask 077
+          printf '%s' "$SERVICE_ACCOUNT" > "$RUNNER_TEMP/service-account.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/service-account.json" >> "$GITHUB_ENV"
+
       - name: Deploy to Firebase Hosting
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-        run: firebase deploy --only hosting --project "$FIREBASE_PROJECT_ID" --token "$FIREBASE_TOKEN" --non-interactive
+          PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          if [ -n "$SERVICE_ACCOUNT" ]; then
+            echo "Authentification par compte de service."
+            firebase deploy --only hosting --project "$PROJECT_ID" --non-interactive
+          else
+            echo "Authentification par jeton (méthode dépréciée)."
+            firebase deploy --only hosting --project "$PROJECT_ID" --token "$TOKEN" --non-interactive
+          fi
+
+      - name: Effacer la clé
+        if: always()
+        run: rm -f "$RUNNER_TEMP/service-account.json"
