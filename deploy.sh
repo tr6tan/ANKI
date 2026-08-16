@@ -18,6 +18,6 @@ subst "s/tmp_script\.js\?v=[^\"']*/tmp_script.js?v=$VERSION/g" sw.js
 git add -A
 git commit -m "Deploy v$VERSION"
 git push origin main
-firebase deploy --only hosting
+firebase deploy --only hosting --project flashcard-1d3b9
 
 echo "Done: v$VERSION (cache-v$NEW)"
