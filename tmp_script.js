@@ -467,28 +467,13 @@ function prepareSpeechText(text) {
   const base = !hasJa && looksRomaji ? toKana(raw) : raw;
   return base.replace(/\s*\/\s*/g, "、").replace(/·/g, "、");
 }
-/* Les petits kana d'un yōon ne portent pas de more, ils se fondent dans le kana
-   qui précède : きゃ vaut une more, pas deux. っ et ー en portent une chacun. */
-const YOON = "ゃゅょャュョぁぃぅぇぉァィゥェォ";
-const SPEECH_PUNCT = "、。・/·";
-const SHORT_MORA_MAX = 2;
-function moraCount(text) {
-  let n = 0;
-  for (const c of String(text || "")) {
-    if (YOON.includes(c) || SPEECH_PUNCT.includes(c)) continue;
-    if (/[ぁ-ヿー]/.test(c)) n += 1;
-    else if (/[㐀-鿿]/.test(c)) n += 2; /* un kanji vaut ~2 mores */
-    else if (/\S/.test(c)) n += 1;
-  }
-  return n;
-}
 /* Un énoncé d'une more dure ~300 ms, et les moteurs TTS rognent l'attaque le
    temps d'ouvrir le flux audio : sur あ, c'est un tiers du signal qui saute. On
-   encadre donc l'énoncé de pauses — la troncature tombe sur le silence — et on
-   répète les énoncés courts au lieu de les ralentir. Descendre le débit sous 0.6
-   n'allonge pas la voyelle, ça déforme les formants ; et comme la longueur
-   vocalique est phonémique en japonais (おばさん / おばあさん), étirer une more
-   apprendrait à l'oreille une durée fausse. */
+   encadre donc l'énoncé de pauses, pour que la troncature tombe sur le silence
+   plutôt que sur le premier phonème. Ralentir ne serait pas une solution :
+   descendre le débit sous 0.6 n'allonge pas la voyelle, ça déforme les
+   formants ; et comme la longueur vocalique est phonémique en japonais
+   (おばさん / おばあさん), étirer une more apprendrait une durée fausse. */
 function paddedSpeech(text) {
   return "、" + text + "、";
 }
@@ -501,20 +486,12 @@ function utter(text, rate) {
   u.pitch = 1.0;
   speechSynthesis.speak(u);
 }
-function speak(text, rate, opts) {
+function speak(text, rate) {
   if (!tts.ok || app.mute || !text) return;
   const speakText = prepareSpeechText(text);
   if (!speakText) return;
-  const o = opts || {};
-  const repeat =
-    o.repeat === undefined
-      ? moraCount(speakText) <= SHORT_MORA_MAX
-      : !!o.repeat;
   const padded = paddedSpeech(speakText);
-  const run = () => {
-    utter(padded, rate);
-    if (repeat) utter(padded, rate);
-  };
+  const run = () => utter(padded, rate);
   const seq = ++speechSeq;
   /* Rien en cours : parler tout de suite. iOS Safari n'autorise le premier
      speak() que dans la pile d'appel du geste utilisateur — le différer, même
@@ -2664,9 +2641,7 @@ function nextCard() {
   if (app.route === "session") {
     render();
     const dk = deck(i.deck);
-    /* la face « sound » est la seule où l'énoncé EST la consigne : on répète
-       toujours, quelle que soit la longueur de l'item */
-    if (s.face === "sound") speak(i.kana, 0.7, { repeat: true });
+    if (s.face === "sound") speak(i.kana, 0.7);
     else if (dk.audio === "always") speak(promptAudio(s), 0.8);
   }
 }
@@ -2861,7 +2836,7 @@ function Session() {
     gloss = [s.ctx.en + " · " + i.keyword, `saisissez la lecture en ${mode}`];
     atoms = s.ctx.kanji.map((k) => KIDX.kanji[k]);
   } else if (s.face === "sound") {
-    body = `<button class="play" data-speak="${esc(i.kana)}" data-speak-repeat="" aria-label="replay">▶</button>`;
+    body = `<button class="play" data-speak="${esc(i.kana)}" aria-label="écouter">▶</button>`;
     gloss = [
       i.rom,
       `écrivez ce que vous entendez en ${i.deck === "kata" ? "katakana" : "hiragana"}`,
@@ -3258,13 +3233,7 @@ function bind() {
     (e) => (e.onclick = () => go("editor", { editing: e.dataset.edit })),
   );
   q("[data-speak]").forEach(
-    (e) =>
-      (e.onclick = () =>
-        speak(
-          e.dataset.speak,
-          0.75,
-          e.dataset.speakRepeat === undefined ? undefined : { repeat: true },
-        )),
+    (e) => (e.onclick = () => speak(e.dataset.speak, 0.75)),
   );
   q("[data-tg]").forEach(
     (e) =>
@@ -3454,19 +3423,34 @@ function bind() {
   if (loginBtn)
     loginBtn.onclick = async () => {
       app.loginError = "";
+      /* initializeApp() renseigne firebaseAuth de façon asynchrone, et renonce
+         si le SDK n'a pas été chargé. Sans ce garde, le clic appelle une
+         méthode sur null : un TypeError, qui n'a pas de .code et se lisait donc
+         « Google sign-in failed undefined » — un message qui ne désigne rien. */
+      if (!firebaseAuth) {
+        app.loginError = globalThis.firebase
+          ? "Connexion en cours d'initialisation, réessaie dans un instant."
+          : "Firebase Auth n'a pas pu être chargé. Vide le cache du site et recharge.";
+        render();
+        return;
+      }
+      /* déclaré hors du try : le catch en a besoin pour le repli par
+         redirection, et un const de bloc n'y serait pas visible */
+      const provider = new firebase.auth.GoogleAuthProvider();
       try {
-        const provider = new firebase.auth.GoogleAuthProvider();
         await firebaseAuth.signInWithPopup(provider);
       } catch (error) {
         if (error.code === "auth/popup-blocked") {
           await firebaseAuth.signInWithRedirect(provider);
           return;
         }
-        console.error("Google sign-in failed", error.code);
+        /* l'erreur entière, pas seulement .code : ce qui n'est pas une erreur
+           Firebase n'en porte pas, et c'est justement ce qu'on veut voir */
+        console.error("Google sign-in failed", error);
         app.loginError =
           error.code === "auth/popup-closed-by-user"
             ? "Connexion annulée."
-            : `Connexion Google impossible (${error.code || "erreur inconnue"}).`;
+            : `Connexion Google impossible (${error.code || error.message || "erreur inconnue"}).`;
         render();
       }
     };
