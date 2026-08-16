@@ -2663,8 +2663,13 @@ function Session() {
     seul cloze y ajoute la traduction de la phrase, distincte du sens du mot. */
   if (!done || s.face === "cloze")
     body += `<div class="gloss${done || upfront ? " on" : ""}${s.face === "cloze" ? " left" : ""}">${esc(gtxt)}</div>`;
-  let rev = '<div class="reveal">';
+  /* Tant que la carte n'est pas révélée il n'y a rien à mettre dedans, et le
+     conteneur s'affichait quand même : min-height 172px, bordure et dégradé,
+     soit un grand cadre vide au milieu de l'écran qui attire l'œil à la place
+     du vrai champ de saisie. On ne l'émet donc qu'une fois qu'il a du contenu. */
+  let rev = "";
   if (done) {
+    rev = '<div class="reveal">';
     let itemText = "",
       answerMain = "",
       mean = "",
@@ -2777,8 +2782,8 @@ function Session() {
       dk.grading === "self"
         ? `<div class="grade"><button class="g0" data-grade="0">Again</button><button class="g1" data-grade="1">Got it</button></div>`
         : `<div class="go">tap to continue &rsaquo;</div>`;
+    rev += "</div>";
   }
-  rev += "</div>";
   const hasKanaOptions = !!(s.kanaChoices && s.kanaChoices.length);
   const showKb = app.kb && s.st === "typing" && !hasKanaOptions;
   const forceChoiceInput = hasKanaOptions && s.st === "typing";
