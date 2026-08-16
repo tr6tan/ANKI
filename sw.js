@@ -1,8 +1,8 @@
-const CACHE_NAME = "study-deck-cache-v63";
+const CACHE_NAME = "study-deck-cache-v64";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./tmp_script.js?v=20260816-1321",
+  "./tmp_script.js?v=20260816-1348",
   "https://cdn.jsdelivr.net/npm/ts-fsrs@5.4.1/dist/index.umd.js",
   "https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js",
   "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js",
