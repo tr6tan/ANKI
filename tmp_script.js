@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260818-1714";
+const BUILD_VERSION = "20260818-1939";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -494,7 +494,7 @@ function speak(text, rate) {
   const run = () => utter(padded, rate);
   const seq = ++speechSeq;
   /* Rien en cours : parler tout de suite. iOS Safari n'autorise le premier
-     speak() que dans la pile d'appel du geste utilisateur — le différer, même
+     speak() que dans la pile d'appel du geste utilisateur ; le différer, même
      d'un tick, le fait bloquer en silence. Il n'y a alors rien à annuler. */
   if (!speechSynthesis.speaking && !speechSynthesis.pending) {
     run();
@@ -695,8 +695,8 @@ function levelProgress(levelId) {
   return deckMasteryRate(l.deckIds);
 }
 /* Le niveau suivant s'ouvre sur la COUVERTURE CONSOLIDÉE du précédent, pas sur sa
-   maîtrise à 95 %. L'argument du verrou est un argument de lisibilité — les kanji
-   N4 se combinent avec ceux de N5 — et « consolidé » y répond. Exiger trois
+   maîtrise à 95 %. L'argument du verrou est un argument de lisibilité (les kanji
+   N4 se combinent avec ceux de N5) et « consolidé » y répond. Exiger trois
    semaines de stabilité sur 95 % des items reproduisait la famine à chaque
    frontière de niveau : le contenu d'un niveau s'épuise en une semaine, sa
    maîtrise demande deux mois. La maîtrise reste ce qu'affiche `progress`, donc ce
@@ -1094,7 +1094,7 @@ const S = (t, r) => ({ t, r: r || null });
   ],
   /* Troisième contexte pour chaque item : la spec §10 en demande au moins trois,
      sans quoi la rotation retombe toujours sur les deux mêmes phrases et l'on
-     mémorise l'indice au lieu du mot — invisible dans les statistiques, puisque le
+     mémorise l'indice au lieu du mot ; invisible dans les statistiques, puisque le
      taux de réussite reste excellent. Les formes choisies varient volontairement
      (négation, passé, volitif) pour ne pas répéter la même conjugaison. */
   [
@@ -1271,7 +1271,7 @@ const MASTERY_REPS = 5;
 /* goodReps seul est un cliquet : il ne redescend jamais, donc une carte oubliée
    depuis longtemps continuait de compter comme maîtrisée et de débloquer des
    prérequis. On exige donc aussi une stabilité courante d'au moins trois semaines
-   — le même seuil que « mature » dans stateOf. Après une rechute, FSRS effondre la
+   ; le même seuil que « mature » dans stateOf. Après une rechute, FSRS effondre la
    stabilité : la carte perd son statut jusqu'à l'avoir reconstruite. */
 const MASTERY_STABILITY = 21;
 
@@ -1280,7 +1280,7 @@ const MASTERY_STABILITY = 21;
    doit être atteint vite, sinon le contenu se tarit. « L'ai-je retenu ? » atteste
    d'un acquis : ce doit être lent, sinon l'attestation ne vaut rien. Les confondre
    verrouillait le contenu derrière une condition de rétention longue de deux mois,
-   alors qu'un deck s'épuise en une semaine — d'où 38 jours consécutifs sans rien
+   alors qu'un deck s'épuise en une semaine ; d'où 38 jours consécutifs sans rien
    à étudier au deuxième mois.
 
      learned  a passé ses pas d'apprentissage         → lisible
@@ -1288,7 +1288,7 @@ const MASTERY_STABILITY = 21;
      known    cinq réussites et trois semaines stable → maîtrisé (affichage, badges)
 
    Les trois redescendent après une rechute : c'est voulu pour les statistiques.
-   Les déblocages, eux, sont rendus définitifs par syncDeckUnlocks — une porte
+   Les déblocages, eux, sont rendus définitifs par syncDeckUnlocks ; une porte
    franchie ne se referme pas, sinon une carte oubliée retirerait du contenu déjà
    en cours d'étude. */
 const LEARNED_REPS = 2,
@@ -1309,7 +1309,7 @@ const cardKnown = (id) =>
   (cards[id].stab || 0) >= MASTERY_STABILITY;
 /* Maîtriser un item, c'est le tenir dans LES DEUX directions : le reconnaître et le
    produire. `learned` et `solid` restent au contraire des propriétés de la seule
-   carte de reconnaissance — savoir lire un caractère est une compétence de
+   carte de reconnaissance ; savoir lire un caractère est une compétence de
    reconnaissance, et c'est elle qui conditionne la lisibilité d'une question. Les
    portes conservent donc exactement le calibrage mesuré. */
 const known = (id) => cardIdsFor(id).every(cardKnown);
@@ -1345,7 +1345,7 @@ function deckUnlockInfo(dk) {
      Le katakana ne dépend d'aucun hiragana (ses réponses sont en romaji) : le
      retenir n'est qu'un séquencement, on ouvre donc dès que l'hiragana est
      largement lisible. Le kanji, lui, dépend vraiment des kana puisque ses
-     lectures se tapent en hiragana — on exige les deux syllabaires, l'hiragana
+     lectures se tapent en hiragana ; on exige les deux syllabaires, l'hiragana
      consolidé, pour ne pas faire échouer une carte sur une faute de kana plutôt
      que sur la lecture. */
   const KATA_NEEDS_HIRA = 90;
@@ -1437,7 +1437,7 @@ function pokemonUnlockInfo() {
   };
 }
 /* Une porte franchie ne se referme jamais. Les trois paliers redescendent après une
-   rechute — c'est souhaitable pour les statistiques, mais si le déblocage en
+   rechute ; c'est souhaitable pour les statistiques, mais si le déblocage en
    dépendait, un hiragana oublié retirerait tout le deck kanji de l'étude en cours.
    On enregistre donc le franchissement. */
 function deckUnlocked(id) {
@@ -1462,8 +1462,7 @@ function syncPokemonUnlocks() {
   );
   let changed = false;
   /* Un déblocage est acquis définitivement. Depuis que known() peut redescendre
-     après une rechute, révoquer reprendrait à l'utilisateur un Pokémon — et son
-     éventuel chromatique — déjà gagné. Le i+1 continue de s'appliquer à ce qui
+     après une rechute, révoquer reprendrait à l'utilisateur un Pokémon déjà gagné, chromatique compris. Le i+1 continue de s'appliquer à ce qui
      n'est pas encore débloqué ; on ne purge donc que les identifiants inconnus. */
   const allPkmnIds = new Set(allDeckItems("pkmn").map((i) => i.id));
   for (const id in app.pokemonUnlocks) {
@@ -1560,7 +1559,7 @@ function atomsOf(i) {
   return [];
 }
 /* i+1 : la question ne doit contenir que des atomes LISIBLES. C'est une condition
-   de lecture, pas de rétention — exiger la maîtrise ici privait les cartes de tout
+   de lecture, pas de rétention ; exiger la maîtrise ici privait les cartes de tout
    contexte utilisable pendant des semaines. */
 const unknownIn = (ids) => ids.filter((id) => !learned(id)).length;
 
@@ -1890,8 +1889,8 @@ const emptyCard = (id) => ({
   lapses: 0,
   last: null,
 });
-/* Les noms de Pokémon n'ont pas de carte sœur : leurs deux faces — anglais →
-   katakana, et écoute → katakana — sont déjà des faces de production. */
+/* Les noms de Pokémon n'ont pas de carte sœur : leurs deux faces ; anglais →
+   katakana, et écoute → katakana ; sont déjà des faces de production. */
 const hasProduction = (i) => i.kind !== "name";
 const productionId = (itemId) => {
   const i = ITEM_BY_ID[baseId(itemId)];
@@ -2048,7 +2047,7 @@ function noteDailyProgress(delta, outcome) {
   app.dailyStats = stats;
 }
 /* kanji fait figure d'exception : c'est un deck ordonné (non filtré par atomes),
-   mais ses lectures sont en hiragana — donc pas de nouveau kanji tant que la base
+   mais ses lectures sont en hiragana ; donc pas de nouveau kanji tant que la base
    hiragana n'est pas raisonnablement en place. */
 const KANJI_UNLOCK_HIRA = 10;
 function validateDeckData() {
@@ -2155,7 +2154,7 @@ function unseenPool(dk) {
         .map((x) => x.item);
   /* La production ne s'ouvre qu'une fois la reconnaissance acquise : devoir écrire
      une graphie qu'on ne reconnaît pas encore n'est pas du rappel, c'est une
-     devinette. Et elle passe AVANT les nouveaux items — consolider ce qui est déjà
+     devinette. Et elle passe AVANT les nouveaux items ; consolider ce qui est déjà
      entamé vaut mieux que laisser grossir une dette de production. */
   const siblings = items
     .map((i) => productionId(i.id))
@@ -2163,7 +2162,7 @@ function unseenPool(dk) {
   let pool = [...siblings, ...ordered.map((i) => i.id)];
   /* Garde-fou : les lectures de kanji se tapent en hiragana. Redondant avec la
      porte du deck, mais il protège le cas où le deck a été débloqué puis les
-     hiragana oubliés — le déblocage est définitif, la lisibilité ne l'est pas. */
+     hiragana oubliés ; le déblocage est définitif, la lisibilité ne l'est pas. */
   if (dk.id === "kanji" && learnedCount("hira") < KANJI_UNLOCK_HIRA) pool = [];
   return pool;
 }
@@ -2207,7 +2206,7 @@ const dailyBudget = () => {
 };
 /* Une carte neuve est vue deux fois le jour de son introduction : la présentation,
    puis la reprise du pas d'apprentissage. Le budget se compte en expositions, donc
-   une nouveauté en consomme deux — sans quoi une journée sans révision servait
+   une nouveauté en consomme deux ; sans quoi une journée sans révision servait
    30 nouveautés, soit 60 cartes à l'écran. */
 const EXPOSURES_PER_NEW_CARD = 2;
 /* Régime dégradé. Mesuré à 70 % de précision : aucune porte ne s'ouvrait en quatre
@@ -2215,8 +2214,8 @@ const EXPOSURES_PER_NEW_CARD = 2;
    séance pendant que de nouvelles cartes continuent d'entrer. L'apprenant qui a le
    plus besoin d'aide reçoit donc plus de charge et moins de progrès.
 
-   La réponse n'est pas d'abaisser les portes — quelqu'un qui rate 30 % de ses kana
-   n'est pas prêt pour le katakana — mais de tarir l'apport de nouveautés pour lui
+   La réponse n'est pas d'abaisser les portes (quelqu'un qui rate 30 % de ses kana
+   n'est pas prêt pour le katakana) mais de tarir l'apport de nouveautés pour lui
    laisser consolider l'existant. Le mécanisme est auto-correcteur : moins de
    nouveautés, donc plus de répétitions sur les cartes en cours, donc la stabilité
    remonte, donc la porte finit par s'ouvrir. C'est aussi le conseil constant de la
@@ -2229,7 +2228,7 @@ const THROTTLE_FLOOR = 0.7;
 const THROTTLE_START = 0.85;
 /* Mais jamais zéro tant qu'il reste du contenu à introduire : les portes se
    comptent en nombre absolu de caractères lisibles, donc couper complètement
-   l'apport les verrouillerait pour de bon — l'apprenant en difficulté serait puni
+   l'apport les verrouillerait pour de bon ; l'apprenant en difficulté serait puni
    deux fois. Un filet d'eau garantit que le seuil reste atteignable, tout en
    ramenant la charge à ce qu'il peut absorber. */
 const THROTTLE_MIN_NEW = 2;
@@ -2287,7 +2286,7 @@ function queueFor(id) {
   if (id) return burySiblings(shuffle([...due, ...newFor(deck(id))]));
   /* Les révisions dues n'étaient bornées par rien : seules les nouveautés
      l'étaient. Après une semaine d'absence, « Normal · 30 » servait donc deux
-     cents cartes. On plafonne, en commençant par les PLUS EN RETARD — ce sont
+     cents cartes. On plafonne, en commençant par les PLUS EN RETARD ; ce sont
      celles dont la rétention se dégrade le plus, et les reporter coûte davantage
      que de reporter une carte tout juste échue. Le surplus reste dû et revient
      demain, sans pénalité : FSRS n'a pas de notion de retard. */
@@ -2357,7 +2356,7 @@ function ctxForKanji(c) {
    cartes. Sans cela ctxForLex passait une fonction vide, u valait toujours 0, et
    toute phrase était réputée lisible : le seul deck où le i+1 compte vraiment en
    était exempté. On classe ici du plus lisible au moins lisible sans jamais
-   bloquer — un item de vocabulaire n'a que deux ou trois phrases, les exclure
+   bloquer ; un item de vocabulaire n'a que deux ou trois phrases, les exclure
    toutes le priverait de contexte, et la spec ne contraint que la question. */
 function sentenceAtoms(x) {
   const ids = [];
@@ -2574,7 +2573,7 @@ function Home() {
     ${resumeToday ? "" : `<p class="faint" style="text-align:center;font-size:12px;line-height:1.5;margin:0 0 20px">Les cartes ratées reviennent dans la séance, en plus de ce total.</p>`}
     ${
       remaining
-        ? `<div class="row"><span class="muted">Nouvelles cartes${newCount ? ` <span class="faint" style="font-size:12px">— vues deux fois</span>` : ""}</span><span class="mono">${newCount}</span></div><div class="row" style="margin-bottom:18px"><span class="muted">Révisions</span><span class="mono">${reviewCount}</span></div>`
+        ? `<div class="row"><span class="muted">Nouvelles cartes${newCount ? ` <span class="faint" style="font-size:12px">(vues deux fois)</span>` : ""}</span><span class="mono">${newCount}</span></div><div class="row" style="margin-bottom:18px"><span class="muted">Révisions</span><span class="mono">${reviewCount}</span></div>`
         : ""
     }
     ${canStart && remaining ? `<button class="btn" data-start="">Commencer</button>` : ""}
@@ -2609,12 +2608,12 @@ function Home() {
 }
 /* Remplace la heatmap annuelle : 365 cases de 11 px avec des infobulles
    inutilisables au doigt occupaient la moitié de l'écran principal pour une
-   information sur laquelle on ne peut pas agir — et c'était, littéralement, le
+   information sur laquelle on ne peut pas agir ; et c'était, littéralement, le
    compteur de série de jours que la spec §12.2 interdit. Ici on répond à la seule
    question utile avant de lancer une session : ce qui arrive ensuite. */
 /* Le budget n'est pas toujours ce qui borne la session : au démarrage, seul
    l'hiragana est ouvert et son plafond vaut 10, donc « Long · 60 » ne change rien.
-   Sans explication, le réglage passerait pour cassé — on dit donc ce qui borne
+   Sans explication, le réglage passerait pour cassé ; on dit donc ce qui borne
    réellement, et où le régler. */
 function loadNote(newCount, reviewCount) {
   /* Le régime dégradé passe avant : c'est l'explication la plus utile, et la plus
@@ -2622,7 +2621,7 @@ function loadNote(newCount, reviewCount) {
   const acc = recentAccuracy();
   const factor = newCardFactor();
   if (factor < 1)
-    return `Apport de nouveautés réduit au minimum : ${Math.round(acc * 100)} % de réussite sur les sept derniers jours, pour ${Math.round(THROTTLE_START * 100)} % attendus. Mieux vaut consolider que d'empiler — cela remontera de soi-même.`;
+    return `Apport de nouveautés réduit au minimum : ${Math.round(acc * 100)} % de réussite sur les sept derniers jours, pour ${Math.round(THROTTLE_START * 100)} % attendus. Mieux vaut consolider que d'empiler ; cela remontera de soi-même.`;
   const slots = Math.floor(
     Math.max(0, dailyBudget() - reviewCount) / EXPOSURES_PER_NEW_CARD,
   );
@@ -3057,7 +3056,7 @@ function faceFor(c, g) {
   if (i.kind === "kanji") return varied && usable ? "comp" : "keyword";
   /* Le deck Pokémon n'avait qu'une face : anglais → katakana, 151 fois. C'était le
      seul deck sans alternance, alors que c'est le deck-récompense. On intercale une
-     face d'écoute — entendre le nom japonais et l'écrire — qui exerce le lien son →
+     face d'écoute, entendre le nom japonais et l'écrire, qui exerce le lien son →
      graphie, absent de la face d'origine. */
   return varied ? "sound" : "name";
 }
@@ -3204,7 +3203,7 @@ function kanaChoicePoolForFace(s) {
   if (!i) return [];
   /* Les pastilles de choix n'ont de sens que sur un kana isolé. Sur un nom de
      Pokémon, proposer dix noms entiers transformerait un exercice d'écriture en
-     question à choix multiples — beaucoup plus facile, et ce n'est pas la même
+     question à choix multiples ; beaucoup plus facile, et ce n'est pas la même
      compétence. */
   if (i.kind === "glyph" && (s.face === "sound" || s.face === "glyph-write")) {
     const useKata = i.deck === "kata";
@@ -3256,8 +3255,8 @@ function liveFeedback(s) {
     state: dist <= 1 ? "near" : "bad",
     text:
       dist <= 1
-        ? "Presque — une seule faute"
-        : "Faux — réponse attendue en " + (mode === "kana" ? "kana" : "romaji"),
+        ? "Presque : une seule faute"
+        : "Faux : réponse attendue en " + (mode === "kana" ? "kana" : "romaji"),
   };
 }
 function syncLiveFeedback() {
@@ -3318,7 +3317,7 @@ function Session() {
     atoms = null,
     gloss = ["", ""];
   const feedback = feedbackFor(s);
-  /* aria-live : sans lui, un lecteur d'écran n'annonçait rien après une réponse —
+  /* aria-live : sans lui, un lecteur d'écran n'annonçait rien après une réponse ;
      le verdict n'existait qu'en couleur et en position. */
   const feedbackHtml =
     feedback && ["ok", "near", "ko", "skip"].includes(s.st)
@@ -3355,7 +3354,7 @@ function Session() {
     gloss = [s.ctx.en + " · " + i.keyword, `saisissez la lecture en ${mode}`];
     atoms = s.ctx.kanji.map((k) => KIDX.kanji[k]);
   } else if (s.face === "sound") {
-    /* un nom de Pokémon s'écrit en katakana, comme le deck kata — la consigne suit
+    /* un nom de Pokémon s'écrit en katakana, comme le deck kata ; la consigne suit
        le script attendu, pas le nom du deck */
     const script =
       i.deck === "kata" || i.kind === "name" ? "katakana" : "hiragana";
@@ -3516,7 +3515,7 @@ function Session() {
       rev += `<div class="go" style="margin-top:6px"><button data-undo="" style="color:var(--shu);font-size:11px;letter-spacing:.04em;text-transform:uppercase">je m'étais trompé</button></div>`;
     /* fermeture à l'intérieur du bloc : hors de lui, une carte non révélée
        produirait "" + "</div>", un orphelin qui referme #sess trop tôt et
-       éjecte .s-input du conteneur — la règle #sess.kb-on .s-input cesse alors
+       éjecte .s-input du conteneur ; la règle #sess.kb-on .s-input cesse alors
        de s'appliquer et le champ passe sous le clavier simulé. */
     rev += "</div>";
   }
@@ -3534,7 +3533,7 @@ function Session() {
       : s.st === "ask"
         ? `<div class="s-input"><button class="btn" data-reveal="">Afficher</button><div style="height:44px"></div></div>`
         : `<div class="s-input"><input class="res ${s.st === "ok" ? "good" : s.st === "skip" ? "skip" : "bad"} ${ime ? "" : "lat"}" readonly value="${esc(
-            (ime ? toKana(s.typed) : s.typed) || "—",
+            (ime ? toKana(s.typed) : s.typed) || "·",
           )}"><div style="height:44px"></div></div>`;
   const isKanaKb = showKb && mode === "kana";
   return `<div id="sess" class="${showKb ? "kb-on" : ""}${isKanaKb ? " kana" : ""}">
@@ -3558,7 +3557,7 @@ function KB(mode) {
       `<div class="kr"><button class="kk w" type="button" data-kb="backspace">⌫</button><button class="kk sp" type="button" data-kb="space">espace</button><button class="kk w go" type="button" data-kb="enter">go</button></div>`
     );
   }
-  // Gojūon kana keyboard — katakana for pkmn/kata, hiragana otherwise
+  // Gojūon kana keyboard ; katakana for pkmn/kata, hiragana otherwise
   const curItem = app.sess?.cur?.id ? item(app.sess.cur.id) : null;
   const useKata = curItem?.deck === "kata" || curItem?.kind === "name";
   const cv = useKata ? toKata : (s) => s;
@@ -3606,7 +3605,7 @@ function validate() {
     r === "ok"
       ? { state: "good", text: "Juste" }
       : r === "near"
-        ? { state: "near", text: "Presque — à toi de trancher" }
+        ? { state: "near", text: "Presque : à toi de trancher" }
         : { state: "bad", text: "Faux" };
   if (s.ctx) s.cur.last = s.ctx.id;
   if (dk.audio !== "never") speak(promptAudio(s));
@@ -3636,7 +3635,7 @@ function skipCard() {
 const LEECH_LAPSES = 3;
 /* Plafond dur de la séance, en multiple de la charge annoncée. Les reprises après
    échec ne se comptaient dans aucun budget : à 70 % de réussite, « Normal · 30 »
-   servait 55 cartes. Passé ce plafond, on cesse de remettre les cartes en file —
+   servait 55 cartes. Passé ce plafond, on cesse de remettre les cartes en file ;
    elles sont déjà notées et replanifiées par FSRS, donc rien n'est perdu ; seule
    la répétition du jour est abandonnée. La charge annoncée devient ainsi une
    promesse tenue à 50 % près, et non à 80 %. */
@@ -3650,7 +3649,7 @@ const MIN_REQUEUE_GAP = 4;
 function requeue(s, card) {
   /* File vide : il n'y a rien à intercaler, et la carte est déjà replanifiée par
      FSRS en réapprentissage. La redemander sur-le-champ ne serait que de la
-     recopie — Anki ne le fait pas non plus, il termine la session. */
+     recopie ; Anki ne le fait pas non plus, il termine la session. */
   if (!s.queue.length) return false;
   s.queue.splice(Math.min(s.queue.length, MIN_REQUEUE_GAP), 0, card);
   return true;
@@ -3723,7 +3722,7 @@ function commit(outcome, elapsed) {
     /* Carte bloquante : au-delà de LEECH_LAPSES échecs dans la même session, on
        la met de côté au lieu de la faire tourner indéfiniment. Une carte qu'on
        n'obtient pas après trois tentatives rapprochées ne s'apprendra pas en en
-       ajoutant une quatrième — elle a besoin d'une nuit, ou d'être reformulée. */
+       ajoutant une quatrième ; elle a besoin d'une nuit, ou d'être reformulée. */
     if (lapses >= LEECH_LAPSES || !roomLeft) {
       s.setAside = (s.setAside || 0) + 1;
       if (!s.setAsideItems) s.setAsideItems = [];
@@ -3835,7 +3834,7 @@ function Summary() {
    s.setAside
      ? `<div style="height:28px"></div><hr class="rule" style="margin:0 0 12px">
  <p class="label">Mises de côté</p>
- <p class="faint" style="font-size:13px;line-height:1.6;margin:6px 0 0">${s.setAside} carte${s.setAside > 1 ? "s" : ""} ratée${s.setAside > 1 ? "s" : ""} ${LEECH_LAPSES} fois de suite : <span style="font-family:var(--f-jp)">${esc(s.setAsideItems.slice(0, 8).join(" · "))}</span>${s.setAsideItems.length > 8 ? " …" : ""}. Insister le même jour n'aurait rien donné — elles reviendront à leur échéance. Si l'une résiste plusieurs jours, l'énoncé mérite d'être revu.</p>`
+ <p class="faint" style="font-size:13px;line-height:1.6;margin:6px 0 0">${s.setAside} carte${s.setAside > 1 ? "s" : ""} ratée${s.setAside > 1 ? "s" : ""} ${LEECH_LAPSES} fois de suite : <span style="font-family:var(--f-jp)">${esc(s.setAsideItems.slice(0, 8).join(" · "))}</span>${s.setAsideItems.length > 8 ? " …" : ""}. Insister le même jour n'aurait rien donné ; elles reviendront à leur échéance. Si l'une résiste plusieurs jours, l'énoncé mérite d'être revu.</p>`
      : ""
  }
  <div style="height:56px"></div><button class="btn" data-go="home">Terminer</button>
@@ -4087,7 +4086,7 @@ function bind() {
       /* initializeApp() renseigne firebaseAuth de façon asynchrone, et renonce
          si le SDK n'a pas été chargé. Sans ce garde, le clic appelle une
          méthode sur null : un TypeError, qui n'a pas de .code et se lisait donc
-         « Google sign-in failed undefined » — un message qui ne désigne rien. */
+         « Google sign-in failed undefined » ; un message qui ne désigne rien. */
       if (!firebaseAuth) {
         app.loginError = globalThis.firebase
           ? "Connexion en cours d'initialisation, réessaie dans un instant."
@@ -4274,7 +4273,7 @@ function syncViewportHeight() {
 const syncViewportHeightDebounced = debounce(syncViewportHeight, 50);
 document.addEventListener("keydown", (e) => {
   const s = app.sess;
-  /* La route peut valoir "session" sans session vivante — reprise avortée, état
+  /* La route peut valoir "session" sans session vivante ; reprise avortée, état
      restauré incomplet. Lire s.st dans ce cas jette une exception à chaque touche. */
   if (app.route !== "session" || !s || !s.cur) return;
   if (e.key === "Enter" && (s.st === "ok" || s.st === "ko")) {

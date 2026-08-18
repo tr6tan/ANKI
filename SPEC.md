@@ -1,4 +1,4 @@
-# Spécification — application de répétition espacée pour le japonais
+# Spécification ; application de répétition espacée pour le japonais
 
 Document de construction. Il accompagne `prototype.html`, qui est la référence visuelle et comportementale. En cas de désaccord entre les deux, ce document tranche : le prototype contient des raccourcis assumés, listés au §13.
 
@@ -8,7 +8,7 @@ Langue de l'interface : **anglais**. Tout ce qui n'est pas du japonais s'affiche
 
 ## 1. Direction artistique
 
-**原稿用紙 — Swiss/International appliquée à la typographie pédagogique japonaise.** Décision prise, pas une option. Ne pas produire de variante, ne pas proposer de thème alternatif.
+**原稿用紙 ; Swiss/International appliquée à la typographie pédagogique japonaise.** Décision prise, pas une option. Ne pas produire de variante, ne pas proposer de thème alternatif.
 
 Grille stricte, marges généreuses, filets d'un pixel, aucune ombre portée, aucun dégradé, aucun arrondi au-dessus de 4px. La personnalité vient du système typographique et du module carré, pas de la décoration.
 
@@ -24,8 +24,8 @@ Interdits explicites : gamification visuelle (badges, séries, confettis, mascot
 :root{
   --paper:#FAFAF8; --surface:#FFFFFF; --rule:#E2E5E1; --grid:#C3D3CA;
   --ink:#16181A; --ink-muted:#5C6260; --ink-faint:#8A918E;
-  --shu:#C8402E;    /* vermillon — UNIQUEMENT l'erreur */
-  --seiji:#3F6B57;  /* céladon — UNIQUEMENT la réponse juste */
+  --shu:#C8402E;    /* vermillon ; UNIQUEMENT l'erreur */
+  --seiji:#3F6B57;  /* céladon ; UNIQUEMENT la réponse juste */
   --s2:8px; --s3:16px; --s4:24px; --s5:32px; --s6:48px; --s7:64px;
   --radius:2px; --dur:140ms; --ease:cubic-bezier(.2,0,.2,1);
 }
@@ -115,19 +115,19 @@ Trois racines : **Study**, **Collection**, **Settings**. Les statistiques ne son
 
 Pendant une session, la navigation disparaît entièrement.
 
-**Study** — un objectif : lancer en un tap. Date, carré de comptage, bouton `Start`, puis la liste des decks ayant des cartes dues. Aucun tableau de bord.
+**Study** ; un objectif : lancer en un tap. Date, carré de comptage, bouton `Start`, puis la liste des decks ayant des cartes dues. Aucun tableau de bord.
 
-**Session** — voir §8.
+**Session** ; voir §8.
 
-**Summary** — trois nombres (cartes, précision, durée), un bouton. Pas de graphe, pas de série de jours, pas de félicitation écrite.
+**Summary** ; trois nombres (cartes, précision, durée), un bouton. Pas de graphe, pas de série de jours, pas de félicitation écrite.
 
-**Collection** — une ligne par deck, trois compteurs alignés à droite en chasse fixe : nouvelles, à revoir, dues.
+**Collection** ; une ligne par deck, trois compteurs alignés à droite en chasse fixe : nouvelles, à revoir, dues.
 
-**Deck detail** — onglets Cards / Settings / Stats. Le navigateur de cartes est dense, lignes de 44px, recherche et filtres en chips. Les cartes bloquées par prérequis (§7) affichent `locked` au lieu de leur état.
+**Deck detail** ; onglets Cards / Settings / Stats. Le navigateur de cartes est dense, lignes de 44px, recherche et filtres en chips. Les cartes bloquées par prérequis (§7) affichent `locked` au lieu de leur état.
 
-**Card editor** — champs recto/verso, liste des prérequis avec les manquants en vermillon, et surtout **un aperçu en direct du rendu final**, furigana comprises, débounce 200ms. C'est l'aperçu qui évite les cartes cassées, il n'est pas optionnel.
+**Card editor** ; champs recto/verso, liste des prérequis avec les manquants en vermillon, et surtout **un aperçu en direct du rendu final**, furigana comprises, débounce 200ms. C'est l'aperçu qui évite les cartes cassées, il n'est pas optionnel.
 
-**Settings** — muet, thème sombre, notation détaillée, plus l'état de la synthèse vocale du système (voix détectée ou non, dit explicitement).
+**Settings** ; muet, thème sombre, notation détaillée, plus l'état de la synthèse vocale du système (voix détectée ou non, dit explicitement).
 
 ---
 
@@ -392,7 +392,7 @@ lib/        kana.ts (wanakana + normalisation), romaji.ts, atoms.ts,
 
 ## 15. Clavier et gestes
 
-`Entrée` valide, puis `Entrée` avance. `Entrée` sur champ vide vaut « I don't know ». `Échap` quitte. `E` édite la carte courante. `/` recherche dans le navigateur. `1`–`4` ne servent que sur un presque ou en auto-évaluation.
+`Entrée` valide, puis `Entrée` avance. `Entrée` sur champ vide vaut « I don't know ». `Échap` quitte. `E` édite la carte courante. `/` recherche dans le navigateur. `1``4` ne servent que sur un presque ou en auto-évaluation.
 
 Une seule touche fait tourner toute la session. C'est le critère : si la main doit quitter la rangée de repos, l'ergonomie est ratée.
 

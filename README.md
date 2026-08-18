@@ -4,9 +4,9 @@ This workspace contains a mobile-first Japanese spaced-repetition prototype buil
 
 ## Files
 
-- `prototype.html` — original reference implementation and visual behaviour source.
-- `index.html` — working app entrypoint copied from `prototype.html`.
-- `SPEC.md` — product specification describing design, interaction, data model and session rules.
+- `prototype.html` ; original reference implementation and visual behaviour source.
+- `index.html` ; working app entrypoint copied from `prototype.html`.
+- `SPEC.md` ; product specification describing design, interaction, data model and session rules.
 
 ## Prompt to recreate the app
 

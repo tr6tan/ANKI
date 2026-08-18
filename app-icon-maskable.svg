@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="学 dans une case de papier de rédaction">
+  <!--
+    Variante masquable. Android rogne l'icône selon une forme arbitraire et ne
+    garantit que le cercle central de 80 % du côté, soit un diamètre de 819. Le
+    carré inscrit dans ce cercle mesure 819/√2, environ 579 : la case fait donc
+    560 ici, contre 760 dans la version pleine.
+
+    Servir un seul fichier pour "any" et "maskable", comme le faisait le manifeste,
+    oblige à choisir entre une icône rognée sur Android et une icône flottante
+    ailleurs. On sépare les deux.
+  -->
+  <rect width="1024" height="1024" fill="#FAFAF8"/>
+
+  <rect x="232" y="232" width="560" height="560" fill="none" stroke="#C3D3CA" stroke-width="6"/>
+
+  <g stroke="#C3D3CA" stroke-width="6" opacity="0.55">
+    <line x1="512" y1="232" x2="512" y2="290"/>
+    <line x1="512" y1="734" x2="512" y2="792"/>
+    <line x1="232" y1="512" x2="290" y2="512"/>
+    <line x1="734" y1="512" x2="792" y2="512"/>
+  </g>
+
+  <!-- y au centre exact de la case : voir app-icon.svg -->
+  <text x="512" y="512" text-anchor="middle" dominant-baseline="central"
+        fill="#16181A" font-size="346"
+        font-family="'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif">学</text>
+</svg>

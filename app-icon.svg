@@ -1,4 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <rect width="1024" height="1024" fill="#ffffff" />
-  <text x="512" y="512" text-anchor="middle" dominant-baseline="middle" fill="#000000" font-size="560" font-weight="600" font-family="'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif">学</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="学 dans une case de papier de rédaction">
+  <!--
+    原稿用紙. La signature du produit est le module carré : une case de papier de
+    rédaction japonais, filet clair et repères de centrage. L'icône la reprend au
+    lieu de poser le glyphe sur un fond nu.
+
+    Jetons de la spec §2, et non du noir sur blanc :
+      papier #FAFAF8, encre #16181A, filet #C3D3CA.
+
+    Le glyphe ne porte AUCUNE graisse forcée. La spec §12.8 interdit le faux gras
+    sur le japonais : à 600 sur un mincho qui n'a pas cette graisse, le moteur
+    épaissit synthétiquement et les traits se referment. On garde donc le poids
+    réel de la fonte.
+
+    Composition pleine (purpose "any") : la case occupe 760 sur 1024. Pour la
+    variante masquable, voir app-icon-maskable.svg, dont le contenu tient dans le
+    cercle de sécurité.
+  -->
+  <rect width="1024" height="1024" fill="#FAFAF8"/>
+
+  <!-- la case : filet d'un pixel à l'échelle du produit, mis à l'échelle ici -->
+  <rect x="132" y="132" width="760" height="760" fill="none" stroke="#C3D3CA" stroke-width="6"/>
+
+  <!-- repères de centrage de la case, en croix, comme sur le papier réel -->
+  <g stroke="#C3D3CA" stroke-width="6" opacity="0.55">
+    <line x1="512" y1="132" x2="512" y2="212"/>
+    <line x1="512" y1="812" x2="512" y2="892"/>
+    <line x1="132" y1="512" x2="212" y2="512"/>
+    <line x1="812" y1="512" x2="892" y2="512"/>
+  </g>
+
+  <!--
+    y vaut exactement le centre de la case : cumuler un décalage manuel avec
+    dominant-baseline="central" compensait deux fois et descendait le glyphe de
+    35 px, écart mesuré sur la boîte d'encre rendue.
+  -->
+  <text x="512" y="512" text-anchor="middle" dominant-baseline="central"
+        fill="#16181A" font-size="470"
+        font-family="'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif">学</text>
 </svg>
