@@ -2,10 +2,23 @@
 
 **Version 2.0, 18 août 2026.** Remplace la version 1, non datée.
 
-Document de construction. Il décrit l'état visé, qui est aussi l'état implémenté à la
-version de build `20260818-2000`. En cas de désaccord avec le code, ce document
-tranche ; en cas de désaccord avec `prototype.html`, ce document tranche également, le
-prototype contenant des raccourcis assumés listés au §14.
+Document de construction. En cas de désaccord avec le code, ce document tranche ; en
+cas de désaccord avec `prototype.html`, ce document tranche également, le prototype
+contenant des raccourcis assumés listés au §14.
+
+**Ce que le document décrit, et à quel titre.** Les §1 à §13 et le §16 décrivent le
+**comportement implémenté** à la version de build `20260818-2350`, vérifié contre le
+code. Les §6.2, §15 et §17 décrivent en revanche une **architecture visée** : les types
+y sont donnés en TypeScript et l'inventaire en modules, alors que l'implémentation est
+un unique fichier JavaScript de 4530 lignes. Cette divergence est assumée et non
+masquée, parce qu'un lecteur qui prend §15 pour un état des lieux chercherait des
+fichiers qui n'existent pas. Les noms de types et de modules valent comme frontières de
+responsabilité, pas comme arborescence.
+
+La règle générale, apprise à ses dépens : **une affirmation non vérifiée est une
+affirmation fausse en attente.** La version 1 en contenait plusieurs, reprises telles
+quelles pendant neuf mois. Toute assertion chiffrée de ce document a été mesurée contre
+le code au moment de l'écriture.
 
 Langue de l'interface : **français**. La version 1 prescrivait l'anglais, l'app a
 toujours été en français, et personne n'a arbitré pendant neuf mois : la réalité
@@ -209,8 +222,10 @@ le dire.
 
 **Éditeur de carte**, champs recto et verso, liste des prérequis avec les manquants en
 vermillon, l'état des deux directions, et surtout **un aperçu en direct du rendu
-final**, furigana comprises, débounce 200 ms. C'est l'aperçu qui évite les cartes
-cassées, il n'est pas optionnel.
+final**, furigana comprises, débounce 250 ms. C'est l'aperçu qui évite les cartes
+cassées, il n'est pas optionnel. La version 1 annonçait 200 ms, l'implémentation en
+applique 250 : le chiffre exact n'a aucune importance, la divergence silencieuse entre
+document et code en a.
 
 **Réglages**, muet, thème sombre, notation détaillée, clavier simulé, puis la
 synchronisation (§13), la sauvegarde locale (§13), et l'état de la synthèse vocale. Ce
@@ -721,7 +736,9 @@ replanifiées. La charge annoncée devient une promesse tenue à 50 % près au l
 
 **Bridage adaptatif des nouveautés.** Sous 85 % de réussite sur les sept derniers
 jours, et à partir de 30 réponses d'échantillon, l'apport de nouveautés décroît
-proportionnellement jusqu'à un plancher de 2 par jour. Mesuré à 70 % sans ce mécanisme :
+linéairement, atteignant son minimum à 70 %, et ne descend jamais sous un plancher de
+2 par jour. En dessous de l'échantillon minimal, on ne conclut rien : trois erreurs le
+premier jour ne prouvent pas qu'un apprenant est en peine. Mesuré à 70 % sans ce mécanisme :
 aucune porte ne s'ouvrait en quatre mois et la séance gonflait, donc l'apprenant en
 difficulté recevait plus de charge et moins de progrès.
 
@@ -976,7 +993,14 @@ Une seule touche fait tourner toute la session. C'est le critère : si la main d
 quitter la rangée de repos, l'ergonomie est ratée.
 
 Mobile : `enterkeyhint="done"`, la touche du clavier système joue les deux rôles. Tap
-n'importe où sur le corps pour avancer. Retour haptique léger au résultat, désactivable.
+n'importe où sur le corps pour avancer.
+
+**Pas de retour haptique.** La version 1 le prescrivait « léger au résultat,
+désactivable ». `navigator.vibrate` n'existe pas sur iOS Safari, qui est la plateforme
+cible de ce produit : la prescription était donc intenable là où elle comptait, et
+tenable seulement là où elle importe le moins. Une spécification ne promet pas ce que
+la cible ne peut pas rendre. Si le web finit par exposer un retour haptique sur iOS,
+cette décision se rouvre.
 
 Clavier simulé : le réglage existe parce que la plupart des apprenants n'ont pas d'IME
 japonais. Le pavé de kana propose le gojūon plus une rangée de modificateurs, ゛ et ゜
