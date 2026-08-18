@@ -683,22 +683,41 @@ function deckMasteryRate(deckIds) {
   const mastered = cardsForDecks.filter((i) => known(i.id)).length;
   return mastered / cardsForDecks.length;
 }
+/* couverture « consolidée » : sert à ouvrir le niveau suivant */
+function deckSolidRate(deckIds) {
+  const items = deckIds.flatMap((id) => ITEMS.filter((i) => i.deck === id));
+  if (!items.length) return 0;
+  return items.filter((i) => solid(i.id)).length / items.length;
+}
 function levelProgress(levelId) {
   const l = level(levelId);
   if (!l) return 0;
   return deckMasteryRate(l.deckIds);
 }
+/* Le niveau suivant s'ouvre sur la COUVERTURE CONSOLIDÉE du précédent, pas sur sa
+   maîtrise à 95 %. L'argument du verrou est un argument de lisibilité — les kanji
+   N4 se combinent avec ceux de N5 — et « consolidé » y répond. Exiger trois
+   semaines de stabilité sur 95 % des items reproduisait la famine à chaque
+   frontière de niveau : le contenu d'un niveau s'épuise en une semaine, sa
+   maîtrise demande deux mois. La maîtrise reste ce qu'affiche `progress`, donc ce
+   que la Collection présente comme accompli. */
+const LEVEL_UNLOCK_COVERAGE = 0.9;
 function levelUnlockInfo(levelId) {
   const l = level(levelId);
   if (!l) return { open: false, need: "" };
   if (l.id === "n5")
     return { open: true, need: "", progress: levelProgress("n5") };
   const prev = LEVELS[LEVELS.findIndex((x) => x.id === l.id) - 1];
-  const progress = prev ? levelProgress(prev.id) : 0;
+  const coverage = prev ? deckSolidRate(prev.deckIds) : 0;
+  if (coverage >= LEVEL_UNLOCK_COVERAGE) markDeckUnlocked("level:" + l.id);
+  const open = coverage >= LEVEL_UNLOCK_COVERAGE || deckUnlocked("level:" + l.id);
   return {
-    open: progress >= 0.95,
-    need: prev ? `Fondations ${prev.label} entièrement maîtrisées` : "",
-    progress,
+    open,
+    need: prev
+      ? `${Math.round(coverage * 100)} % de ${prev.label} consolidé (${Math.round(LEVEL_UNLOCK_COVERAGE * 100)} % requis)`
+      : "",
+    progress: levelProgress(prev ? prev.id : l.id),
+    coverage,
   };
 }
 
@@ -789,6 +808,11 @@ PK.split(",").forEach((s) => {
     ja: p[1],
     en: p[2],
     type: p[3].replace("/", " / "),
+    /* `kana` et `rom` sont dérivés pour que la face d'écoute fonctionne sans cas
+       particulier : un nom est déjà écrit en katakana, donc kana === ja. C'est ce
+       qui donne au deck-récompense une seconde face sans dupliquer la machinerie. */
+    kana: p[1],
+    rom: toRomaji(p[1]),
   });
 });
 
@@ -1068,6 +1092,110 @@ const S = (t, r) => ({ t, r: r || null });
     ],
     2,
   ],
+  /* Troisième contexte pour chaque item : la spec §10 en demande au moins trois,
+     sans quoi la rotation retombe toujours sur les deux mêmes phrases et l'on
+     mémorise l'indice au lieu du mot — invisible dans les statistiques, puisque le
+     taux de réussite reste excellent. Les formes choisies varient volontairement
+     (négation, passé, volitif) pour ne pas répéter la même conjugaison. */
+  [
+    "v2",
+    ["のみません"],
+    "Won't you drink some tea?",
+    [
+      S("お茶", "おちゃ"),
+      S("を"),
+      S("飲みません", "のみません"),
+      S("か"),
+      S("。"),
+    ],
+    2,
+  ],
+  [
+    "v3",
+    ["あけないで"],
+    "Please don't open the door.",
+    [
+      S("ドア"),
+      S("を"),
+      S("開けないで", "あけないで"),
+      S("ください"),
+      S("。"),
+    ],
+    2,
+  ],
+  [
+    "v4",
+    ["ふりました"],
+    "It rained yesterday.",
+    [
+      S("昨日", "きのう"),
+      S("は"),
+      S("雨", "あめ"),
+      S("が"),
+      S("降りました", "ふりました"),
+      S("。"),
+    ],
+    4,
+  ],
+  [
+    "v5",
+    ["かいたい"],
+    "I want to buy flowers.",
+    [S("花", "はな"), S("を"), S("買いたい", "かいたい"), S("です"), S("。")],
+    2,
+  ],
+  [
+    "v6",
+    ["たべません"],
+    "I don't eat fish.",
+    [S("魚", "さかな"), S("を"), S("食べません", "たべません"), S("。")],
+    2,
+  ],
+  [
+    "v7",
+    ["いきました"],
+    "I went to school.",
+    [
+      S("学校", "がっこう"),
+      S("へ"),
+      S("行きました", "いきました"),
+      S("。"),
+    ],
+    2,
+  ],
+  [
+    "a1",
+    ["おもしろくない"],
+    "It was a boring movie.",
+    [
+      S("面白くない", "おもしろくない"),
+      S("映画", "えいが"),
+      S("でした"),
+      S("。"),
+    ],
+    0,
+  ],
+  [
+    "a2",
+    ["むずかしくない"],
+    "It isn't difficult.",
+    [S("難しくない", "むずかしくない"), S("です"), S("。")],
+    0,
+  ],
+  [
+    "a3",
+    ["しずかな"],
+    "A quiet room would be good.",
+    [
+      S("静かな", "しずかな"),
+      S("部屋", "へや"),
+      S("が"),
+      S("いい"),
+      S("です"),
+      S("。"),
+    ],
+    0,
+  ],
 ].forEach(([lex, ans, en, segs, ti], n) =>
   CTX.push({ id: "s" + n, type: "sentence", lex, ans, en, segs, ti }),
 );
@@ -1113,16 +1241,83 @@ COMP_EXT.split("|").forEach((s, n) => {
 });
 
 /* ===================== atomes et i+1 ===================== */
-const item = (id) => ITEMS.find((i) => i.id === id);
+/* Une carte par DIRECTION. Reconnaissance et production sont deux compétences de
+   difficulté différente : on peut reconnaître し de façon fiable et être incapable
+   de l'écrire depuis « shi ». Tant qu'un seul état FSRS portait les deux, le
+   planificateur en moyennait le signal, donc sur-espaçait la direction faible et
+   sous-espaçait la forte.
+
+   La clé de la carte de reconnaissance reste l'identifiant de l'item : les données
+   existantes et les charges utiles de synchro restent valides, aucune migration. La
+   carte de production prend un suffixe. */
+const PROD_SUFFIX = "#p";
+const baseId = (id) => {
+  const n = String(id).indexOf(PROD_SUFFIX);
+  return n === -1 ? String(id) : String(id).slice(0, n);
+};
+const isProd = (id) => String(id).endsWith(PROD_SUFFIX);
+/* index par identifiant : item() était un balayage linéaire de 1434 entrées appelé
+   plusieurs fois par carte affichée, et le doublement des cartes l'aggravait. */
+const ITEM_BY_ID = Object.create(null);
+for (const i of ITEMS) ITEM_BY_ID[i.id] = i;
+/* accepte une clé de carte comme un identifiant d'item : c'est ce qui laisse tous
+   les appels existants fonctionner sans les reprendre un par un. */
+const item = (id) => ITEM_BY_ID[baseId(id)];
 const STORAGE_KEY = "anki-jp-state-v1";
 /* une carte n'est un prérequis fiable qu'après plusieurs rappels réussis,
    pas dès la première exposition : évite de débloquer kanji/mots/pokémon
    sur un hiragana vu une seule fois. */
 const MASTERY_REPS = 5;
-const known = (id) => cards[id] && (cards[id].goodReps || 0) >= MASTERY_REPS;
+/* goodReps seul est un cliquet : il ne redescend jamais, donc une carte oubliée
+   depuis longtemps continuait de compter comme maîtrisée et de débloquer des
+   prérequis. On exige donc aussi une stabilité courante d'au moins trois semaines
+   — le même seuil que « mature » dans stateOf. Après une rechute, FSRS effondre la
+   stabilité : la carte perd son statut jusqu'à l'avoir reconstruite. */
+const MASTERY_STABILITY = 21;
+
+/* ---- trois paliers, parce qu'un seul prédicat servait deux besoins opposés ----
+   « Puis-je lire ce caractère ? » conditionne la lisibilité d'une question : ce
+   doit être atteint vite, sinon le contenu se tarit. « L'ai-je retenu ? » atteste
+   d'un acquis : ce doit être lent, sinon l'attestation ne vaut rien. Les confondre
+   verrouillait le contenu derrière une condition de rétention longue de deux mois,
+   alors qu'un deck s'épuise en une semaine — d'où 38 jours consécutifs sans rien
+   à étudier au deuxième mois.
+
+     learned  a passé ses pas d'apprentissage         → lisible
+     solid    a survécu à un intervalle espacé        → utilisable comme base
+     known    cinq réussites et trois semaines stable → maîtrisé (affichage, badges)
+
+   Les trois redescendent après une rechute : c'est voulu pour les statistiques.
+   Les déblocages, eux, sont rendus définitifs par syncDeckUnlocks — une porte
+   franchie ne se referme pas, sinon une carte oubliée retirerait du contenu déjà
+   en cours d'étude. */
+const LEARNED_REPS = 2,
+  LEARNED_STABILITY = 1;
+const SOLID_REPS = 3,
+  SOLID_STABILITY = 2;
+const learned = (id) =>
+  !!cards[id] &&
+  (cards[id].goodReps || 0) >= LEARNED_REPS &&
+  (cards[id].stab || 0) >= LEARNED_STABILITY;
+const solid = (id) =>
+  !!cards[id] &&
+  (cards[id].goodReps || 0) >= SOLID_REPS &&
+  (cards[id].stab || 0) >= SOLID_STABILITY;
+const cardKnown = (id) =>
+  !!cards[id] &&
+  (cards[id].goodReps || 0) >= MASTERY_REPS &&
+  (cards[id].stab || 0) >= MASTERY_STABILITY;
+/* Maîtriser un item, c'est le tenir dans LES DEUX directions : le reconnaître et le
+   produire. `learned` et `solid` restent au contraire des propriétés de la seule
+   carte de reconnaissance — savoir lire un caractère est une compétence de
+   reconnaissance, et c'est elle qui conditionne la lisibilité d'une question. Les
+   portes conservent donc exactement le calibrage mesuré. */
+const known = (id) => cardIdsFor(id).every(cardKnown);
 const allDeckItems = (id) => ITEMS.filter((i) => i.deck === id);
 const masteredCount = (id) =>
   allDeckItems(id).filter((i) => known(i.id)).length;
+const learnedCount = (id) => allDeckItems(id).filter((i) => learned(i.id)).length;
+const solidCount = (id) => allDeckItems(id).filter((i) => solid(i.id)).length;
 const totalCount = (id) => allDeckItems(id).length;
 function deckUnlockInfo(dk) {
   if (dk.level === "bonus") {
@@ -1146,10 +1341,34 @@ function deckUnlockInfo(dk) {
       need: lvl.need || `unlock ${dk.level.toUpperCase()}`,
     };
   }
-  const hira = masteredCount("hira");
-  const kata = masteredCount("kata");
-  const kanaReady = hira >= 30 && kata >= 30;
-  const kanjiReady = masteredCount("kanji") >= 10;
+  /* Seuils calibrés sur le rythme d'introduction, pas sur la rétention longue.
+     Le katakana ne dépend d'aucun hiragana (ses réponses sont en romaji) : le
+     retenir n'est qu'un séquencement, on ouvre donc dès que l'hiragana est
+     largement lisible. Le kanji, lui, dépend vraiment des kana puisque ses
+     lectures se tapent en hiragana — on exige les deux syllabaires, l'hiragana
+     consolidé, pour ne pas faire échouer une carte sur une faute de kana plutôt
+     que sur la lecture. */
+  const KATA_NEEDS_HIRA = 90;
+  const KANJI_NEEDS_HIRA_SOLID = 100;
+  const KANJI_NEEDS_KATA = 100;
+  const VOCAB_NEEDS_KANJI_SOLID = 30;
+  const hiraLearned = learnedCount("hira");
+  const hiraSolid = solidCount("hira");
+  const kataLearned = learnedCount("kata");
+  const kanjiSolid = solidCount("kanji");
+  const kanaReady =
+    hiraSolid >= KANJI_NEEDS_HIRA_SOLID && kataLearned >= KANJI_NEEDS_KATA;
+  const gate = (id, rawOpen, label, need) => {
+    if (rawOpen) markDeckUnlocked(id);
+    const open = rawOpen || deckUnlocked(id);
+    return {
+      stage: "N5",
+      open,
+      limit: open ? totalCount(id) : 0,
+      label,
+      need,
+    };
+  };
   if (dk.id === "hira")
     return {
       stage: "N5",
@@ -1158,31 +1377,28 @@ function deckUnlockInfo(dk) {
       label: "Hiragana",
     };
   if (dk.id === "kata")
-    return {
-      stage: "N5",
-      open: hira >= 30,
-      limit: hira >= 30 ? totalCount("kata") : 0,
-      label: "Katakana",
-      need: `${Math.min(hira, 30)}/30 hiragana`,
-    };
-  if (dk.id === "vocab")
-    return {
-      stage: "N5",
-      open: kanaReady && kanjiReady,
-      limit: kanaReady && kanjiReady ? totalCount("vocab") : 0,
-      label: "Sentences N5",
-      need: kanaReady
-        ? `${masteredCount("kanji")}/10 kanji maîtrisés`
-        : `${Math.min(hira, 30)}/30 hira · ${Math.min(kata, 30)}/30 kata`,
-    };
+    return gate(
+      "kata",
+      hiraLearned >= KATA_NEEDS_HIRA,
+      "Katakana",
+      `${Math.min(hiraLearned, KATA_NEEDS_HIRA)}/${KATA_NEEDS_HIRA} hiragana lisibles`,
+    );
   if (dk.id === "kanji")
-    return {
-      stage: "N5",
-      open: kanaReady,
-      limit: kanaReady ? totalCount("kanji") : 0,
-      label: "Kanji N5",
-      need: `${Math.min(hira, 30)}/30 hira · ${Math.min(kata, 30)}/30 kata`,
-    };
+    return gate(
+      "kanji",
+      kanaReady,
+      "Kanji N5",
+      `${Math.min(hiraSolid, KANJI_NEEDS_HIRA_SOLID)}/${KANJI_NEEDS_HIRA_SOLID} hiragana consolidés · ${Math.min(kataLearned, KANJI_NEEDS_KATA)}/${KANJI_NEEDS_KATA} katakana lisibles`,
+    );
+  if (dk.id === "vocab")
+    return gate(
+      "vocab",
+      kanaReady && kanjiSolid >= VOCAB_NEEDS_KANJI_SOLID,
+      "Sentences N5",
+      kanaReady
+        ? `${Math.min(kanjiSolid, VOCAB_NEEDS_KANJI_SOLID)}/${VOCAB_NEEDS_KANJI_SOLID} kanji consolidés`
+        : `les deux syllabaires d'abord`,
+    );
   return pokemonUnlockInfo();
 }
 const deckVisibleItems = (dk) => {
@@ -1200,8 +1416,11 @@ const deckVisibleItems = (dk) => {
   return limited;
 };
 const POKEMON_SHINY_RATE = 1 / 32;
+/* Condition de déblocage d'un Pokémon : savoir LIRE chaque katakana de son nom.
+   Exiger la maîtrise repoussait le premier Pokémon au 128e jour, soit très loin
+   après le moment où le nom devient effectivement déchiffrable. */
 function pokemonUnlockedByKana(i) {
-  return atomsOf(i).every(known);
+  return atomsOf(i).every(learned);
 }
 function pokemonUnlockInfo() {
   const items = allDeckItems("pkmn");
@@ -1217,6 +1436,20 @@ function pokemonUnlockInfo() {
     unlocked,
   };
 }
+/* Une porte franchie ne se referme jamais. Les trois paliers redescendent après une
+   rechute — c'est souhaitable pour les statistiques, mais si le déblocage en
+   dépendait, un hiragana oublié retirerait tout le deck kanji de l'étude en cours.
+   On enregistre donc le franchissement. */
+function deckUnlocked(id) {
+  return !!(app.deckUnlocks && app.deckUnlocks[id]);
+}
+function markDeckUnlocked(id) {
+  if (!app.deckUnlocks) app.deckUnlocks = {};
+  if (app.deckUnlocks[id]) return false;
+  app.deckUnlocks[id] = Date.now();
+  saveState();
+  return true;
+}
 function pokemonMeta(id) {
   return (app.pokemonUnlocks && app.pokemonUnlocks[id]) || null;
 }
@@ -1228,9 +1461,13 @@ function syncPokemonUnlocks() {
       .map((i) => i.id),
   );
   let changed = false;
-  // Revoke unlocks whose condition is no longer met
+  /* Un déblocage est acquis définitivement. Depuis que known() peut redescendre
+     après une rechute, révoquer reprendrait à l'utilisateur un Pokémon — et son
+     éventuel chromatique — déjà gagné. Le i+1 continue de s'appliquer à ce qui
+     n'est pas encore débloqué ; on ne purge donc que les identifiants inconnus. */
+  const allPkmnIds = new Set(allDeckItems("pkmn").map((i) => i.id));
   for (const id in app.pokemonUnlocks) {
-    if (!validIds.has(id)) {
+    if (!allPkmnIds.has(id)) {
       delete app.pokemonUnlocks[id];
       changed = true;
     }
@@ -1265,9 +1502,12 @@ function levelRowsHtml() {
       .map((dk) => {
         const dkInfo = deckUnlockInfo(dk);
         const deckItems = allDeckItems(dk.id);
-        const cs = deckItems.map((i) => cards[i.id]);
+        /* « à réviser » et « en cours » se comptent en CARTES, puisqu'un item en
+           porte deux depuis le découpage par direction ; « maîtrisées » se compte en
+           items, la maîtrise exigeant les deux sens. */
+        const cs = deckCards(dk.id);
         const mastered = deckItems.filter((i) => known(i.id)).length;
-        const learning = cs.filter((c) => c.reps > 0 && !known(c.id)).length;
+        const learning = cs.filter((c) => c.reps > 0 && !cardKnown(c.id)).length;
         const due = cs.filter(
           (c) => c.due !== null && c.due <= Date.now(),
         ).length;
@@ -1319,7 +1559,10 @@ function atomsOf(i) {
   if (i.kind === "name") return kanaPrerequisiteIds(i.ja, KIDX.kata);
   return [];
 }
-const unknownIn = (ids) => ids.filter((id) => !known(id)).length;
+/* i+1 : la question ne doit contenir que des atomes LISIBLES. C'est une condition
+   de lecture, pas de rétention — exiger la maîtrise ici privait les cartes de tout
+   contexte utilisable pendant des semaines. */
+const unknownIn = (ids) => ids.filter((id) => !learned(id)).length;
 
 function loadState() {
   try {
@@ -1365,6 +1608,9 @@ function loadState() {
     if (stored?.pokemonUnlocks) {
       app.pokemonUnlocks = stored.pokemonUnlocks;
     }
+    if (stored?.deckUnlocks) {
+      app.deckUnlocks = stored.deckUnlocks;
+    }
     if (stored?.decks) {
       for (const dk of stored.decks) {
         const target = DECKS.find((d) => d.id === dk.id);
@@ -1408,6 +1654,7 @@ function saveState() {
           detailed: app.detailed,
           kb: app.kb,
           sync: app.sync,
+          dailyLoad: app.dailyLoad || "normal",
           dataUpdatedAt: app.dataUpdatedAt || 0,
           sessionUpdatedAt: app.sessionUpdatedAt || 0,
           dailyPlan: app.dailyPlan || null,
@@ -1423,6 +1670,7 @@ function saveState() {
         },
         dailyStats: app.dailyStats || {},
         pokemonUnlocks: app.pokemonUnlocks || {},
+        deckUnlocks: app.deckUnlocks || {},
         sessQueue:
           app.pausedSession?.queue?.map((c) => c.id) ||
           (app.sess ? app.sess.queue.map((c) => c.id) : null),
@@ -1480,6 +1728,7 @@ function localPayload() {
     },
     dailyStats: app.dailyStats || {},
     pokemonUnlocks: app.pokemonUnlocks || {},
+    deckUnlocks: app.deckUnlocks || {},
     dailyPlan: app.dailyPlan || null,
     session: {
       day: app.sessionDay || null,
@@ -1533,6 +1782,9 @@ function applyPayload(payload) {
     app.dataUpdatedAt = remoteUpdated;
   }
   app.pokemonUnlocks = payload.pokemonUnlocks || {};
+  /* union, jamais remplacement : un déblocage obtenu sur un autre appareil ne doit
+     pas disparaître parce que ce navigateur ne l'avait pas encore vu. */
+  app.deckUnlocks = { ...(payload.deckUnlocks || {}), ...(app.deckUnlocks || {}) };
   if (
     payload.dailyPlan?.day === dayKey() &&
     (payload.dailyPlan.createdAt || 0) >= (app.dailyPlan?.createdAt || 0)
@@ -1624,33 +1876,54 @@ function maybeAutoPush() {
 
 /* ===================== ordonnanceur ===================== */
 const DAY = 864e5,
+  /* en deçà de cet horizon, une carte est encore « du jour » : elle est reprise
+     dans la session courante plutôt que reportée au lendemain. */
+  LEARNING_HORIZON = 12 * 36e5,
   cards = {};
-ITEMS.forEach(
-  (i) =>
-    (cards[i.id] = {
-      id: i.id,
-      stab: 0,
-      diff: 5,
-      due: null,
-      reps: 0,
-      goodReps: 0,
-      lapses: 0,
-      last: null,
-    }),
-);
+const emptyCard = (id) => ({
+  id,
+  stab: 0,
+  diff: 5,
+  due: null,
+  reps: 0,
+  goodReps: 0,
+  lapses: 0,
+  last: null,
+});
+/* Les noms de Pokémon n'ont pas de carte sœur : leurs deux faces — anglais →
+   katakana, et écoute → katakana — sont déjà des faces de production. */
+const hasProduction = (i) => i.kind !== "name";
+const productionId = (itemId) => {
+  const i = ITEM_BY_ID[baseId(itemId)];
+  return i && hasProduction(i) ? baseId(itemId) + PROD_SUFFIX : null;
+};
+const cardIdsFor = (itemId) => {
+  const p = productionId(itemId);
+  return p ? [baseId(itemId), p] : [baseId(itemId)];
+};
+ITEMS.forEach((i) => {
+  cards[i.id] = emptyCard(i.id);
+  const p = productionId(i.id);
+  if (p) cards[p] = emptyCard(p);
+});
+const deckCards = (deckId) =>
+  allDeckItems(deckId).flatMap((i) => cardIdsFor(i.id).map((id) => cards[id]));
 function stateOf(c) {
   if (c.reps === 0) return "new";
   if (c.lapses && c.stab < 1) return "lrn";
   return c.stab >= 21 ? "mature" : "young";
 }
+/* enable_short_term : les pas d'apprentissage du jour même. Une carte neuve vue
+   une seule fois puis renvoyée à trois jours ne s'encode pas ; FSRS sait gérer
+   une reprise à quelques minutes, et la session la redemande (voir commit). */
 const fsrsScheduler = globalThis.FSRS
   ? globalThis.FSRS.fsrs({
       request_retention: 0.9,
-      enable_short_term: false,
+      enable_short_term: true,
       enable_fuzz: true,
     })
   : null;
-function fsrsCard(c, now) {
+function fsrsCard(c, now, prevSeen) {
   const isNew = !c.reps;
   return {
     due: new Date(c.due || now),
@@ -1660,13 +1933,23 @@ function fsrsCard(c, now) {
     scheduled_days: c.fsrsScheduledDays || Math.max(0, Math.round(c.stab || 0)),
     reps: c.reps || 0,
     lapses: c.lapses || 0,
-    learning_steps: 0,
-    state: isNew ? globalThis.FSRS.State.New : globalThis.FSRS.State.Review,
-    last_review: c.lastSeen ? new Date(c.lastSeen) : undefined,
+    /* l'état et l'index de pas doivent survivre d'une révision à l'autre, sinon
+       une carte en cours d'apprentissage repasse pour une carte mûre et saute
+       ses pas courts. */
+    learning_steps: c.fsrsLearningSteps || 0,
+    state: isNew
+      ? globalThis.FSRS.State.New
+      : (c.fsrsState ?? globalThis.FSRS.State.Review),
+    /* last_review est la révision PRÉCÉDENTE : FSRS en tire elapsed_days, donc la
+       rétrievabilité, donc tout le gain de stabilité. La lire après avoir écrit
+       c.lastSeen la ramenait à « maintenant », elapsed_days restait à 0 et chaque
+       intervalle se figeait à sa valeur initiale. */
+    last_review: prevSeen ? new Date(prevSeen) : undefined,
   };
 }
 function grade(c, good, elapsed, skip) {
   const reviewedAt = new Date();
+  const prevSeen = c.lastSeen;
   if (good) c.goodReps = (c.goodReps || 0) + 1;
   c.lastSeen = reviewedAt.getTime();
   c.modifiedAt = c.lastSeen;
@@ -1678,7 +1961,7 @@ function grade(c, good, elapsed, skip) {
       ? globalThis.FSRS.Rating.Good
       : globalThis.FSRS.Rating.Again;
     const next = fsrsScheduler.next(
-      fsrsCard(c, reviewedAt),
+      fsrsCard(c, reviewedAt, prevSeen),
       reviewedAt,
       rating,
     ).card;
@@ -1690,6 +1973,7 @@ function grade(c, good, elapsed, skip) {
     c.fsrsElapsedDays = next.elapsed_days;
     c.fsrsScheduledDays = next.scheduled_days;
     c.fsrsState = next.state;
+    c.fsrsLearningSteps = next.learning_steps || 0;
     saveState();
     return;
   }
@@ -1718,8 +2002,14 @@ function shuffle(a) {
   }
   return a;
 }
+/* Même pénalité pour une mauvaise réponse et pour « je ne sais pas ». Tant que
+   l'abandon coûtait 0 et la tentative -6, le score récompensait le renoncement,
+   alors que les deux envoient Rating.Again au planificateur : conséquence
+   d'apprentissage identique. Or c'est la tentative de récupération, même ratée,
+   qui encode. */
+const WRONG_PENALTY = -6;
 function pointsForResult(good, combo) {
-  if (!good) return -6;
+  if (!good) return WRONG_PENALTY;
   const tier = Math.floor(Math.max(1, combo) - 1) / 3;
   const mult = 1 + Math.min(1.75, tier * 0.25);
   return Math.round(10 * mult);
@@ -1756,33 +2046,6 @@ function noteDailyProgress(delta, outcome) {
   day.attempts = (day.attempts || 0) + 1;
   day[outcome] = (day[outcome] || 0) + 1;
   app.dailyStats = stats;
-}
-function heatmapDays(year = new Date().getFullYear()) {
-  const start = new Date(year, 0, 1);
-  const end = new Date(year, 11, 31);
-  const today = new Date();
-  const out = [];
-  const stats = getDailyStats();
-  for (const d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-    const key = dayKey(d);
-    out.push({
-      key,
-      date: new Date(d),
-      future: d > today,
-      stats: stats[key] || dailyDefault(),
-    });
-  }
-  return out;
-}
-function heatmapClass(stats, max, future) {
-  if (future) return "heat future";
-  const pts = stats.points || 0;
-  if (pts <= 0) return stats.attempts ? "heat attempt" : "heat zero";
-  const ratio = max ? pts / max : 0;
-  if (ratio >= 0.75) return "heat s4";
-  if (ratio >= 0.5) return "heat s3";
-  if (ratio >= 0.25) return "heat s2";
-  return "heat s1";
 }
 /* kanji fait figure d'exception : c'est un deck ordonné (non filtré par atomes),
    mais ses lectures sont en hiragana — donc pas de nouveau kanji tant que la base
@@ -1832,6 +2095,28 @@ function validateDeckData() {
     }
   }
 
+  /* Spec §10 : trois contextes minimum par item de vocabulaire. En deçà, la rotation
+     retombe sur les mêmes phrases et l'on mémorise l'indice, pas le mot. */
+  const MIN_CONTEXTS = 3;
+  for (const i of ITEMS.filter((x) => x.kind === "lex")) {
+    const n = CTX.filter((x) => x.lex === i.id).length;
+    if (n < MIN_CONTEXTS)
+      errors.push(`${i.id} n'a que ${n} contexte(s), ${MIN_CONTEXTS} requis`);
+  }
+  /* Un contexte doit désigner un segment cible valide, sinon le cloze élide au
+     hasard et la réponse attendue ne correspond à rien. */
+  for (const x of CTX) {
+    if (!Number.isInteger(x.ti) || x.ti < 0 || x.ti >= x.segs.length)
+      errors.push(`${x.id} a un index cible invalide (${x.ti})`);
+    else {
+      const target = x.segs[x.ti];
+      const reading = target.r || target.t;
+      if (!x.ans.some((a) => normKana(a) === normKana(reading)))
+        errors.push(
+          `${x.id} : la réponse attendue ne correspond pas au segment cible (${reading})`,
+        );
+    }
+  }
   const unlockThresholds = { hira: 30, kata: 30, kanji: 10 };
   for (const [deckId, threshold] of Object.entries(unlockThresholds)) {
     const count = ITEMS.filter((i) => i.deck === deckId).length;
@@ -1851,68 +2136,85 @@ function validateDeckData() {
   }
   return errors;
 }
+/* Renvoie des CLÉS DE CARTE, plus des items : depuis le découpage par direction, un
+   même item fournit deux cartes à introduire, à deux moments différents. */
 function unseenPool(dk) {
-  let pool = deckVisibleItems(dk).filter((i) => cards[i.id].reps === 0);
-  if (dk.ordered) pool.sort((a, b) => a.idx - b.idx);
-  else {
-    pool = pool
-      .map((i) => ({
-        item: i,
-        unknown: unknownIn(atomsOf(i)),
-        len: (i.surface || i.ja || i.glyph || "").length,
-      }))
-      .sort(
-        (a, b) => a.unknown - b.unknown || a.len - b.len || Math.random() - 0.5,
+  const items = deckVisibleItems(dk);
+  const fresh = items.filter((i) => cards[i.id].reps === 0);
+  const ordered = dk.ordered
+    ? fresh.slice().sort((a, b) => a.idx - b.idx)
+    : // pré-mélange puis tri stable : voir pickCtx
+      shuffle(
+        fresh.map((i) => ({
+          item: i,
+          unknown: unknownIn(atomsOf(i)),
+          len: (i.surface || i.ja || i.glyph || "").length,
+        })),
       )
-      .map((x) => x.item);
-  }
-  if (dk.id === "kanji") {
-    const hiraMastered = ITEMS.filter(
-      (i) => i.deck === "hira" && known(i.id),
-    ).length;
-    if (hiraMastered < KANJI_UNLOCK_HIRA) pool = [];
-  }
+        .sort((a, b) => a.unknown - b.unknown || a.len - b.len)
+        .map((x) => x.item);
+  /* La production ne s'ouvre qu'une fois la reconnaissance acquise : devoir écrire
+     une graphie qu'on ne reconnaît pas encore n'est pas du rappel, c'est une
+     devinette. Et elle passe AVANT les nouveaux items — consolider ce qui est déjà
+     entamé vaut mieux que laisser grossir une dette de production. */
+  const siblings = items
+    .map((i) => productionId(i.id))
+    .filter((p) => p && cards[p].reps === 0 && learned(baseId(p)));
+  let pool = [...siblings, ...ordered.map((i) => i.id)];
+  /* Garde-fou : les lectures de kanji se tapent en hiragana. Redondant avec la
+     porte du deck, mais il protège le cas où le deck a été débloqué puis les
+     hiragana oubliés — le déblocage est définitif, la lisibilité ne l'est pas. */
+  if (dk.id === "kanji" && learnedCount("hira") < KANJI_UNLOCK_HIRA) pool = [];
   return pool;
 }
 function newFor(dk, limit) {
   const n = limit === undefined ? dk.newPerDay : limit;
   return unseenPool(dk)
     .slice(0, n)
-    .map((i) => cards[i.id]);
+    .map((id) => cards[id]);
 }
-/* le budget quotidien se répartit selon le poids newPerDay de chaque deck,
-   et se redistribue vers les decks suivants dès qu'un deck est épuisé ou verrouillé :
-   le total glisse ainsi naturellement des cartes neuves vers les révisions à mesure
-   que l'apprentissage avance, sans jamais dépasser la charge du jour. */
+/* `newPerDay` est désormais un vrai PLAFOND par deck, pas un poids. Avant, la
+   valeur était divisée par la somme de tous les decks : un deck réglé à 10 sur un
+   total de 46 recevait 10/46 des places, soit 3. Le réglage promettait donc un
+   nombre que l'application ne servait jamais. Il borne maintenant ce que le deck
+   peut recevoir ; l'ordre des decks (des fondations vers les niveaux hauts) donne
+   la priorité, et le reliquat glisse vers les decks suivants dès qu'un deck est
+   plafonné, épuisé ou verrouillé. */
 function allocateNewBudget(remaining) {
-  const totalWeight = DECKS.reduce((s, dk) => s + dk.newPerDay, 0) || 1;
   const avail = {};
   for (const dk of DECKS) avail[dk.id] = unseenPool(dk).length;
   const alloc = {};
-  for (const dk of DECKS) alloc[dk.id] = 0;
   let left = remaining;
   for (const dk of DECKS) {
-    const want = Math.round((remaining * dk.newPerDay) / totalWeight);
-    const give = Math.min(want, avail[dk.id], left);
+    const give = Math.min(dk.newPerDay, avail[dk.id], Math.max(0, left));
     alloc[dk.id] = give;
     left -= give;
   }
-  for (const dk of DECKS) {
-    if (left <= 0) break;
-    const room = avail[dk.id] - alloc[dk.id];
-    if (room > 0) {
-      const take = Math.min(room, left);
-      alloc[dk.id] += take;
-      left -= take;
-    }
-  }
   return alloc;
 }
+/* Charge quotidienne réglable : c'est le premier levier d'abandon. Un budget figé
+   force la même dose un jour chargé et un jour disponible ; laisser choisir vaut
+   mieux qu'une session sautée. Exprimé en expositions, donc en cartes à l'écran. */
 const DAILY_BUDGET = 30;
+const DAILY_LOADS = [
+  { id: "court", label: "Court", budget: 15 },
+  { id: "normal", label: "Normal", budget: 30 },
+  { id: "long", label: "Long", budget: 60 },
+];
+const dailyBudget = () => {
+  const chosen = DAILY_LOADS.find((l) => l.id === app.dailyLoad);
+  return chosen ? chosen.budget : DAILY_BUDGET;
+};
+/* Une carte neuve est vue deux fois le jour de son introduction : la présentation,
+   puis la reprise du pas d'apprentissage. Le budget se compte en expositions, donc
+   une nouveauté en consomme deux — sans quoi une journée sans révision servait
+   30 nouveautés, soit 60 cartes à l'écran. */
+const EXPOSURES_PER_NEW_CARD = 2;
 function ensureDailyPlan(dueCount) {
   const today = dayKey();
   if (app.dailyPlan?.day === today) return app.dailyPlan;
-  const alloc = allocateNewBudget(Math.max(0, DAILY_BUDGET - dueCount));
+  const room = Math.max(0, dailyBudget() - dueCount);
+  const alloc = allocateNewBudget(Math.floor(room / EXPOSURES_PER_NEW_CARD));
   const newIds = [];
   for (const dk of DECKS)
     newIds.push(...newFor(dk, alloc[dk.id]).map((c) => c.id));
@@ -1925,11 +2227,11 @@ function queueFor(id) {
     out = [];
   const targets = id ? [deck(id)] : DECKS;
   for (const dk of targets)
-    out.push(
-      ...deckVisibleItems(dk)
-        .map((i) => cards[i.id])
-        .filter((c) => c.due !== null && c.due <= now),
-    );
+    for (const i of deckVisibleItems(dk))
+      for (const cardId of cardIdsFor(i.id)) {
+        const c = cards[cardId];
+        if (c && c.due !== null && c.due <= now) out.push(c);
+      }
   if (id) {
     out.push(...newFor(deck(id)));
   } else {
@@ -1940,19 +2242,39 @@ function queueFor(id) {
       if (card && card.reps === 0 && !existing.has(cardId)) out.push(card);
     }
   }
-  return shuffle(out);
+  return burySiblings(shuffle(out));
+}
+/* Enterrement des cartes sœurs : jamais les deux directions d'un même item dans la
+   même session. Voir 山 → « yama » puis « yama » → 山 à quelques cartes d'écart
+   donne la réponse au lieu de la faire chercher, et les deux intervalles se
+   verrouilleraient sur le même rythme au lieu de diverger selon la difficulté
+   propre à chaque direction. */
+function burySiblings(queue) {
+  const seenItems = new Set();
+  const out = [];
+  for (const c of queue) {
+    const base = baseId(c.id);
+    if (seenItems.has(base)) continue;
+    seenItems.add(base);
+    out.push(c);
+  }
+  return out;
 }
 
 /* sélection de contexte : le moins d'atomes inconnus, jamais celui de la répétition précédente */
 function pickCtx(c, pool, atoms) {
   if (!pool.length) return null;
-  return pool
-    .map((x) => ({
+  /* pré-mélange puis tri stable : Math.random() dans un comparateur n'est pas
+     transitif, le résultat dépend de l'implémentation de sort et n'est pas
+     uniforme. Le hasard ne doit départager que les ex æquo. */
+  return shuffle(
+    pool.map((x) => ({
       x,
-      u: unknownIn(atoms(x).filter((a) => a !== c.id)),
+      // baseId : les atomes sont des identifiants d'item, la carte peut être une sœur
+      u: unknownIn(atoms(x).filter((a) => a !== baseId(c.id))),
       r: x.id === c.last ? 1 : 0,
-    }))
-    .sort((a, b) => a.r - b.r || a.u - b.u || Math.random() - 0.5)[0];
+    })),
+  ).sort((a, b) => a.r - b.r || a.u - b.u)[0];
 }
 function ctxForGlyph(c) {
   const i = item(c.id),
@@ -1971,11 +2293,26 @@ function ctxForKanji(c) {
     m.kanji.map((k) => KIDX.kanji[k]).filter(Boolean),
   );
 }
+/* Atomes d'une phrase : les kanji qu'elle contient et qui sont eux-mêmes des
+   cartes. Sans cela ctxForLex passait une fonction vide, u valait toujours 0, et
+   toute phrase était réputée lisible : le seul deck où le i+1 compte vraiment en
+   était exempté. On classe ici du plus lisible au moins lisible sans jamais
+   bloquer — un item de vocabulaire n'a que deux ou trois phrases, les exclure
+   toutes le priverait de contexte, et la spec ne contraint que la question. */
+function sentenceAtoms(x) {
+  const ids = [];
+  for (const g of x.segs)
+    for (const ch of g.t) {
+      const id = KIDX.kanji[ch];
+      if (id && !ids.includes(id)) ids.push(id);
+    }
+  return ids;
+}
 function ctxForLex(c) {
   return pickCtx(
     c,
     CTX.filter((x) => x.lex === c.id),
-    () => [],
+    sentenceAtoms,
   );
 }
 
@@ -2153,16 +2490,10 @@ function Login() {
 }
 function Home() {
   normalizeDailyState();
-  const today = dayKey();
-  const lockedToday = app.sessionDay === today;
   const hasPausedSession = !!app.pausedSession?.queue?.length;
-  const resumeToday = lockedToday && hasPausedSession;
-  const canStart = !lockedToday && !hasPausedSession;
-  const sessionQueue = resumeToday
-    ? app.pausedSession.queue
-    : canStart
-      ? queueFor()
-      : [];
+  const resumeToday = hasPausedSession;
+  const canStart = !hasPausedSession;
+  const sessionQueue = resumeToday ? app.pausedSession.queue : queueFor();
   const remaining = sessionQueue.length;
   const newCount = sessionQueue.filter((c) => c.reps === 0).length;
   const reviewCount = remaining - newCount;
@@ -2171,37 +2502,87 @@ function Home() {
     day: "numeric",
     month: "long",
   });
-  const days = heatmapDays();
-  const maxPts = Math.max(1, ...days.map((x) => x.stats.points || 0));
+  /* Le compteur annonçait le nombre de cartes du plan, alors qu'une nouveauté est
+     vue deux fois : on promettait 15 et on en présentait 30. On affiche donc les
+     expositions, et la ventilation dit d'où elles viennent. */
+  const exposures = newCount * EXPOSURES_PER_NEW_CARD + reviewCount;
+  const upcoming = dueOutlook();
   return `<div class="scroll pad" style="position:relative"><span class="mono faint" style="position:absolute;top:10px;right:0;font-size:11px;letter-spacing:.04em">v${BUILD_VERSION}</span><p class="label" style="margin-top:24px">${esc(d)}</p>
   <div style="display:flex;justify-content:center;margin:36px 0 12px">
-    <div class="sq" style="width:146px"><span class="mono" style="font-size:60px">${remaining}</span></div></div>
-    <p class="muted" style="text-align:center;font-size:14px;margin:0 0 24px">${resumeToday ? "cartes restantes" : lockedToday ? "session terminée" : "cartes dans la session"}</p>
-    ${remaining ? `<div class="row"><span class="muted">Nouvelles cartes</span><span class="mono">${newCount}</span></div><div class="row" style="margin-bottom:18px"><span class="muted">Révisions</span><span class="mono">${reviewCount}</span></div>` : ""}
-  <div style="display:flex;gap:12px;margin:0 0 18px">
-   ${[
-     ["points", app.points || 0],
-     ["série", app.streak || 0],
-     ["record", app.bestStreak || 0],
-   ]
-     .map(
-       ([l, v]) =>
-         `<div style="flex:1;border:1px solid var(--rule);border-radius:var(--radius);padding:10px 12px"><div class="mono" style="font-size:22px">${v}</div><div class="label" style="margin-top:4px">${l}</div></div>`,
-     )
-     .join("")}
-  </div>
+    <div class="sq" style="width:146px"><span class="mono" style="font-size:60px">${resumeToday ? remaining : exposures}</span></div></div>
+    <p class="muted" style="text-align:center;font-size:14px;margin:0 0 24px">${resumeToday ? "cartes restantes" : "cartes à voir aujourd'hui"}</p>
+    ${
+      remaining
+        ? `<div class="row"><span class="muted">Nouvelles cartes${newCount ? ` <span class="faint" style="font-size:12px">— vues deux fois</span>` : ""}</span><span class="mono">${newCount}</span></div><div class="row" style="margin-bottom:18px"><span class="muted">Révisions</span><span class="mono">${reviewCount}</span></div>`
+        : ""
+    }
     ${canStart && remaining ? `<button class="btn" data-start="">Commencer</button>` : ""}
   ${resumeToday ? `<button class="btn" data-start="resume">Reprendre · ${remaining} restantes</button>` : ""}
-  ${lockedToday && !resumeToday ? `<div class="empty" style="padding:12px 0 0">Nouvelle session disponible demain à 00:00.</div>` : ""}
-  ${canStart && !remaining ? `<div class="empty" style="padding:12px 0 0">Aucune carte disponible actuellement.</div>` : ""}
+  ${canStart && !remaining ? `<div class="empty" style="padding:12px 0 0">Rien à réviser pour le moment. Les prochaines cartes reviendront à leur échéance.</div>` : ""}
+  ${
+    canStart
+      ? `<div style="margin-top:18px"><span class="label">Charge du jour</span>
+  <div class="chips" style="margin-top:8px">${DAILY_LOADS.map(
+    (l) =>
+      `<button class="chip ${(app.dailyLoad || "normal") === l.id ? "on" : ""}" data-load="${l.id}">${l.label} · ${l.budget}</button>`,
+  ).join("")}</div>${
+    loadNote(newCount, reviewCount)
+      ? `<p class="faint" style="font-size:12px;line-height:1.6;margin:8px 0 0">${esc(loadNote(newCount, reviewCount))}</p>`
+      : ""
+  }</div>`
+      : ""
+  }
   <hr class="rule">
-  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px">
-   <span class="label">Progression</span>
-   <span class="faint" style="font-size:12px">objectif ${POINTS_PER_DAY_ESTIMATE} pts/jour</span>
-  </div>
-  <div class="hm-wrap"><div class="hm" aria-label="daily progress heatmap">${days.map(({ key, stats, future }) => `<span class="${heatmapClass(stats, maxPts, future)}" title="${key} · ${stats.points || 0} pts · ${stats.attempts || 0} tries"></span>`).join("")}</div></div>
-  <div style="display:flex;justify-content:space-between;margin-top:8px"><span class="faint" style="font-size:12px">moins</span><span class="faint" style="font-size:12px">plus</span></div>
+  <span class="label">À venir</span>
+  <div class="row" style="margin-top:6px"><span class="muted">Demain</span><span class="mono">${upcoming.tomorrow}</span></div>
+  <div class="row"><span class="muted">Sept prochains jours</span><span class="mono">${upcoming.week}</span></div>
+  <div class="row"><span class="muted">Cartes en circulation</span><span class="mono">${upcoming.circulating}</span></div>
+  <p class="faint" style="font-size:12px;line-height:1.6;margin:10px 0 0">${esc(upcoming.hint)}</p>
   <div style="height:24px"></div></div>`;
+}
+/* Remplace la heatmap annuelle : 365 cases de 11 px avec des infobulles
+   inutilisables au doigt occupaient la moitié de l'écran principal pour une
+   information sur laquelle on ne peut pas agir — et c'était, littéralement, le
+   compteur de série de jours que la spec §12.2 interdit. Ici on répond à la seule
+   question utile avant de lancer une session : ce qui arrive ensuite. */
+/* Le budget n'est pas toujours ce qui borne la session : au démarrage, seul
+   l'hiragana est ouvert et son plafond vaut 10, donc « Long · 60 » ne change rien.
+   Sans explication, le réglage passerait pour cassé — on dit donc ce qui borne
+   réellement, et où le régler. */
+function loadNote(newCount, reviewCount) {
+  const slots = Math.floor(
+    Math.max(0, dailyBudget() - reviewCount) / EXPOSURES_PER_NEW_CARD,
+  );
+  if (newCount >= slots) return "";
+  let capped = 0,
+    available = 0;
+  for (const dk of DECKS) {
+    const pool = unseenPool(dk).length;
+    available += pool;
+    capped += Math.min(dk.newPerDay, pool);
+  }
+  if (available > capped)
+    return "Le budget n'est pas atteint : chaque deck a son propre plafond de nouvelles cartes, réglable dans Collection › le deck › Réglages.";
+  return "Le budget n'est pas atteint : il n'y a pas plus de contenu disponible pour l'instant. Les prochains decks s'ouvriront à mesure des progrès.";
+}
+function dueOutlook() {
+  const now = Date.now();
+  /* en cartes, pas en items : c'est la charge à venir qu'on annonce, et les deux
+     directions se planifient séparément */
+  let circulating = 0,
+    tomorrow = 0,
+    week = 0;
+  for (const id in cards) {
+    const c = cards[id];
+    if (c.reps > 0) circulating++;
+    if (c.due === null || c.due <= now) continue;
+    if (c.due <= now + DAY) tomorrow++;
+    if (c.due <= now + 7 * DAY) week++;
+  }
+  const hint = circulating
+    ? `${masteredCount("hira") + masteredCount("kata")} kana maîtrisés sur 208. Une carte réussie s'éloigne, une carte ratée revient vite : c'est normal que ces nombres bougent.`
+    : "Aucune carte encore commencée. La première session en introduit quelques-unes.";
+  return { tomorrow, week, circulating, hint };
 }
 
 function face(i) {
@@ -2212,7 +2593,9 @@ function face(i) {
 }
 function Collection() {
   const pkmn = pokemonUnlockInfo();
-  const studied = ITEMS.filter((i) => cards[i.id].reps > 0).length;
+  const studied = ITEMS.filter((i) =>
+    cardIdsFor(i.id).some((id) => cards[id].reps > 0),
+  ).length;
   const mastered = ITEMS.filter((i) => i.deck !== "pkmn" && known(i.id)).length;
   const shinyCount = app.pokemonUnlocks
     ? Object.values(app.pokemonUnlocks).filter((x) => x.shiny).length
@@ -2221,7 +2604,19 @@ function Collection() {
   <div class="collection-overview">
   <div><strong class="mono">${studied}</strong><span>étudiées</span></div>
   <div><strong class="mono">${mastered}</strong><span>maîtrisées</span></div>
-  <p>Une carte est maîtrisée après ${MASTERY_REPS} réponses réussies.</p>
+  <p>Une carte est maîtrisée après ${MASTERY_REPS} réussites espacées, quand son intervalle dépasse ${MASTERY_STABILITY} jours. Un caractère devient lisible bien avant : c'est ce qui débloque la suite.</p>
+  </div>
+  <div style="display:flex;gap:12px;margin:0 0 4px">
+   ${[
+     ["points", app.points || 0],
+     ["série", app.streak || 0],
+     ["record", app.bestStreak || 0],
+   ]
+     .map(
+       ([l, v]) =>
+         `<div style="flex:1;border:1px solid var(--rule);border-radius:var(--radius);padding:10px 12px"><div class="mono" style="font-size:22px">${v}</div><div class="label" style="margin-top:4px">${l}</div></div>`,
+     )
+     .join("")}
   </div>
   <div class="label" style="margin:12px 0 10px">Collections JLPT</div>
   ${levelRowsHtml()}
@@ -2259,7 +2654,12 @@ function Collection() {
 
 function Deck() {
   const dk = deck(app.deck);
-  return `<div class="hdr"><button class="back" data-go="collection">←</button><h1>${esc(dk.name)}</h1></div>
+  /* startSession(id) gérait déjà la session ciblée sur un deck, mais aucun écran
+     n'en offrait le déclencheur. Utile pour reprendre un deck précis sans attendre
+     que le plan du jour veuille bien en servir. */
+  const targeted = queueFor(dk.id).length;
+  return `<div class="hdr"><button class="back" data-go="collection">←</button><h1>${esc(dk.name)}</h1>
+  ${targeted ? `<button class="chip" data-start="${dk.id}" style="height:32px">Étudier · ${targeted}</button>` : ""}</div>
  <div class="tabs">${[
    ["cards", "Cartes"],
    ["settings", "Réglages"],
@@ -2282,11 +2682,14 @@ function reviewTimingLabel(c) {
   return `dans ${days} j`;
 }
 function DeckCards(dk) {
+  /* Les filtres portent sur l'ITEM, en interrogeant ses deux directions : une carte
+     dont seule la production est due doit apparaître sous « à réviser ». */
+  const anyCard = (i, pred) => cardIdsFor(i.id).some((id) => pred(cards[id]));
   const F = {
     all: () => true,
-    new: (c) => stateOf(c) === "new",
-    learning: (c) => c.reps > 0 && !known(c.id),
-    due: (c) => c.due !== null && c.due <= Date.now(),
+    new: (i) => cardIdsFor(i.id).every((id) => cards[id].reps === 0),
+    learning: (i) => !known(i.id) && anyCard(i, (c) => c.reps > 0),
+    due: (i) => anyCard(i, (c) => c.due !== null && c.due <= Date.now()),
   };
   if (!F[app.filter]) app.filter = "all";
   const info = deckUnlockInfo(dk);
@@ -2303,7 +2706,7 @@ function DeckCards(dk) {
       const [a, b] = face(i);
       return (a + b).toLowerCase().includes(app.q.toLowerCase());
     })
-    .filter((i) => F[app.filter](cards[i.id]));
+    .filter((i) => F[app.filter](i));
   if (dk.kind === "bonus")
     return `<div class="scroll pad"><div style="height:12px"></div><div class="empty">${
       info.open
@@ -2333,12 +2736,21 @@ function DeckCards(dk) {
             const c = cards[i.id],
               [a, b] = face(i),
               meta = i.deck === "pkmn" ? pokemonMeta(i.id) : null;
+            const prod = productionId(i.id);
+            /* On affiche l'avancement des deux directions : c'est la seule façon de
+               voir qu'un caractère se lit sans qu'on sache l'écrire. */
             const status = known(i.id)
               ? "maîtrisée"
-              : c.reps > 0
-                ? `${c.goodReps || 0}/${MASTERY_REPS} réussites`
+              : cardIdsFor(i.id).some((id) => cards[id].reps > 0)
+                ? prod
+                  ? `lire ${cards[i.id].goodReps || 0}/${MASTERY_REPS} · écrire ${cards[prod].goodReps || 0}/${MASTERY_REPS}`
+                  : `${c.goodReps || 0}/${MASTERY_REPS} réussites`
                 : "pas commencée";
-            const locked = false;
+            /* échéance la plus proche des deux directions */
+            const nextDue = cardIdsFor(i.id)
+              .map((id) => cards[id])
+              .filter((x) => x.due !== null)
+              .sort((x, y) => x.due - y.due)[0];
             // For pkmn, show prerequisite kana with mastery coloring
             const prereqs = i.deck === "pkmn" ? atomsOf(i) : [];
             const prereqHtml = prereqs.length
@@ -2352,7 +2764,7 @@ function DeckCards(dk) {
       ${prereqHtml}
     </div>
     <span class="faint" style="font-size:12px;padding-top:2px">${i.deck === "pkmn" ? (pkmnUnlocked ? "débloqué" : "verrouillé") : status}</span>
-    <span class="faint mono" style="font-size:11px;min-width:92px;text-align:right;padding-top:2px">${reviewTimingLabel(c)}</span></div>`;
+    <span class="faint mono" style="font-size:11px;min-width:92px;text-align:right;padding-top:2px">${reviewTimingLabel(nextDue || c)}</span></div>`;
           })
           .join("")
       : '<div class="empty">Aucune carte ne correspond à ce filtre.</div>'
@@ -2404,20 +2816,35 @@ function DeckSettings(dk) {
 function DeckStats(dk) {
   const info = deckUnlockInfo(dk);
   const deckItems = allDeckItems(dk.id);
-  const cs = deckItems.map((i) => cards[i.id]);
-  const total = cs.length;
+  /* Deux unités à ne pas confondre : l'item, qui est ce qu'on apprend, et la carte,
+     qui est une direction d'interrogation. L'historique et la charge se comptent en
+     cartes ; la maîtrise et l'avancement, en items. */
+  const cs = deckCards(dk.id);
+  const total = deckItems.length;
   const mastered = deckItems.filter((i) => known(i.id)).length;
-  const learning = cs.filter((c) => c.reps > 0 && !known(c.id)).length;
+  const learning = deckItems.filter(
+    (i) => !known(i.id) && cardIdsFor(i.id).some((id) => cards[id].reps > 0),
+  ).length;
   const notStarted = total - mastered - learning;
   const dueNow = cs.filter((c) => c.due !== null && c.due <= Date.now()).length;
   const attempts = cs.reduce((sum, c) => sum + c.reps, 0);
   const successes = cs.reduce((sum, c) => sum + (c.goodReps || 0), 0);
   const mistakes = cs.reduce((sum, c) => sum + (c.lapses || 0), 0);
+  const recoDone = deckItems.filter((i) => cardKnown(baseId(i.id))).length;
+  const prodDone = deckItems.filter((i) => {
+    const p = productionId(i.id);
+    return p ? cardKnown(p) : cardKnown(i.id);
+  }).length;
   const successRate = attempts ? Math.round((successes / attempts) * 100) : 0;
   const masteryRate = total ? Math.round((mastered / total) * 100) : 0;
   const rows = [
-    ["Maîtrisées", `${MASTERY_REPS} réponses réussies`, mastered, "t-due"],
-    ["En cours", "Étudiées, mais pas encore maîtrisées", learning, "t-lrn"],
+    [
+      "Maîtrisées",
+      `les deux directions, ${MASTERY_REPS} réussites chacune`,
+      mastered,
+      "t-due",
+    ],
+    ["En cours", "Entamées, pas encore maîtrisées", learning, "t-lrn"],
     ["Pas commencées", "Jamais affichées", notStarted, "muted"],
   ];
   return `<div class="scroll pad"><div style="height:20px"></div>
@@ -2437,6 +2864,10 @@ function DeckStats(dk) {
  <div class="label" style="margin:26px 0 6px">Prochaine session</div>
  <div class="row"><div><div style="font-size:14px">Prêtes à réviser</div><div class="faint" style="font-size:12px;margin-top:3px">${dueNow ? "Présentes dans la prochaine session" : "Aucune révision actuellement"}</div></div><span class="mono t-due" style="font-size:18px">${dueNow}</span></div>
  <p class="faint" style="font-size:12px;line-height:1.6;margin:12px 0 0">Une réponse correcte retire la carte de la session. Cinq réussites s'étalent généralement sur une douzaine de jours. Une erreur raccourcit le prochain délai.</p>
+ <div class="label" style="margin:26px 0 6px">Par direction</div>
+ <div class="row"><div><div style="font-size:14px">Reconnaissance</div><div class="faint" style="font-size:12px;margin-top:3px">Lire la graphie</div></div><span class="mono" style="font-size:18px">${recoDone}<span class="faint" style="font-size:13px">/${total}</span></span></div>
+ <div class="row"><div><div style="font-size:14px">Production</div><div class="faint" style="font-size:12px;margin-top:3px">Écrire depuis le sens ou le son</div></div><span class="mono" style="font-size:18px">${prodDone}<span class="faint" style="font-size:13px">/${total}</span></span></div>
+ <p class="faint" style="font-size:12px;line-height:1.6;margin:10px 0 0">Chaque direction a son propre intervalle : reconnaître un caractère et savoir l'écrire ne s'oublient pas au même rythme.</p>
  <div class="label" style="margin:26px 0 6px">Historique</div>
  <div class="row"><span class="muted">Réponses</span><span class="mono">${attempts}</span></div>
  <div class="row"><span class="muted">Réussite</span><span class="mono">${successRate}%</span></div>
@@ -2483,7 +2914,15 @@ function Editor() {
  }
  <hr class="rule"><p class="label" style="margin-bottom:12px">Aperçu</p>
  <div style="border:1px solid var(--rule);border-radius:var(--radius);padding:16px">${prev}</div>
- <p class="note">${c.goodReps || 0}/${MASTERY_REPS} réussites · ${c.lapses} erreur${c.lapses === 1 ? "" : "s"} · ${reviewTimingLabel(c)}</p>
+ <p class="note">Reconnaissance ${c.goodReps || 0}/${MASTERY_REPS} · ${reviewTimingLabel(c)}</p>
+ ${
+   productionId(i.id)
+     ? (() => {
+         const p = cards[productionId(i.id)];
+         return `<p class="note" style="margin-top:4px">Production ${p.goodReps || 0}/${MASTERY_REPS} · ${reviewTimingLabel(p)}</p>`;
+       })()
+     : ""
+ }
  <div style="height:24px"></div></div>`;
 }
 
@@ -2529,29 +2968,25 @@ function contextFor(c) {
 function faceFor(c, g) {
   const i = item(c.id),
     usable = !!g && g.u === 0;
-  if (i.kind === "lex") {
-    if (c.reps === 0) return "cloze";
-    const m = c.reps % 5;
-    if (m === 3) return "bare";
-    if (m === 4) return "lex-write";
-    return "cloze";
+  /* Carte de production : on part du sens ou du son, et l'on doit restituer la
+     graphie japonaise. Les faces d'une carte ne mélangent plus les deux directions,
+     de sorte que chaque intervalle mesure une seule compétence. */
+  if (isProd(c.id)) {
+    if (i.kind === "glyph") return c.reps % 2 === 1 ? "sound" : "glyph-write";
+    if (i.kind === "kanji") return "kanji-write";
+    return "lex-write";
   }
-  if (i.kind === "glyph") {
-    if (c.reps === 0) return "glyph";
-    const m = c.reps % 4;
-    if (m === 1) return "sound";
-    if (m === 2) return "glyph-write";
-    if (m === 3) return usable ? "word" : "glyph";
-    return "glyph";
-  }
-  if (i.kind === "kanji") {
-    if (c.reps === 0) return "keyword";
-    const m = c.reps % 3;
-    if (m === 1 && usable) return "comp";
-    if (m === 2) return "kanji-write";
-    return "keyword";
-  }
-  return "name";
+  /* Carte de reconnaissance : la graphie est donnée, on en produit la lecture ou le
+     sens. Une face sur trois passe au contexte, quand un contexte lisible existe. */
+  const varied = c.reps > 0 && c.reps % 3 === 2;
+  if (i.kind === "lex") return varied ? "bare" : "cloze";
+  if (i.kind === "glyph") return varied && usable ? "word" : "glyph";
+  if (i.kind === "kanji") return varied && usable ? "comp" : "keyword";
+  /* Le deck Pokémon n'avait qu'une face : anglais → katakana, 151 fois. C'était le
+     seul deck sans alternance, alors que c'est le deck-récompense. On intercale une
+     face d'écoute — entendre le nom japonais et l'écrire — qui exerce le lien son →
+     graphie, absent de la face d'origine. */
+  return varied ? "sound" : "name";
 }
 function startSession(id) {
   normalizeDailyState();
@@ -2586,7 +3021,10 @@ function startSession(id) {
     go("session");
     return;
   }
-  if (!id && app.sessionDay === dayKey()) return;
+  /* Plus de verrou « une session par jour ». Il rendait muet le bouton
+     « Continuer » du résumé et interdisait toute reprise alors que des cartes
+     restaient dues. Rien ne se regonfle : ensureDailyPlan mémorise le plan du
+     jour, et queueFor n'en reprend que les cartes encore à reps 0. */
   app.sessionDay = dayKey();
   app.sessionUpdatedAt = Date.now();
   app.pausedSession = null;
@@ -2689,7 +3127,11 @@ function modeFor(s) {
 function kanaChoicePoolForFace(s) {
   const i = item(s.cur.id);
   if (!i) return [];
-  if (s.face === "sound" || s.face === "glyph-write") {
+  /* Les pastilles de choix n'ont de sens que sur un kana isolé. Sur un nom de
+     Pokémon, proposer dix noms entiers transformerait un exercice d'écriture en
+     question à choix multiples — beaucoup plus facile, et ce n'est pas la même
+     compétence. */
+  if (i.kind === "glyph" && (s.face === "sound" || s.face === "glyph-write")) {
     const useKata = i.deck === "kata";
     return ITEMS.filter((x) => x.deck === i.deck).map((x) =>
       useKata ? toKata(x.kana) : x.kana,
@@ -2739,8 +3181,8 @@ function liveFeedback(s) {
     state: dist <= 1 ? "near" : "bad",
     text:
       dist <= 1
-        ? "Presque: 1 erreur max"
-        : "Continue (" + (mode === "kana" ? "kana" : "romaji") + ")",
+        ? "Presque — une seule faute"
+        : "Faux — réponse attendue en " + (mode === "kana" ? "kana" : "romaji"),
   };
 }
 function syncLiveFeedback() {
@@ -2801,12 +3243,14 @@ function Session() {
     atoms = null,
     gloss = ["", ""];
   const feedback = feedbackFor(s);
+  /* aria-live : sans lui, un lecteur d'écran n'annonçait rien après une réponse —
+     le verdict n'existait qu'en couleur et en position. */
   const feedbackHtml =
     feedback && ["ok", "near", "ko", "skip"].includes(s.st)
-      ? `<div class="feedback note ${feedback.state}">${feedback.text}</div>`
-      : '<div class="feedback note"></div>';
+      ? `<div class="feedback note ${feedback.state}" role="status" aria-live="polite">${feedback.text}</div>`
+      : '<div class="feedback note" role="status" aria-live="polite"></div>';
   if (s.face === "cloze") {
-    const cell = `<span class="cell${done ? " on" : ""}" id="cell">${esc(done ? s.ctx.ans[0] : toKana(s.typed))}</span>`;
+    const cell = `<span class="cell${done ? " on" : ""}" id="cell" role="textbox" aria-label="mot à compléter">${esc(done ? s.ctx.ans[0] : toKana(s.typed))}</span>`;
     const furi = dk.furi === "always" || (dk.furi === "hidden" && done);
     body = `<div class="sentence" data-furi="${furi ? "on" : "hidden"}">${s.ctx.segs.map((g, n) => (n === s.ctx.ti ? cell : segHTML(g, true))).join("")}</div>
 `;
@@ -2836,11 +3280,12 @@ function Session() {
     gloss = [s.ctx.en + " · " + i.keyword, `saisissez la lecture en ${mode}`];
     atoms = s.ctx.kanji.map((k) => KIDX.kanji[k]);
   } else if (s.face === "sound") {
+    /* un nom de Pokémon s'écrit en katakana, comme le deck kata — la consigne suit
+       le script attendu, pas le nom du deck */
+    const script =
+      i.deck === "kata" || i.kind === "name" ? "katakana" : "hiragana";
     body = `<button class="play" data-speak="${esc(i.kana)}" aria-label="écouter">▶</button>`;
-    gloss = [
-      i.rom,
-      `écrivez ce que vous entendez en ${i.deck === "kata" ? "katakana" : "hiragana"}`,
-    ];
+    gloss = [i.rom, `écrivez ce que vous entendez en ${script}`];
   } else if (s.face === "name") {
     const shiny = i.deck === "pkmn" && pokemonMeta(i.id)?.shiny;
     body = `<div class="solo-row${shiny ? " shiny" : ""}"><div class="solo lat">${esc(i.en)}</div>${shiny ? '<span class="tag-shiny">shiny</span>' : ""}</div>`;
@@ -2980,13 +3425,20 @@ function Session() {
             `<span class="${known(id) ? "known" : "new"}">${esc(item(id).glyph)}</span>`,
         )
         .join("")}</div>`;
-    rev +=
+    const needsGrade =
       s.st === "near" ||
       s.st === "shown" ||
       app.detailed ||
-      dk.grading === "self"
-        ? `<div class="grade"><button class="g0" data-grade="0">À revoir</button><button class="g1" data-grade="1">Réussi</button></div>`
-        : `<div class="go">touchez pour continuer &rsaquo;</div>`;
+      dk.grading === "self";
+    rev += needsGrade
+      ? `<div class="grade"><button class="g0" data-grade="0">À revoir</button><button class="g1" data-grade="1">Réussi</button></div>`
+      : `<div class="go">touchez pour continuer &rsaquo;</div>`;
+    /* Spec §8.4 : une correction reste possible quelques secondes après une bonne
+       réponse. Un tap malheureux ou une réponse juste par hasard notait la carte
+       sans recours. On n'affiche l'échappatoire que là où elle a un sens : après un
+       succès auto-noté, quand aucun bouton de notation n'est déjà proposé. */
+    if (!needsGrade && s.st === "ok" && !s.corrected)
+      rev += `<div class="go" style="margin-top:6px"><button data-undo="" style="color:var(--shu);font-size:11px;letter-spacing:.04em;text-transform:uppercase">je m'étais trompé</button></div>`;
     /* fermeture à l'intérieur du bloc : hors de lui, une carte non révélée
        produirait "" + "</div>", un orphelin qui referme #sess trop tôt et
        éjecte .s-input du conteneur — la règle #sess.kb-on .s-input cesse alors
@@ -3077,10 +3529,10 @@ function validate() {
   const elapsed = Date.now() - s.startTime;
   s.feedback =
     r === "ok"
-      ? { state: "good", text: "Looks right" }
+      ? { state: "good", text: "Juste" }
       : r === "near"
-        ? { state: "near", text: "Almost there" }
-        : { state: "bad", text: "Keep going" };
+        ? { state: "near", text: "Presque — à toi de trancher" }
+        : { state: "bad", text: "Faux" };
   if (s.ctx) s.cur.last = s.ctx.id;
   if (dk.audio !== "never") speak(promptAudio(s));
   if (r === "ok") {
@@ -3099,24 +3551,57 @@ function skipCard() {
   const s = app.sess;
   if (!s || s.st !== "typing") return;
   s.typed = "";
-  s.feedback = { state: "skip", text: "Skipped" };
+  s.feedback = { state: "skip", text: "Passée" };
   s.st = "skip";
   commit("skip", Date.now() - s.startTime);
   s.revealAt = Date.now();
   render();
 }
+/* Nombre d'échecs, dans une même session, au bout duquel une carte est mise de côté. */
+const LEECH_LAPSES = 3;
+/* Écart minimal avant de revoir une carte. `queue.push` la remettait en fin de
+   file, ce qui, en fin de session, la remettait au rang suivant : on voyait la
+   réponse puis on la redemandait dans la seconde. Ce n'est plus du rappel, c'est
+   de la recopie. On l'insère donc au moins MIN_REQUEUE_GAP cartes plus loin, et
+   en fin de file si la file est plus longue que ça. */
+const MIN_REQUEUE_GAP = 4;
+function requeue(s, card) {
+  /* File vide : il n'y a rien à intercaler, et la carte est déjà replanifiée par
+     FSRS en réapprentissage. La redemander sur-le-champ ne serait que de la
+     recopie — Anki ne le fait pas non plus, il termine la session. */
+  if (!s.queue.length) return false;
+  s.queue.splice(Math.min(s.queue.length, MIN_REQUEUE_GAP), 0, card);
+  return true;
+}
 function commit(outcome, elapsed) {
   const s = app.sess;
   if (s.committed) return;
   s.committed = true;
+  /* Instantané pris avant toute mutation : c'est ce qui rend l'annulation possible.
+     On copie la carte, les compteurs de session et le journal du jour, car grade()
+     et noteDailyProgress() écrivent dans les trois. */
+  s.undoSnapshot = {
+    card: { ...s.cur },
+    points: app.points,
+    streak: app.streak,
+    bestStreak: app.bestStreak,
+    totalRuns: app.totalRuns,
+    dailyStats: JSON.parse(JSON.stringify(app.dailyStats || {})),
+    runCombo: s.runCombo,
+    runBestCombo: s.runBestCombo,
+    runPoints: s.runPoints,
+    seen: s.seen,
+    ok: s.ok,
+    queue: s.queue.slice(),
+    drilled: { ...(s.drilled || {}) },
+    sessionLapses: { ...(s.sessionLapses || {}) },
+    setAside: s.setAside || 0,
+    setAsideItems: (s.setAsideItems || []).slice(),
+  };
   const good = outcome === "good";
   const combo = good ? s.runCombo + 1 : 0;
   const delta =
-    outcome === "good"
-      ? pointsForResult(true, combo)
-      : outcome === "wrong"
-        ? -6
-        : 0;
+    outcome === "good" ? pointsForResult(true, combo) : WRONG_PENALTY;
   if (good) s.runCombo = combo;
   else s.runCombo = 0;
   s.runBestCombo = Math.max(s.runBestCombo, s.runCombo);
@@ -3140,7 +3625,32 @@ function commit(outcome, elapsed) {
   s.seen++;
   if (good) s.ok++;
   s.queue.shift();
-  if (!good) s.queue.push(s.cur);
+  /* Une carte encore dans ses pas d'apprentissage (nouvelle carte réussie, ou
+     rechute) est due dans quelques minutes : la session la redemande au lieu de
+     la renvoyer au lendemain. C'est le renfort du jour même, décidé par FSRS et
+     non par une règle parallèle. Deux reprises au maximum pour ne pas boucler. */
+  if (!s.drilled) s.drilled = {};
+  if (!s.sessionLapses) s.sessionLapses = {};
+  const dueSoon =
+    s.cur.due !== null && s.cur.due - Date.now() < LEARNING_HORIZON;
+  const drills = s.drilled[s.cur.id] || 0;
+  if (!good) {
+    const lapses = (s.sessionLapses[s.cur.id] =
+      (s.sessionLapses[s.cur.id] || 0) + 1);
+    /* Carte bloquante : au-delà de LEECH_LAPSES échecs dans la même session, on
+       la met de côté au lieu de la faire tourner indéfiniment. Une carte qu'on
+       n'obtient pas après trois tentatives rapprochées ne s'apprendra pas en en
+       ajoutant une quatrième — elle a besoin d'une nuit, ou d'être reformulée. */
+    if (lapses >= LEECH_LAPSES) {
+      s.setAside = (s.setAside || 0) + 1;
+      if (!s.setAsideItems) s.setAsideItems = [];
+      const it = item(s.cur.id);
+      s.setAsideItems.push(it.glyph || it.surface || it.ja || it.id);
+    } else requeue(s, s.cur);
+  } else if (dueSoon && drills < 2) {
+    s.drilled[s.cur.id] = drills + 1;
+    requeue(s, s.cur);
+  }
   s.fx =
     outcome === "skip"
       ? null
@@ -3161,6 +3671,45 @@ function commit(outcome, elapsed) {
   saveState();
 }
 maybeAutoPush();
+/* Requalifie en erreur une bonne réponse déjà validée. On restaure l'instantané
+   puis on rejoue commit("wrong") : l'ordonnanceur, les points et le journal du jour
+   repartent donc du même état qu'avant la validation, sans correctif approximatif. */
+function undoGoodAnswer() {
+  const s = app.sess;
+  const u = s && s.undoSnapshot;
+  if (!u || s.st !== "ok") return;
+  const live = cards[u.card.id];
+  /* grade() ajoute des champs qui n'existaient pas (fsrsState sur une carte
+     neuve) : un simple Object.assign les laisserait en place. */
+  for (const k of Object.keys(live)) if (!(k in u.card)) delete live[k];
+  Object.assign(live, u.card);
+  app.points = u.points;
+  app.streak = u.streak;
+  app.bestStreak = u.bestStreak;
+  app.totalRuns = u.totalRuns;
+  app.dailyStats = u.dailyStats;
+  Object.assign(s, {
+    runCombo: u.runCombo,
+    runBestCombo: u.runBestCombo,
+    runPoints: u.runPoints,
+    seen: u.seen,
+    ok: u.ok,
+    queue: u.queue,
+    drilled: u.drilled,
+    sessionLapses: u.sessionLapses,
+    setAside: u.setAside,
+    setAsideItems: u.setAsideItems,
+    undoSnapshot: null,
+    committed: false,
+    corrected: true,
+    st: "ko",
+    feedback: { state: "bad", text: "Corrigé en erreur" },
+  });
+  commit("wrong", Date.now() - s.startTime);
+  syncPokemonUnlocks();
+  saveState();
+  render();
+}
 function advance() {
   const s = app.sess;
   if (!s.committed)
@@ -3199,6 +3748,13 @@ function Summary() {
         `<div style="flex:1"><div class="mono" style="font-size:24px">${v}</div><div class="label" style="margin-top:6px">${l}</div></div>`,
     )
     .join("")}</div>
+ ${
+   s.setAside
+     ? `<div style="height:28px"></div><hr class="rule" style="margin:0 0 12px">
+ <p class="label">Mises de côté</p>
+ <p class="faint" style="font-size:13px;line-height:1.6;margin:6px 0 0">${s.setAside} carte${s.setAside > 1 ? "s" : ""} ratée${s.setAside > 1 ? "s" : ""} ${LEECH_LAPSES} fois de suite : <span style="font-family:var(--f-jp)">${esc(s.setAsideItems.slice(0, 8).join(" · "))}</span>${s.setAsideItems.length > 8 ? " …" : ""}. Insister le même jour n'aurait rien donné — elles reviendront à leur échéance. Si l'une résiste plusieurs jours, l'énoncé mérite d'être revu.</p>`
+     : ""
+ }
  <div style="height:56px"></div><button class="btn" data-go="home">Terminer</button>
  ${queueFor().length ? `<div style="height:10px"></div><button class="btn ghost" data-start="">Continuer (${queueFor().length})</button>` : ""}</div>`;
 }
@@ -3227,6 +3783,24 @@ function bind() {
           filter: "all",
         })),
   );
+  q("[data-load]").forEach(
+    (e) =>
+      (e.onclick = () => {
+        app.dailyLoad = e.dataset.load;
+        /* Le plan du jour est mémorisé : changer la charge doit le recalculer,
+           sinon le réglage ne prendrait effet que demain. Jamais pendant une
+           session en cours, pour ne pas déplacer le sol sous les pieds. */
+        if (!app.sess && !app.pausedSession?.queue?.length) app.dailyPlan = null;
+        saveState();
+        render();
+      }),
+  );
+  const undo = view.querySelector("[data-undo]");
+  if (undo)
+    undo.onclick = (e) => {
+      e.stopPropagation();
+      undoGoodAnswer();
+    };
   q("[data-tab]").forEach(
     (e) => (e.onclick = () => go("deck", { tab: e.dataset.tab })),
   );
@@ -3462,9 +4036,10 @@ function bind() {
   if (resetBtn)
     resetBtn.onclick = () => {
       if (resetBtn.dataset.reset === "confirm") {
-        ITEMS.forEach((i) => {
-          const resetAt = Date.now();
-          Object.assign(cards[i.id], {
+        const resetAt = Date.now();
+        // toutes les cartes, les deux directions comprises
+        for (const id in cards) {
+          Object.assign(cards[id], {
             reps: 0,
             goodReps: 0,
             stab: 0,
@@ -3477,13 +4052,18 @@ function bind() {
             responseAvg: 0,
             modifiedAt: resetAt,
           });
-        });
+          delete cards[id].fsrsState;
+          delete cards[id].fsrsScheduledDays;
+          delete cards[id].fsrsElapsedDays;
+          delete cards[id].fsrsLearningSteps;
+        }
         app.points = 0;
         app.streak = 0;
         app.bestStreak = 0;
         app.totalRuns = 0;
         app.unlockedBonus = {};
         app.pokemonUnlocks = {};
+        app.deckUnlocks = {};
         app.dailyStats = {};
         app.dataUpdatedAt = Date.now();
         app.pausedSession = null;
@@ -3610,16 +4190,50 @@ function syncViewportHeight() {
 }
 const syncViewportHeightDebounced = debounce(syncViewportHeight, 50);
 document.addEventListener("keydown", (e) => {
-  if (app.route !== "session") return;
   const s = app.sess;
+  /* La route peut valoir "session" sans session vivante — reprise avortée, état
+     restauré incomplet. Lire s.st dans ce cas jette une exception à chaque touche. */
+  if (app.route !== "session" || !s || !s.cur) return;
   if (e.key === "Enter" && (s.st === "ok" || s.st === "ko")) {
     e.preventDefault();
     advance();
+    return;
   }
   if (e.key === "Escape") {
+    /* La croix demande confirmation au-delà de 5 cartes vues ; Échap quittait
+       sèchement. Même garde-fou pour les deux : une session perdue par
+       inadvertance est plus coûteuse qu'une touche à presser deux fois. */
+    if (s.seen > 5 && !s.confirmQuit) {
+      s.confirmQuit = true;
+      render();
+      clearTimeout(s.quitTimer);
+      s.quitTimer = setTimeout(() => {
+        if (app.sess === s) {
+          s.confirmQuit = false;
+          render();
+        }
+      }, 3000);
+      return;
+    }
     clearTimeout(s.timer);
     if (tts.ok) speechSynthesis.cancel();
     go("home");
+    return;
+  }
+  /* Spec §15 : E édite la carte courante, 1/2 notent quand deux boutons sont
+     proposés (un « presque » ou une auto-évaluation). Sans eux, la main doit
+     quitter le clavier à chaque carte auto-évaluée. */
+  if ((e.key === "e" || e.key === "E") && s.cur && s.st !== "typing") {
+    e.preventDefault();
+    go("editor", { editing: s.cur.id });
+    return;
+  }
+  if (e.key === "1" || e.key === "2") {
+    const btn = view.querySelector(`[data-grade="${e.key === "1" ? "0" : "1"}"]`);
+    if (btn) {
+      e.preventDefault();
+      btn.click();
+    }
   }
 });
 window.addEventListener("resize", syncViewportHeightDebounced);
@@ -3646,6 +4260,17 @@ async function initializeApp() {
   loadState();
   app.auth = null;
   render();
+  const host = globalThis.location?.hostname || "";
+  if (host === "localhost" || host === "127.0.0.1") {
+    app.auth = { uid: "local-dev", email: "dev@localhost", name: "Dev", photoURL: "" };
+    /* Sans Firebase, aucun jeton n'est disponible : laisser la synchro active
+       faisait échouer chaque envoi automatique et remplissait sync.lastError. */
+    app.sync = { ...app.sync, enabled: false, auto: false, lastError: "" };
+    app.route = app.route === "login" ? "home" : app.route;
+    syncHydrated = true;
+    render();
+    return;
+  }
   if (!globalThis.firebase) {
     app.loginError = "Firebase Auth n'a pas pu être chargé.";
     syncHydrated = true;
