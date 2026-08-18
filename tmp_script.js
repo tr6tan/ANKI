@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260818-1701";
+const BUILD_VERSION = "20260818-1714";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -2210,11 +2210,63 @@ const dailyBudget = () => {
    une nouveauté en consomme deux — sans quoi une journée sans révision servait
    30 nouveautés, soit 60 cartes à l'écran. */
 const EXPOSURES_PER_NEW_CARD = 2;
+/* Régime dégradé. Mesuré à 70 % de précision : aucune porte ne s'ouvrait en quatre
+   mois et la session gonflait à 55 cartes, parce que les échecs se rejouent en
+   séance pendant que de nouvelles cartes continuent d'entrer. L'apprenant qui a le
+   plus besoin d'aide reçoit donc plus de charge et moins de progrès.
+
+   La réponse n'est pas d'abaisser les portes — quelqu'un qui rate 30 % de ses kana
+   n'est pas prêt pour le katakana — mais de tarir l'apport de nouveautés pour lui
+   laisser consolider l'existant. Le mécanisme est auto-correcteur : moins de
+   nouveautés, donc plus de répétitions sur les cartes en cours, donc la stabilité
+   remonte, donc la porte finit par s'ouvrir. C'est aussi le conseil constant de la
+   communauté Anki : devant un taux d'échec élevé, on coupe les nouvelles cartes. */
+const ACCURACY_WINDOW_DAYS = 7;
+const ACCURACY_MIN_SAMPLE = 30;
+/* FSRS vise 90 % de rétention : 70 % est déjà très dégradé, d'où un bridage qui
+   mord tôt et fort. */
+const THROTTLE_FLOOR = 0.7;
+const THROTTLE_START = 0.85;
+/* Mais jamais zéro tant qu'il reste du contenu à introduire : les portes se
+   comptent en nombre absolu de caractères lisibles, donc couper complètement
+   l'apport les verrouillerait pour de bon — l'apprenant en difficulté serait puni
+   deux fois. Un filet d'eau garantit que le seuil reste atteignable, tout en
+   ramenant la charge à ce qu'il peut absorber. */
+const THROTTLE_MIN_NEW = 2;
+function recentAccuracy() {
+  const stats = getDailyStats();
+  let good = 0,
+    attempts = 0;
+  const now = new Date();
+  for (let n = 0; n < ACCURACY_WINDOW_DAYS; n++) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - n);
+    const day = stats[dayKey(d)];
+    if (!day) continue;
+    good += day.good || 0;
+    attempts += day.attempts || 0;
+  }
+  // en dessous de l'échantillon minimal, on ne conclut rien
+  if (attempts < ACCURACY_MIN_SAMPLE) return null;
+  return good / attempts;
+}
+function newCardFactor() {
+  const acc = recentAccuracy();
+  if (acc === null || acc >= THROTTLE_START) return 1;
+  if (acc <= THROTTLE_FLOOR) return 0;
+  return (acc - THROTTLE_FLOOR) / (THROTTLE_START - THROTTLE_FLOOR);
+}
 function ensureDailyPlan(dueCount) {
   const today = dayKey();
   if (app.dailyPlan?.day === today) return app.dailyPlan;
   const room = Math.max(0, dailyBudget() - dueCount);
-  const alloc = allocateNewBudget(Math.floor(room / EXPOSURES_PER_NEW_CARD));
+  const full = Math.floor(room / EXPOSURES_PER_NEW_CARD);
+  const factor = newCardFactor();
+  const slots =
+    factor < 1 && full > 0
+      ? Math.max(THROTTLE_MIN_NEW, Math.floor(full * factor))
+      : full;
+  const alloc = allocateNewBudget(Math.min(full, slots));
   const newIds = [];
   for (const dk of DECKS)
     newIds.push(...newFor(dk, alloc[dk.id]).map((c) => c.id));
@@ -2223,24 +2275,32 @@ function ensureDailyPlan(dueCount) {
   return app.dailyPlan;
 }
 function queueFor(id) {
-  const now = Date.now(),
-    out = [];
+  const now = Date.now();
+  let due = [];
   const targets = id ? [deck(id)] : DECKS;
   for (const dk of targets)
     for (const i of deckVisibleItems(dk))
       for (const cardId of cardIdsFor(i.id)) {
         const c = cards[cardId];
-        if (c && c.due !== null && c.due <= now) out.push(c);
+        if (c && c.due !== null && c.due <= now) due.push(c);
       }
-  if (id) {
-    out.push(...newFor(deck(id)));
-  } else {
-    const plan = ensureDailyPlan(out.length);
-    const existing = new Set(out.map((c) => c.id));
-    for (const cardId of plan.newIds) {
-      const card = cards[cardId];
-      if (card && card.reps === 0 && !existing.has(cardId)) out.push(card);
-    }
+  if (id) return burySiblings(shuffle([...due, ...newFor(deck(id))]));
+  /* Les révisions dues n'étaient bornées par rien : seules les nouveautés
+     l'étaient. Après une semaine d'absence, « Normal · 30 » servait donc deux
+     cents cartes. On plafonne, en commençant par les PLUS EN RETARD — ce sont
+     celles dont la rétention se dégrade le plus, et les reporter coûte davantage
+     que de reporter une carte tout juste échue. Le surplus reste dû et revient
+     demain, sans pénalité : FSRS n'a pas de notion de retard. */
+  due.sort((a, b) => a.due - b.due);
+  const budget = dailyBudget();
+  const kept = due.slice(0, budget);
+  app.deferredReviews = due.length - kept.length;
+  const plan = ensureDailyPlan(kept.length);
+  const existing = new Set(kept.map((c) => c.id));
+  const out = kept.slice();
+  for (const cardId of plan.newIds) {
+    const card = cards[cardId];
+    if (card && card.reps === 0 && !existing.has(cardId)) out.push(card);
   }
   return burySiblings(shuffle(out));
 }
@@ -2510,7 +2570,8 @@ function Home() {
   return `<div class="scroll pad" style="position:relative"><span class="mono faint" style="position:absolute;top:10px;right:0;font-size:11px;letter-spacing:.04em">v${BUILD_VERSION}</span><p class="label" style="margin-top:24px">${esc(d)}</p>
   <div style="display:flex;justify-content:center;margin:36px 0 12px">
     <div class="sq" style="width:146px"><span class="mono" style="font-size:60px">${resumeToday ? remaining : exposures}</span></div></div>
-    <p class="muted" style="text-align:center;font-size:14px;margin:0 0 24px">${resumeToday ? "cartes restantes" : "cartes à voir aujourd'hui"}</p>
+    <p class="muted" style="text-align:center;font-size:14px;margin:0 0 6px">${resumeToday ? "cartes restantes" : "cartes au programme"}</p>
+    ${resumeToday ? "" : `<p class="faint" style="text-align:center;font-size:12px;line-height:1.5;margin:0 0 20px">Les cartes ratées reviennent dans la séance, en plus de ce total.</p>`}
     ${
       remaining
         ? `<div class="row"><span class="muted">Nouvelles cartes${newCount ? ` <span class="faint" style="font-size:12px">— vues deux fois</span>` : ""}</span><span class="mono">${newCount}</span></div><div class="row" style="margin-bottom:18px"><span class="muted">Révisions</span><span class="mono">${reviewCount}</span></div>`
@@ -2537,6 +2598,12 @@ function Home() {
   <div class="row" style="margin-top:6px"><span class="muted">Demain</span><span class="mono">${upcoming.tomorrow}</span></div>
   <div class="row"><span class="muted">Sept prochains jours</span><span class="mono">${upcoming.week}</span></div>
   <div class="row"><span class="muted">Cartes en circulation</span><span class="mono">${upcoming.circulating}</span></div>
+  ${
+    app.deferredReviews
+      ? `<div class="row"><span class="muted">Reportées à demain</span><span class="mono t-lrn">${app.deferredReviews}</span></div>
+  <p class="faint" style="font-size:12px;line-height:1.6;margin:8px 0 0">Plus de révisions dues que la charge du jour ne permet. Les plus en retard passent d'abord ; le reste attend, sans pénalité.</p>`
+      : ""
+  }
   <p class="faint" style="font-size:12px;line-height:1.6;margin:10px 0 0">${esc(upcoming.hint)}</p>
   <div style="height:24px"></div></div>`;
 }
@@ -2550,6 +2617,12 @@ function Home() {
    Sans explication, le réglage passerait pour cassé — on dit donc ce qui borne
    réellement, et où le régler. */
 function loadNote(newCount, reviewCount) {
+  /* Le régime dégradé passe avant : c'est l'explication la plus utile, et la plus
+     susceptible d'être prise pour une panne. */
+  const acc = recentAccuracy();
+  const factor = newCardFactor();
+  if (factor < 1)
+    return `Apport de nouveautés réduit au minimum : ${Math.round(acc * 100)} % de réussite sur les sept derniers jours, pour ${Math.round(THROTTLE_START * 100)} % attendus. Mieux vaut consolider que d'empiler — cela remontera de soi-même.`;
   const slots = Math.floor(
     Math.max(0, dailyBudget() - reviewCount) / EXPOSURES_PER_NEW_CARD,
   );
@@ -3016,6 +3089,7 @@ function startSession(id) {
       runPoints: 0,
       runCombo: 0,
       runBestCombo: 0,
+      exposureCap: Math.round(dailyBudget() * SESSION_OVERSHOOT),
     };
     nextCard();
     go("session");
@@ -3050,6 +3124,7 @@ function startSession(id) {
     runPoints: 0,
     runCombo: 0,
     runBestCombo: 0,
+    exposureCap: Math.round(dailyBudget() * SESSION_OVERSHOOT),
   };
   nextCard();
   go("session");
@@ -3559,6 +3634,13 @@ function skipCard() {
 }
 /* Nombre d'échecs, dans une même session, au bout duquel une carte est mise de côté. */
 const LEECH_LAPSES = 3;
+/* Plafond dur de la séance, en multiple de la charge annoncée. Les reprises après
+   échec ne se comptaient dans aucun budget : à 70 % de réussite, « Normal · 30 »
+   servait 55 cartes. Passé ce plafond, on cesse de remettre les cartes en file —
+   elles sont déjà notées et replanifiées par FSRS, donc rien n'est perdu ; seule
+   la répétition du jour est abandonnée. La charge annoncée devient ainsi une
+   promesse tenue à 50 % près, et non à 80 %. */
+const SESSION_OVERSHOOT = 1.5;
 /* Écart minimal avant de revoir une carte. `queue.push` la remettait en fin de
    file, ce qui, en fin de session, la remettait au rang suivant : on voyait la
    réponse puis on la redemandait dans la seconde. Ce n'est plus du rappel, c'est
@@ -3634,6 +3716,7 @@ function commit(outcome, elapsed) {
   const dueSoon =
     s.cur.due !== null && s.cur.due - Date.now() < LEARNING_HORIZON;
   const drills = s.drilled[s.cur.id] || 0;
+  const roomLeft = s.seen < (s.exposureCap || Infinity);
   if (!good) {
     const lapses = (s.sessionLapses[s.cur.id] =
       (s.sessionLapses[s.cur.id] || 0) + 1);
@@ -3641,13 +3724,13 @@ function commit(outcome, elapsed) {
        la met de côté au lieu de la faire tourner indéfiniment. Une carte qu'on
        n'obtient pas après trois tentatives rapprochées ne s'apprendra pas en en
        ajoutant une quatrième — elle a besoin d'une nuit, ou d'être reformulée. */
-    if (lapses >= LEECH_LAPSES) {
+    if (lapses >= LEECH_LAPSES || !roomLeft) {
       s.setAside = (s.setAside || 0) + 1;
       if (!s.setAsideItems) s.setAsideItems = [];
       const it = item(s.cur.id);
       s.setAsideItems.push(it.glyph || it.surface || it.ja || it.id);
     } else requeue(s, s.cur);
-  } else if (dueSoon && drills < 2) {
+  } else if (dueSoon && drills < 2 && roomLeft) {
     s.drilled[s.cur.id] = drills + 1;
     requeue(s, s.cur);
   }

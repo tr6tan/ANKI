@@ -323,6 +323,77 @@ test("newPerDay est un plafond réellement respecté", () => {
   );
 });
 
+test("les révisions dues sont plafonnées par la charge du jour", () => {
+  const api = loadApp();
+  // 200 cartes échues : bien au-delà du budget « Normal »
+  const ids = Object.keys(api.cards).slice(0, 200);
+  for (const id of ids) {
+    Object.assign(api.cards[id], { reps: 3, goodReps: 3, stab: 5 });
+    api.cards[id].due = Date.now() - 86400000;
+  }
+  const q = api.queueFor();
+  assert.ok(
+    q.length <= 30,
+    `la session doit rester sous la charge du jour, obtenu ${q.length}`,
+  );
+  assert.ok(api.app.deferredReviews > 0, "le surplus doit être signalé");
+});
+
+test("les révisions les plus en retard passent en premier", () => {
+  const api = loadApp();
+  /* Cartes de reconnaissance seulement : l'enterrement des sœurs ne garde qu'une
+     carte par item, ce qui rendrait le choix indéterminé. */
+  const ids = api.ITEMS.filter((i) => i.deck === "hira")
+    .slice(0, 100)
+    .map((i) => i.id);
+  ids.forEach((id, n) => {
+    Object.assign(api.cards[id], { reps: 3, goodReps: 3, stab: 5 });
+    // n croissant = échue depuis moins longtemps
+    api.cards[id].due = Date.now() - (100 - n) * 86400000;
+  });
+  const kept = new Set(api.queueFor().map((c) => c.id));
+  assert.ok(kept.has(ids[0]), "la plus en retard doit être retenue");
+  assert.ok(!kept.has(ids[99]), "la moins en retard doit être reportée");
+});
+
+test("une précision effondrée bride les nouveautés sans jamais les tarir", () => {
+  const api = loadApp();
+  const today = api.dayKey();
+  const newCount = () => {
+    api.app.dailyPlan = null;
+    return api.queueFor().filter((c) => c.reps === 0).length;
+  };
+
+  api.app.dailyStats = { [today]: { attempts: 100, good: 90, wrong: 10, skip: 0, points: 0 } };
+  const healthy = newCount();
+
+  api.app.dailyStats = { [today]: { attempts: 100, good: 50, wrong: 50, skip: 0, points: 0 } };
+  const struggling = newCount();
+
+  assert.ok(
+    struggling < healthy,
+    `à 50 % de réussite l'apport doit chuter (${struggling} contre ${healthy})`,
+  );
+  /* Mais jamais à zéro : les portes se comptent en caractères lisibles, donc couper
+     l'apport les verrouillerait définitivement. */
+  assert.ok(
+    struggling > 0,
+    "un apport nul verrouillerait les portes pour de bon",
+  );
+});
+
+test("un échantillon trop mince ne déclenche aucun bridage", () => {
+  const api = loadApp();
+  const today = api.dayKey();
+  // trois erreurs le premier jour ne prouvent rien
+  api.app.dailyStats = { [today]: { attempts: 4, good: 1, wrong: 3, skip: 0, points: 0 } };
+  api.app.dailyPlan = null;
+  assert.ok(
+    api.queueFor().filter((c) => c.reps === 0).length > 0,
+    "il faut un échantillon minimal avant de conclure",
+  );
+});
+
 test("un nouveau jour efface plan et session en pause", () => {
   const api = loadApp();
   api.app.dailyPlan = { day: "2000-01-01", newIds: ["h0"], createdAt: 1 };
