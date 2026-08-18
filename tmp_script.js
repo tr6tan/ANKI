@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260818-1939";
+const BUILD_VERSION = "20260818-2000";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -136,6 +136,28 @@ const KANA = {
   ro: "ろ",
   wa: "わ",
   wo: "を",
+  /* Sons étrangers, indispensables aux emprunts et aux noms de Pokémon. On n'ajoute
+     que des clés libres : « ti » et « di » restent ち et ぢ comme sur un IME, et les
+     graphies てぃ でぃ s'obtiennent par thi et dhi. Taper « di » pour ディ reste
+     accepté au jugement, qui compare aussi les romaji. */
+  fa: "ふぁ",
+  fi: "ふぃ",
+  fe: "ふぇ",
+  fo: "ふぉ",
+  she: "しぇ",
+  je: "じぇ",
+  che: "ちぇ",
+  thi: "てぃ",
+  dhi: "でぃ",
+  twu: "とぅ",
+  dwu: "どぅ",
+  wi: "うぃ",
+  we: "うぇ",
+  vu: "ゔ",
+  va: "ゔぁ",
+  vi: "ゔぃ",
+  ve: "ゔぇ",
+  vo: "ゔぉ",
 };
 const toKata = (s) =>
   s.replace(/[\u3041-\u3096]/g, (c) =>
@@ -256,8 +278,15 @@ const expandLong = (s) => {
   }
   return o;
 };
+/* Les signes ♀ et ♂ des Nidoran ne se tapent sur aucun clavier de l'application :
+   on les retire de la comparaison pour que la carte soit répondable. Les deux
+   Nidoran se normalisent alors pareil, ce qui est voulu : l'énoncé anglais les
+   distingue, la graphie attendue non. */
+const stripDeco = (s) => String(s).replace(/[♀♂]/g, "");
 const normKana = (s) =>
-  expandLong(toHira(String(s).normalize("NFKC").trim().replace(/\s+/g, "")));
+  expandLong(
+    toHira(stripDeco(String(s).normalize("NFKC")).trim().replace(/\s+/g, "")),
+  );
 
 /* romaji canonique construit depuis KROWS (hepburn) */
 const K2R = {},
@@ -270,6 +299,10 @@ KROWS.join(" ")
     if (!m) return;
     K2R[m[1]] = m[2];
     K2R[toKata(m[1])] = m[2];
+    /* ゔ / ヴ n'appartient pas au gojūon, donc KROWS ne le fournit pas ; sans lui il
+       fuirait tel quel dans la sortie romaji, comme le faisaient ファ et ディ. */
+    K2R["ゔ"] = "vu";
+    K2R["ヴ"] = "vu";
     if (m[1].length === 2) {
       DIGRAPH.add(m[1]);
       DIGRAPH.add(toKata(m[1]));
@@ -298,8 +331,33 @@ function toRomaji(w) {
       i += 2;
       continue;
     }
+    /* Sons étrangers du katakana : consonne suivie d'une petite voyelle. K2R est
+       construit depuis le gojūon, donc ファ ディ シェ フォ n'y figuraient pas et le
+       caractère fuyait tel quel dans la sortie. Onze cartes Pokémon affichaient
+       ainsi « fuァiyaa » comme lecture, et refusaient la frappe « faiyaa ».
+       La règle générale : on retire la voyelle de la consonne et on ajoute celle du
+       petit kana. フ(fu)+ァ donne fa, テ(te)+ィ donne ti, シ(shi)+ェ donne she. */
+    const small = SMALL_VOWEL[w[i + 1]];
+    const baseRom = K2R[c];
+    if (small && baseRom) {
+      /* ィ derrière un romaji déjà en -i allonge la voyelle : ケーシィ donne
+         keeshii, et non keeshi. */
+      o +=
+        small === "i" && baseRom.endsWith("i")
+          ? baseRom + "i"
+          : baseRom.replace(/[aiueo]$/, "") + small;
+      i += 2;
+      continue;
+    }
     if (K2R[c]) {
       o += K2R[c];
+      i++;
+      continue;
+    }
+    /* Les signes ♀ et ♂ des noms de Nidoran ne se romanisent pas et ne figurent sur
+       aucun clavier de l'application : on les laisse tomber ici, et normKana les
+       retire de la comparaison, de sorte que « nidoran » soit accepté. */
+    if (c === "♀" || c === "♂") {
       i++;
       continue;
     }
@@ -338,13 +396,35 @@ function normRom(s) {
     .replace(/[ūû]/g, "u")
     .replace(/[ēê]/g, "e")
     .replace(/[ōô]/g, "o");
+  v = stripDeco(v);
   for (const [a, b] of RVAR) v = v.split(a).join(b);
+  /* ii rejoint uu et oo : la longueur vocalique est phonémique, mais ce pipeline a
+     déjà choisi la clémence pour les deux autres. Sans quoi ケーシィ n'accepterait
+     que « keeshii » et refuserait « keeshi ». */
   return v
     .replace(/nn/g, "n")
     .replace(/ou/g, "o")
     .replace(/uu/g, "u")
-    .replace(/oo/g, "o");
+    .replace(/oo/g, "o")
+    .replace(/ii/g, "i");
 }
+
+/* Petites voyelles, hiragana et katakana. ゃゅょ en sont exclus : ils forment des
+   digrammes déjà présents dans K2R via KROWS. */
+const SMALL_VOWEL = (() => {
+  const m = {};
+  for (const [k, v] of [
+    ["ぁ", "a"],
+    ["ぃ", "i"],
+    ["ぅ", "u"],
+    ["ぇ", "e"],
+    ["ぉ", "o"],
+  ]) {
+    m[k] = v;
+    m[toKata(k)] = v;
+  }
+  return m;
+})();
 
 const PUNCT = { "。": ".", "、": ",", "！": "!", "？": "?" };
 /* les particules は を へ se romanisent wa / o / e : un segment sans lecture
@@ -443,17 +523,29 @@ function pickVoice() {
     tts.voice = null;
     return;
   }
+  /* La qualité perçue vient d'abord du modèle de voix, pas du débit. Sur iOS et
+     macOS, « Kyoko (Enhanced) » et les voix neuronales sont d'un autre ordre que la
+     voix compacte par défaut : l'écart s'entend surtout sur les more isolées, où la
+     voix compacte diphtongue les voyelles longues. On pondère donc la qualité du
+     modèle au-dessus de tout le reste, au lieu de la placer derrière la
+     reconnaissance du nom. */
   const score = (v) => {
     const n = String(v.name || "").toLowerCase();
     let s = 0;
+    if (/premium|enhanced|neural|natural/.test(n)) s += 20;
     if (v.localService) s += 8;
-    if (/google|siri|kyoko|otoya|haruka|japanese|nihongo|日本語|ja-jp/.test(n))
-      s += 10;
-    if (/enhanced|premium|natural|neural/.test(n)) s += 4;
+    if (/^ja-jp$/i.test(String(v.lang || "").replace("_", "-"))) s += 4;
+    if (/google|siri|kyoko|otoya|hattori|haruka|japanese|nihongo|日本語/.test(n))
+      s += 6;
     return s;
   };
   voices.sort((a, b) => score(b) - score(a));
   tts.voice = voices[0] || null;
+  /* Retenu pour l'écran des réglages : proposer d'installer une meilleure voix n'a
+     de sens que si celle qui joue n'en est pas déjà une. */
+  tts.enhanced = tts.voice
+    ? /premium|enhanced|neural|natural/i.test(tts.voice.name || "")
+    : false;
 }
 if (tts.ok) {
   pickVoice();
@@ -477,12 +569,26 @@ function prepareSpeechText(text) {
 function paddedSpeech(text) {
   return "、" + text + "、";
 }
+/* Débit choisi selon la longueur de l'énoncé, et non fixé au hasard par appel.
+   Une more isolée a besoin d'air pour que l'attaque et la durée s'entendent ; une
+   phrase, au contraire, perd sa prosodie dès qu'on la ralentit, parce que
+   l'intonation et l'accent de hauteur du japonais se lisent sur le débit naturel.
+   Trois paliers valent mieux que les 0.7, 0.75 et 0.9 dispersés dans le code. */
+const SPEECH_RATE = { mora: 0.72, mot: 0.86, phrase: 0.98 };
+function rateFor(text) {
+  const n = [...String(text)].filter((c) => !"、。ー・ 　".includes(c)).length;
+  if (n <= 2) return SPEECH_RATE.mora;
+  if (n <= 6) return SPEECH_RATE.mot;
+  return SPEECH_RATE.phrase;
+}
 let speechSeq = 0;
 function utter(text, rate) {
   const u = new SpeechSynthesisUtterance(text);
   u.lang = "ja-JP";
   if (tts.voice) u.voice = tts.voice;
-  u.rate = rate || 0.9;
+  u.rate = rate || rateFor(text);
+  /* pitch laissé à 1 : le japonais porte du sens dans l'accent de hauteur, et
+     déplacer la fondamentale globale brouille ce contraste. */
   u.pitch = 1.0;
   speechSynthesis.speak(u);
 }
@@ -662,13 +768,6 @@ const LEVELS = [
   },
 ];
 const level = (id) => LEVELS.find((l) => l.id === id);
-const BONUS_DECKS = [];
-const bonusDeck = (id) => BONUS_DECKS.find((d) => d.id === id);
-const POINTS_PER_DAY_ESTIMATE = 200;
-function daysToUnlock(threshold, points) {
-  const remaining = Math.max(0, threshold - (points || 0));
-  return Math.max(0, Math.ceil(remaining / POINTS_PER_DAY_ESTIMATE));
-}
 function decksForLevel(levelId) {
   const l = level(levelId);
   if (!l) return [];
@@ -1320,17 +1419,6 @@ const learnedCount = (id) => allDeckItems(id).filter((i) => learned(i.id)).lengt
 const solidCount = (id) => allDeckItems(id).filter((i) => solid(i.id)).length;
 const totalCount = (id) => allDeckItems(id).length;
 function deckUnlockInfo(dk) {
-  if (dk.level === "bonus") {
-    const open = (app.points || 0) >= (dk.threshold || 0);
-    return {
-      stage: "BONUS",
-      open,
-      limit: 0,
-      label: dk.name,
-      need: open ? "" : `${dk.threshold || 0} points`,
-      theme: dk.theme || "",
-    };
-  }
   if (dk.level && dk.level !== "n5") {
     const lvl = levelUnlockInfo(dk.level);
     return {
@@ -1597,11 +1685,9 @@ function loadState() {
         streak: stored.progress.streak || 0,
         bestStreak: stored.progress.bestStreak || 0,
         totalRuns: stored.progress.totalRuns || 0,
-        unlockedBonus: stored.progress.unlockedBonus || {},
-      });
+        });
     }
-    app.unlockedBonus = bonusUnlocksForPoints(app.points || 0);
-    if (stored?.dailyStats) {
+      if (stored?.dailyStats) {
       app.dailyStats = stored.dailyStats;
     }
     if (stored?.pokemonUnlocks) {
@@ -1665,7 +1751,6 @@ function saveState() {
           streak: app.streak,
           bestStreak: app.bestStreak,
           totalRuns: app.totalRuns,
-          unlockedBonus: app.unlockedBonus,
         },
         dailyStats: app.dailyStats || {},
         pokemonUnlocks: app.pokemonUnlocks || {},
@@ -1723,7 +1808,6 @@ function localPayload() {
       streak: app.streak || 0,
       bestStreak: app.bestStreak || 0,
       totalRuns: app.totalRuns || 0,
-      unlockedBonus: app.unlockedBonus || {},
     },
     dailyStats: app.dailyStats || {},
     pokemonUnlocks: app.pokemonUnlocks || {},
@@ -1776,7 +1860,6 @@ function applyPayload(payload) {
     app.streak = payload.progress.streak || 0;
     app.bestStreak = payload.progress.bestStreak || 0;
     app.totalRuns = payload.progress.totalRuns || 0;
-    app.unlockedBonus = payload.progress.unlockedBonus || {};
     app.dailyStats = payload.dailyStats || {};
     app.dataUpdatedAt = remoteUpdated;
   }
@@ -1809,7 +1892,6 @@ function applyPayload(payload) {
       ? { queue, seen: remoteSession.seen || 0, ok: remoteSession.ok || 0 }
       : null;
   }
-  app.unlockedBonus = bonusUnlocksForPoints(app.points || 0);
   syncPokemonUnlocks();
   saveState();
   return true;
@@ -2012,11 +2094,6 @@ function pointsForResult(good, combo) {
   const tier = Math.floor(Math.max(1, combo) - 1) / 3;
   const mult = 1 + Math.min(1.75, tier * 0.25);
   return Math.round(10 * mult);
-}
-function bonusUnlocksForPoints(points) {
-  const unlocked = {};
-  for (const b of BONUS_DECKS) unlocked[b.id] = points >= b.threshold;
-  return unlocked;
 }
 function dayKey(d = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -2471,7 +2548,6 @@ const app = {
   streak: 0,
   bestStreak: 0,
   totalRuns: 0,
-  unlockedBonus: {},
   sync: { ...SYNC_DEFAULT },
   auth: null,
   loginError: "",
@@ -2703,24 +2779,6 @@ function Collection() {
     <span class="deck-chevron">›</span>
    </div>
   </div>
-  <div class="label" style="margin:22px 0 10px">Decks bonus</div>
-  ${
-    BONUS_DECKS.length
-      ? BONUS_DECKS.map((b) => {
-          const open = app.unlockedBonus && app.unlockedBonus[b.id];
-          const eta = daysToUnlock(b.threshold, app.points || 0);
-          return `<div class="level-card ${open ? "open" : "locked"}" data-deck="${b.id}">
-    <div class="level-row">
-     <div class="level-main">
-      <div class="level-top"><span class="level-pill">${open ? "✓" : "★"}</span><span class="level-title">${esc(b.name)}</span></div>
-      <div class="level-sub">${open ? `Débloqué à ${b.threshold} points` : `${esc(b.theme)} · ${b.threshold} points requis · environ ${eta} jour${eta === 1 ? "" : "s"}`}</div>
-     </div>
-     <div class="tally mono"><span class="t-new">${b.threshold}</span></div>
-    </div>
-   </div>`;
-        }).join("")
-      : '<div class="empty" style="padding:12px 0;font-size:13px">Aucun deck bonus configuré.</div>'
-  }
   <div style="height:24px"></div></div>`;
 }
 
@@ -2779,13 +2837,6 @@ function DeckCards(dk) {
       return (a + b).toLowerCase().includes(app.q.toLowerCase());
     })
     .filter((i) => F[app.filter](i));
-  if (dk.kind === "bonus")
-    return `<div class="scroll pad"><div style="height:12px"></div><div class="empty">${
-      info.open
-        ? `Débloqué. Ce deck bonus est prêt à recevoir son prochain thème.`
-        : `Verrouillé pour le moment.<br>${esc(info.need || "Continuez à gagner des points.")}.
-`
-    }</div><div style="height:24px"></div></div>`;
   if (!info.open)
     return `<div class="scroll pad"><div style="height:12px"></div><div class="empty">Verrouillé pour le moment.<br>${esc(info.need || "Maîtrisez d'abord les decks de base.")}.</div><div style="height:24px"></div></div>`;
   return `<div class="scroll pad">
@@ -2878,11 +2929,10 @@ function DeckSettings(dk) {
      : dk.kind === "kanji"
        ? "Saisissez la lecture en romaji ou en kana. La lecture pertinente est apprise dans les mots composés."
        : dk.kind === "name"
-         ? "Chaque nom rejoint les sessions quand tous les katakana nécessaires sont maîtrisés."
-         : dk.kind === "bonus"
-           ? "Les decks bonus se débloquent lorsque votre total de points atteint leur seuil."
-           : "Les phrases changent entre les révisions pour apprendre le mot, pas une réponse figée."
+         ? "Chaque nom rejoint les sessions dès que tous les katakana de son écriture sont lisibles."
+         : "Les phrases changent entre les révisions pour apprendre le mot, pas une réponse figée."
  }</p>
+ <p class="faint" style="font-size:12px;line-height:1.6">Chaque carte est interrogée dans les deux directions, reconnaissance et production, avec un intervalle propre à chacune.</p>
  <div style="height:24px"></div></div>`;
 }
 function DeckStats(dk) {
@@ -3017,9 +3067,29 @@ function Settings() {
   <button class="btn ghost" style="height:44px" data-sync="pull">Récupérer</button>
   <button class="btn ghost" style="height:44px" data-sync="push">Envoyer</button>
  </div>
+ <hr class="rule">
+ <span class="label">Sauvegarde locale</span>
+ <p class="faint" style="font-size:13px;line-height:1.7;margin:6px 0 10px">Un historique de répétition espacée ne se reconstitue pas : c'est lui qui a de la valeur, pas les cartes. Le fichier exporté contient toutes vos cartes, votre progression et votre journal, et se relit sur n'importe quel appareil.</p>
+ <div style="display:flex;gap:10px">
+  <button class="btn ghost" style="height:44px" data-export="">Exporter</button>
+  <button class="btn ghost" style="height:44px" data-import="">Importer</button>
+ </div>
+ <input id="import-file" type="file" accept="application/json,.json" style="display:none">
+ <p class="faint" style="font-size:12px;line-height:1.6;margin:8px 0 0">L'import fusionne : pour chaque carte, la version la plus récemment modifiée est retenue. Rien n'est effacé.</p>
+ ${app.importNote ? `<p style="font-size:13px;line-height:1.6;margin:8px 0 0;color:var(--seiji)">${esc(app.importNote)}</p>` : ""}
  <p class="faint" style="font-size:12px;line-height:1.6;margin-top:10px">Dernière synchronisation : ${esc(syncStamp)}${sync.lastDirection ? ` · ${esc(sync.lastDirection)}` : ""}${sync.lastError ? ` · erreur : ${esc(sync.lastError)}` : ""}</p>
  <p class="faint" style="font-size:12px;line-height:1.6">Compte Google : ${esc(app.auth?.email || "")}</p>
- <p class="faint" style="font-size:13px;line-height:1.7">${tts.ok ? (tts.voice ? "Voix japonaise détectée : " + esc(tts.voice.name) : "Aucune voix japonaise installée. La lecture audio peut être incorrecte.") : "Synthèse vocale indisponible dans ce navigateur."}</p>
+ <p class="faint" style="font-size:13px;line-height:1.7">${
+   !tts.ok
+     ? "Synthèse vocale indisponible dans ce navigateur."
+     : !tts.voice
+       ? "Aucune voix japonaise installée : la lecture audio sera fausse ou muette."
+       : `Voix japonaise : ${esc(tts.voice.name)}${tts.enhanced ? " (haute qualité)" : ""}.`
+ }${
+   tts.ok && tts.voice && !tts.enhanced
+     ? `<br><br>Cette voix est la version compacte du système. Une voix haute qualité change nettement la diction, surtout sur les kana isolés, où la compacte diphtongue les voyelles longues. Sur iPhone : Réglages, Accessibilité, Contenu énoncé, Voix, Japonais, puis télécharger une voix marquée « Qualité supérieure ». Elle sera reprise automatiquement.`
+     : ""
+ }</p>
  <p class="faint" style="font-size:13px;line-height:1.7;margin-top:16px">La progression, les réglages et l'historique sont conservés dans ce navigateur. Les noms Pokémon sont utilisés uniquement pour l'étude personnelle.</p>
  <hr class="rule">
  <button class="btn ghost" data-logout="" style="height:44px">Se déconnecter</button>
@@ -3157,6 +3227,16 @@ function nextCard() {
     else if (dk.audio === "always") speak(promptAudio(s), 0.8);
   }
 }
+/* Lecture prononçable d'un kanji : celle d'un composé qui le contient, choisi de
+   façon stable pour ne pas changer d'une exposition à l'autre. Renvoie une chaîne
+   vide si aucun composé n'est disponible, auquel cas on préfère le silence à une
+   lecture inventée par le moteur. */
+function compoundSpeech(i) {
+  if (i.kind !== "kanji") return i.kana || i.read || i.ja || "";
+  const pool = COMPCTX.filter((m) => m.kanji.includes(i.glyph));
+  if (!pool.length) return "";
+  return pool[Math.abs(hash(i.id)) % pool.length].read[0] || "";
+}
 function promptAudio(s) {
   const i = item(s.cur.id);
   return s.face === "cloze"
@@ -3171,7 +3251,9 @@ function promptAudio(s) {
             : i.kana
           : s.face === "lex-write"
             ? i.read
-            : i.kana || i.read || i.ja || i.glyph;
+            : /* le repli tombait sur i.glyph, donc sur un kanji isolé pour les faces
+                 keyword et kanji-write : on passe par une lecture de composé */
+              i.kana || i.read || i.ja || compoundSpeech(i);
 }
 function acceptedFor(s) {
   const i = item(s.cur.id);
@@ -3446,13 +3528,17 @@ function Session() {
     } else if (s.face === "keyword") {
       itemText = i.glyph;
       answerMain = i.keyword;
-      speakSrc = i.glyph;
+      /* Jamais le kanji seul : 日 se lit nichi, hi ou jitsu, et le moteur en choisit
+         un arbitrairement. La spec §11 le dit d'ailleurs, il faut passer une lecture
+         et non un idéogramme ambigu. On fait donc entendre un composé dont la
+         lecture est déterminée, ou rien. */
+      speakSrc = compoundSpeech(i);
       skipForm = true;
       skipMean = true;
     } else if (s.face === "kanji-write") {
       itemText = i.keyword;
       answerMain = i.glyph;
-      speakSrc = i.glyph;
+      speakSrc = compoundSpeech(i);
     } else if (s.face === "lex-write") {
       itemText = i.gloss;
       answerMain = i.surface;
@@ -3697,7 +3783,6 @@ function commit(outcome, elapsed) {
   app.totalRuns = (app.totalRuns || 0) + 1;
   app.dataUpdatedAt = Date.now();
   app.sessionUpdatedAt = app.dataUpdatedAt;
-  app.unlockedBonus = bonusUnlocksForPoints(app.points);
   noteDailyProgress(delta, outcome);
   if (outcome === "good") grade(s.cur, true, elapsed || 8000);
   else if (outcome === "wrong") grade(s.cur, false, elapsed || 8000, false);
@@ -4069,6 +4154,47 @@ function bind() {
         validate();
       }),
   );
+  const expBtn = view.querySelector("[data-export]");
+  if (expBtn)
+    expBtn.onclick = () => {
+      /* On réutilise localPayload : c'est la même forme que la synchro cloud, donc
+         un export se réimporte par le même chemin déjà validé. */
+      const blob = new Blob([JSON.stringify(localPayload(), null, 1)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `anki-jp-${dayKey()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      /* Révocation différée : Safari annule le téléchargement si l'URL disparaît
+         avant qu'il ne l'ait lue. */
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    };
+  const impBtn = view.querySelector("[data-import]");
+  const impFile = view.querySelector("#import-file");
+  if (impBtn && impFile) {
+    impBtn.onclick = () => impFile.click();
+    impFile.onchange = async () => {
+      const f = impFile.files && impFile.files[0];
+      if (!f) return;
+      try {
+        const parsed = JSON.parse(await f.text());
+        /* Un export enveloppe la charge utile comme le fait le cloud ; on accepte
+           les deux formes pour qu'un fichier récupéré côté Firebase se relise. */
+        const ok = applyPayload(parsed.payload || parsed);
+        app.importNote = ok
+          ? "Sauvegarde importée."
+          : "Fichier lisible, mais sans cartes reconnaissables.";
+      } catch (e) {
+        app.importNote = "Fichier illisible : " + String(e.message || e);
+      }
+      impFile.value = "";
+      render();
+    };
+  }
   q("[data-sync]").forEach(
     (e) =>
       (e.onclick = async () => {
@@ -4143,7 +4269,6 @@ function bind() {
         app.streak = 0;
         app.bestStreak = 0;
         app.totalRuns = 0;
-        app.unlockedBonus = {};
         app.pokemonUnlocks = {};
         app.deckUnlocks = {};
         app.dailyStats = {};

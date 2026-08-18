@@ -123,7 +123,7 @@ function loadApp() {
   context.globalThis = context;
   vm.createContext(context);
   const source = fs.readFileSync("tmp_script.js", "utf8");
-  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS };`;
+  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS };`;
   vm.runInContext(source + expose, context, { filename: "tmp_script.js" });
   return Object.assign(context.__appTest, { fsrsCalls });
 }
@@ -288,6 +288,58 @@ test("une porte franchie ne se referme pas après une rechute", () => {
     true,
     "retirer un deck déjà en cours d'étude serait pire que le laisser ouvert",
   );
+});
+
+test("aucune lecture romaji ne laisse fuir de caractère japonais", () => {
+  const api = loadApp();
+  const fuites = api.ITEMS.filter((i) => {
+    const rom = i.rom || (i.kana ? api.toRomaji(i.kana) : "");
+    return rom && /[^\x00-\x7F]/.test(rom);
+  }).map((i) => `${i.id} ${i.ja || i.glyph} donne ${i.rom}`);
+  /* La table maison ne couvrait pas les sons étrangers du katakana : ファ ディ シェ
+     フォ fuyaient tels quels, et onze cartes Pokémon affichaient « fuァiyaa ». */
+  assert.deepEqual(Array.from(fuites), []);
+});
+
+test("les sons étrangers du katakana se tapent en romaji naturel", () => {
+  const api = loadApp();
+  const cas = [
+    ["ファイヤー", "faiyaa"],
+    ["モルフォン", "morufon"],
+    ["ディグダ", "diguda"],
+    ["シェルダー", "sherudaa"],
+    ["ケーシィ", "keeshi"],
+    ["ニドラン♀", "nidoran"],
+  ];
+  for (const [nom, frappe] of cas)
+    assert.equal(
+      api.judge(frappe, [nom], "kana").r,
+      "ok",
+      `${frappe} doit être accepté pour ${nom}`,
+    );
+});
+
+test("aucun kanji isolé n'est envoyé à la synthèse vocale", () => {
+  const api = loadApp();
+  const ideogrammeSeul = /^[㐀-鿿]$/;
+  const fautifs = api.ITEMS.filter((i) => i.kind === "kanji").filter((i) =>
+    ideogrammeSeul.test(api.compoundSpeech(i)),
+  );
+  /* 日 se lit nichi, hi ou jitsu : le moteur en choisit un au hasard et enseigne
+     donc une lecture fausse. Spec §11 : passer une lecture, jamais l'idéogramme.
+     Faute de composé disponible, le silence vaut mieux qu'une invention. */
+  assert.deepEqual(Array.from(fautifs.map((i) => i.glyph)), []);
+});
+
+test("le débit suit la longueur de l'énoncé", () => {
+  const api = loadApp();
+  const mora = api.rateFor("あ");
+  const mot = api.rateFor("にほん");
+  const phrase = api.rateFor("えきでともだちをまっている");
+  assert.ok(mora < mot && mot < phrase, `${mora} ${mot} ${phrase}`);
+  /* Descendre sous 0,6 déforme les formants au lieu d'allonger la voyelle. */
+  assert.ok(mora >= 0.6);
+  assert.ok(phrase <= 1);
 });
 
 test("le plan quotidien conserve les mêmes nouvelles cartes", () => {
