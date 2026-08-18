@@ -123,7 +123,7 @@ function loadApp() {
   context.globalThis = context;
   vm.createContext(context);
   const source = fs.readFileSync("tmp_script.js", "utf8");
-  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS };`;
+  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS };`;
   vm.runInContext(source + expose, context, { filename: "tmp_script.js" });
   return Object.assign(context.__appTest, { fsrsCalls });
 }
@@ -494,6 +494,75 @@ test("une session en pause est sérialisée et restaurée", () => {
   );
   assert.equal(api.app.pausedSession.seen, 4);
   assert.equal(api.app.pausedSession.ok, 3);
+});
+
+test("l'aller-retour export puis import restitue l'état à l'identique", () => {
+  const api = loadApp();
+  const prod = api.productionId("h0");
+  reviewSpaced(api, api.cards.h0, 3);
+  reviewSpaced(api, api.cards[prod], 2);
+  api.app.points = 1234;
+  api.app.deckUnlocks = { kata: 1 };
+  const avant = JSON.stringify({
+    reco: api.cards.h0.goodReps,
+    prod: api.cards[prod].goodReps,
+    stab: api.cards.h0.stab,
+    points: api.app.points,
+  });
+
+  const paquet = JSON.parse(JSON.stringify(api.localPayload()));
+  assert.ok(paquet.cards[prod], "la charge utile doit contenir les cartes sœurs");
+  assert.ok(paquet.deckUnlocks, "et les déblocages, qui ne se recalculent pas");
+
+  // on efface, puis on réimporte
+  for (const id of [api.baseId("h0"), prod])
+    Object.assign(api.cards[id], {
+      reps: 0,
+      goodReps: 0,
+      stab: 0,
+      due: null,
+      modifiedAt: undefined,
+    });
+  api.app.points = 0;
+  api.app.dataUpdatedAt = 0;
+  api.app.deckUnlocks = {};
+  assert.equal(api.applyPayload(paquet), true);
+
+  assert.equal(
+    JSON.stringify({
+      reco: api.cards.h0.goodReps,
+      prod: api.cards[prod].goodReps,
+      stab: api.cards.h0.stab,
+      points: api.app.points,
+    }),
+    avant,
+  );
+  assert.ok(api.app.deckUnlocks.kata, "un déblocage ne doit pas se perdre");
+});
+
+test("une session entièrement ratée se termine", () => {
+  const api = loadApp();
+  /* render() renvoie vers l'écran de connexion sans utilisateur, ce qui empêcherait
+     la route d'atteindre « session ». */
+  api.app.auth = { uid: "test" };
+  api.startSession(null);
+  assert.ok(api.app.sess, "la session doit démarrer");
+  let etapes = 0;
+  while (api.app.route === "session" && etapes < 400) {
+    const s = api.app.sess;
+    if (s.st === "ask") s.st = "shown";
+    else {
+      s.typed = "zzz";
+      api.validate();
+    }
+    if (!s.committed) api.commit("wrong", 4000);
+    if (api.app.route === "session") api.nextCard();
+    etapes++;
+  }
+  /* Sans la règle de carte bloquante, cette boucle ne terminait jamais : une carte
+     ratée revenait indéfiniment en file. */
+  assert.equal(api.app.route, "summary", `bloquée après ${etapes} étapes`);
+  assert.ok(api.app.sess.setAside > 0, "des cartes doivent être mises de côté");
 });
 
 test("la synchronisation utilise exclusivement l'UID Firebase", () => {
