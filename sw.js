@@ -1,8 +1,8 @@
-const CACHE_NAME = "study-deck-cache-v69";
+const CACHE_NAME = "study-deck-cache-v71";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./tmp_script.js?v=20260818-2350",
+  "./tmp_script.js?v=20260819-0018",
   "https://cdn.jsdelivr.net/npm/ts-fsrs@5.4.1/dist/index.umd.js",
   "https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js",
   "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js",
@@ -46,13 +46,69 @@ self.addEventListener("activate", (event) => {
   );
   self.clients.claim();
 });
+/* Deux régimes, selon que l'URL désigne une version ou la porte.
+
+   index.html et sw.js sont les seuls fichiers qui pointent vers la version
+   courante : ils doivent venir du réseau, sinon un déploiement ne serait jamais vu.
+   Firebase leur envoie déjà `no-cache`, la logique d'ici s'y accorde.
+
+   Tout le reste porte sa version dans l'URL, donc la copie en cache est
+   prouvablement identique à celle du réseau : la redemander ne peut rien apprendre.
+   Le réseau d'abord coûtait une attente à chaque lancement, et surtout, sur une
+   connexion faible mais non rompue, fetch ne rejette pas, il traîne : aucun repli ne
+   se déclenchait et l'écran restait blanc. */
+const estPointeurDeVersion = (request, url) =>
+  request.mode === "navigate" ||
+  url.pathname === "/" ||
+  url.pathname.endsWith("/index.html") ||
+  url.pathname.endsWith("/sw.js");
+
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+
+  if (estPointeurDeVersion(event.request, url)) {
+    event.respondWith(
+      fetch(event.request)
+        .then((res) => {
+          /* On rafraîchit la copie à chaque passage réussi. Sans cela, index.html
+             n'entrait dans le cache que par le précache de l'installation : si
+             celui-ci échouait ou était interrompu, plus aucun chemin ne le
+             stockait, et l'application ne démarrait tout simplement pas hors
+             ligne. Le précache devenait un point de défaillance unique. */
+          if (res && res.ok) {
+            const copie = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(event.request, copie));
+          }
+          return res;
+        })
+        .catch(() =>
+          caches
+            .match(event.request)
+            .then((res) => res || caches.match("./index.html")),
+        ),
+    );
+    return;
+  }
+
   event.respondWith(
-    fetch(event.request).catch(() =>
-      caches
-        .match(event.request)
-        .then((res) => res || caches.match("./index.html")),
-    ),
+    caches.match(event.request).then((cached) => {
+      if (cached) return cached;
+      return fetch(event.request)
+        .then((res) => {
+          /* Soigne ce que le précache avait manqué : ses échecs sont tolérés entrée
+             par entrée, donc une ressource peut manquer sans que rien ne l'ait dit.
+             On accepte les réponses opaques, seule forme disponible pour les
+             scripts servis par un autre domaine. */
+          if (res && (res.ok || res.type === "opaque")) {
+            const copie = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(event.request, copie));
+          }
+          return res;
+        })
+        /* Pas de repli sur index.html ici : renvoyer du HTML là où un script est
+           attendu produit une erreur de syntaxe au lieu d'un échec propre. */
+        .catch(() => Response.error());
+    }),
   );
 });

@@ -20,7 +20,7 @@ function createElement() {
   };
 }
 
-function loadApp() {
+function loadApp(opts = {}) {
   const storage = new Map();
   const fsrsCalls = [];
   const view = createElement();
@@ -115,6 +115,8 @@ function loadApp() {
       },
     },
   };
+  /* Simule une bibliothèque d'ordonnancement absente, cas d'une panne de CDN. */
+  if (opts.withScheduler === false) delete context.FSRS;
   context.window = context;
   context.window.addEventListener = () => {};
   context.window.matchMedia = () => ({ matches: false });
@@ -145,6 +147,126 @@ function masterItem(api, itemId, times) {
   for (const id of api.cardIdsFor(itemId))
     reviewSpaced(api, api.cards[id], times ?? api.MASTERY_REPS);
 }
+
+/* Charge sw.js dans un environnement factice et rend son gestionnaire `fetch`
+   pilotable. Le cycle de vie réel d'un service worker est trop capricieux à piloter
+   depuis un onglet pour servir de vérification ; la logique d'aiguillage, elle, se
+   teste exactement. */
+function loadServiceWorker({ reseau }) {
+  const store = new Map();
+  const cache = {
+    async match(req) {
+      return store.get(typeof req === "string" ? req : req.url) || undefined;
+    },
+    async put(req, res) {
+      store.set(typeof req === "string" ? req : req.url, res);
+    },
+    async add() {},
+    async keys() {
+      return [];
+    },
+  };
+  const listeners = {};
+  const contexte = {
+    self: {
+      addEventListener: (nom, fn) => (listeners[nom] = fn),
+      skipWaiting() {},
+      clients: { claim() {} },
+    },
+    caches: {
+      async open() {
+        return cache;
+      },
+      async match(req) {
+        return cache.match(req);
+      },
+      async keys() {
+        return [];
+      },
+      async delete() {},
+    },
+    fetch: reseau,
+    Response: { error: () => ({ type: "error" }) },
+    URL,
+    console,
+  };
+  const src = fs.readFileSync("sw.js", "utf8");
+  vm.runInNewContext(src, contexte);
+
+  return {
+    store,
+    /* Rejoue une requête et renvoie ce que le worker a décidé de servir. */
+    async demande(url, { mode = "no-cors" } = {}) {
+      let réponse;
+      listeners.fetch({
+        request: { url, method: "GET", mode },
+        respondWith: (p) => (réponse = p),
+      });
+      return réponse;
+    },
+  };
+}
+
+test("le service worker sert le cache d'abord pour les ressources versionnées", async () => {
+  let appels = 0;
+  const sw = loadServiceWorker({
+    reseau: async () => {
+      appels++;
+      return { ok: true, type: "basic", clone: () => ({}) };
+    },
+  });
+  const url = "http://x/tmp_script.js?v=20260819-0012";
+  sw.store.set(url, { ok: true, provenance: "cache" });
+
+  const res = await sw.demande(url);
+  assert.equal(res.provenance, "cache");
+  /* Le réseau d'abord coûtait une attente à chaque lancement, et traînait sans
+     jamais replier sur une connexion faible mais non rompue. */
+  assert.equal(appels, 0, "le réseau ne doit pas être sollicité");
+});
+
+test("le service worker garde le réseau d'abord pour index.html, et le remet en cache", async () => {
+  let appels = 0;
+  const sw = loadServiceWorker({
+    reseau: async () => {
+      appels++;
+      return { ok: true, provenance: "réseau", clone: () => ({ copie: true }) };
+    },
+  });
+  const res = await sw.demande("http://x/index.html", { mode: "navigate" });
+  assert.equal(res.provenance, "réseau", "sinon un déploiement ne serait jamais vu");
+  assert.equal(appels, 1);
+  await new Promise((r) => setTimeout(r, 0));
+  /* Sans cette remise en cache, index.html n'entrait dans le cache que par le
+     précache : celui-ci devenait un point de défaillance unique, et son échec
+     empêchait purement et simplement le démarrage hors ligne. */
+  assert.ok(sw.store.has("http://x/index.html"), "la copie doit être rafraîchie");
+});
+
+test("hors ligne, une navigation retombe sur index.html en cache", async () => {
+  const sw = loadServiceWorker({
+    reseau: async () => {
+      throw new Error("hors ligne");
+    },
+  });
+  sw.store.set("http://x/index.html", { ok: true, provenance: "cache" });
+  const res = await sw.demande("http://x/index.html", { mode: "navigate" });
+  assert.equal(res.provenance, "cache");
+});
+
+test("une sous-ressource absente ne reçoit jamais du HTML", async () => {
+  const sw = loadServiceWorker({
+    reseau: async () => {
+      throw new Error("hors ligne");
+    },
+  });
+  sw.store.set("http://x/index.html", { ok: true, provenance: "index" });
+  const res = await sw.demande("http://x/manquant.js");
+  /* Le repli d'origine renvoyait index.html pour toute requête en échec : un script
+     recevait du HTML, donc une erreur de syntaxe au lieu d'un échec propre. */
+  assert.equal(res.type, "error");
+  assert.notEqual(res.provenance, "index");
+});
 
 test("les données des decks respectent tous les invariants", () => {
   const api = loadApp();
@@ -197,6 +319,23 @@ test("une session ne présente jamais les deux directions d'un même item", () =
     bases.length,
     "les cartes sœurs doivent être enterrées",
   );
+});
+
+test("sans planificateur, rien n'est noté et la session refuse de démarrer", () => {
+  /* Le repli d'origine recalculait les intervalles avec un ordonnanceur maison :
+     une panne de CDN suffisait à corrompre l'historique en silence, les deux
+     formules écrivant dans les mêmes champs. */
+  const api = loadApp({ withScheduler: false });
+  api.app.auth = { uid: "test" };
+  const card = api.cards.h0;
+  const avant = JSON.stringify(card);
+
+  assert.equal(api.grade(card, true, 4000), false, "grade doit refuser");
+  assert.equal(JSON.stringify(card), avant, "la carte ne doit pas être touchée");
+  assert.equal(api.app.schedulerDown, true, "et l'état doit le signaler");
+
+  api.startSession(null);
+  assert.equal(api.app.sess, null, "aucune session ne doit démarrer");
 });
 
 test("les intervalles croissent au fil des révisions réussies", () => {
