@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260819-0018";
+const BUILD_VERSION = "20260824-1000";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -567,6 +567,13 @@ function prepareSpeechText(text) {
    formants ; et comme la longueur vocalique est phonémique en japonais
    (おばさん / おばあさん), étirer une more apprendrait une durée fausse. */
 function paddedSpeech(text) {
+  const mores = [...String(text)].filter((c) => !"、。ー・ 　".includes(c)).length;
+  /* Une more isolée dure environ 300 ms : c'est le signal le plus court qu'un moteur
+     puisse produire, et il en rogne encore l'attaque. On l'énonce donc deux fois,
+     séparées par une pause. Doubler l'information acoustique coûte une demi-seconde
+     et change tout sur les paires proches, か et が, し et ち, つ et す. Au-delà de
+     deux mores le signal suffit, et répéter deviendrait lassant. */
+  if (mores <= 2) return "、" + text + "、、" + text + "、";
   return "、" + text + "、";
 }
 /* Débit choisi selon la longueur de l'énoncé, et non fixé au hasard par appel.
@@ -3260,6 +3267,22 @@ function promptAudio(s) {
                  keyword et kanji-write : on passe par une lecture de composé */
               i.kana || i.read || i.ja || compoundSpeech(i);
 }
+/* Prononciation moderne, là où l'orthographe distingue ce que l'oreille ne
+   distingue pas : ぢ se dit comme じ, づ comme ず, et を isolé se dit « o ». Une
+   carte d'écoute qui exige la bonne graphie parmi des homophones n'évalue plus
+   l'audition mais la chance, et c'est ce qui rendait certains exercices vocaux
+   incompréhensibles : ils l'étaient par construction. */
+const SPOKEN_KANA = { ぢ: "じ", づ: "ず", を: "お" };
+const spokenForm = (s) =>
+  [...toHira(String(s))].map((c) => SPOKEN_KANA[c] || c).join("");
+/* Toutes les graphies d'un deck qui sonnent comme celle-ci. */
+function homophonesDe(kana, deckId) {
+  const cible = spokenForm(kana);
+  const kata = deckId === "kata";
+  return ITEMS.filter(
+    (x) => x.deck === deckId && x.kana && spokenForm(x.kana) === cible,
+  ).map((x) => (kata ? toKata(x.kana) : x.kana));
+}
 function acceptedFor(s) {
   const i = item(s.cur.id);
   let a;
@@ -3275,6 +3298,11 @@ function acceptedFor(s) {
   else if (s.face === "kanji-write") a = [i.glyph];
   else if (s.face === "lex-write") a = [i.surface, i.read];
   else a = [i.ja];
+  /* Sur les faces où l'énoncé est un son ou un romaji ambigu, toute graphie
+     acoustiquement identique est juste. Ce n'est pas de la clémence : la graphie se
+     travaille sur la face de reconnaissance, où le caractère est montré. */
+  if ((s.face === "sound" || s.face === "glyph-write") && i.kind === "glyph")
+    a = [...new Set([...a, ...homophonesDe(i.kana, i.deck)])];
   if (modeFor(s) === "romaji") a = a.map((x) => (isKana(x) ? toRomaji(x) : x));
   return a;
 }
@@ -3300,6 +3328,30 @@ function kanaChoicePoolForFace(s) {
   }
   return [];
 }
+/* Familles qui se confondent à l'OREILLE, et non à l'œil : les paires de
+   sonorisation viennent des tables de dakuten déjà présentes, le reste est la liste
+   classique des difficultés d'écoute du japonais. On ne met pas ici les confusions
+   visuelles (ぬ et め, れ et ね) : elles relèvent d'une autre face. */
+const EAR_FAMILIES = ["しちじ", "つすず", "らだな", "ふはほ", "んむ", "いえ", "うお"];
+function earNeighbours(kana) {
+  const h = toHira(String(kana));
+  const out = new Set();
+  const ajouterPaire = (map) => {
+    for (const [clair, sonore] of Object.entries(map)) {
+      if (!/^[ぁ-ゖ]+$/.test(clair)) continue; // les tables portent aussi les katakana
+      if (clair === h || sonore === h) {
+        out.add(clair);
+        out.add(sonore);
+      }
+    }
+  };
+  ajouterPaire(VOICED_MAP);
+  ajouterPaire(SEMIVOICED_MAP);
+  for (const famille of EAR_FAMILIES)
+    if (famille.includes(h)) for (const c of famille) out.add(c);
+  out.delete(h);
+  return [...out];
+}
 function kanaChoicesForSession(s) {
   if (!s || modeFor(s) !== "kana") return null;
   if (!["sound", "glyph-write"].includes(s.face)) return null;
@@ -3316,7 +3368,18 @@ function kanaChoicesForSession(s) {
     seen.add(n);
     uniq.push(v);
   }
-  const distractors = shuffle(uniq).slice(0, 9);
+  /* Les voisins acoustiques d'abord. Dix kana tirés au hasard font de l'incertitude
+     une loterie : si l'on hésite entre か et が, proposer や et ぬ n'aide pas et
+     n'apprend rien. Placer les voisins dans la liste transforme le choix en exercice
+     de discrimination, qui est exactement la compétence que la face d'écoute vise. */
+  const cible = item(s.cur.id)?.kana || "";
+  /* Pas de filtre sur la longueur : きゃ est UNE more, comme か, malgré ses deux
+     caractères. Un digramme n'offre donc aucune élimination gratuite, il faut
+     l'écarter à l'oreille comme les autres. */
+  const voisins = new Set(earNeighbours(cible));
+  const proches = uniq.filter((v) => voisins.has(toHira(v)));
+  const reste = uniq.filter((v) => !voisins.has(toHira(v)));
+  const distractors = [...shuffle(proches), ...shuffle(reste)].slice(0, 9);
   return shuffle([accepted[0], ...distractors]).slice(0, 10);
 }
 const isKana = (s) => /[\u3040-\u30FF]/.test(s);

@@ -125,7 +125,7 @@ function loadApp(opts = {}) {
   context.globalThis = context;
   vm.createContext(context);
   const source = fs.readFileSync("tmp_script.js", "utf8");
-  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS };`;
+  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS };`;
   vm.runInContext(source + expose, context, { filename: "tmp_script.js" });
   return Object.assign(context.__appTest, { fsrsCalls });
 }
@@ -456,6 +456,64 @@ test("les sons étrangers du katakana se tapent en romaji naturel", () => {
       "ok",
       `${frappe} doit être accepté pour ${nom}`,
     );
+});
+
+test("la face d'écoute accepte les graphies homophones", () => {
+  const api = loadApp();
+  const ecoute = (kana) => {
+    const it = api.ITEMS.find((x) => x.deck === "hira" && x.kana === kana);
+    return { cur: { id: it.id }, face: "sound", typed: "" };
+  };
+  /* ぢ se prononce comme じ, づ comme ず, et を isolé se dit « o ». Exiger la bonne
+     graphie parmi des homophones fait dépendre la réponse du hasard, pas de
+     l'oreille : c'est ce qui rendait certains exercices vocaux impossibles. */
+  for (const [carte, ecrit] of [
+    ["じ", "ぢ"],
+    ["ぢ", "じ"],
+    ["ず", "づ"],
+    ["を", "お"],
+    ["お", "を"],
+  ])
+    assert.equal(
+      api.judge(ecrit, api.acceptedFor(ecoute(carte)), "kana").r,
+      "ok",
+      `${ecrit} doit être accepté pour ${carte}`,
+    );
+
+  /* Sans devenir permissif pour autant : une vraie confusion reste fausse. */
+  for (const faux of ["し", "ち", "か"])
+    assert.equal(
+      api.judge(faux, api.acceptedFor(ecoute("じ")), "kana").r,
+      "ko",
+      `${faux} ne doit pas passer pour じ`,
+    );
+});
+
+test("les propositions d'écoute privilégient les voisins acoustiques", () => {
+  const api = loadApp();
+  const ecoute = (kana) => {
+    const it = api.ITEMS.find((x) => x.deck === "hira" && x.kana === kana);
+    return { cur: { id: it.id }, face: "sound", typed: "" };
+  };
+  const choix = api.kanaChoicesForSession(ecoute("か"));
+  assert.ok(choix.includes("か"), "la réponse doit figurer parmi les propositions");
+  /* Dix kana au hasard font de l'hésitation une loterie ; la paire de sonorisation
+     en fait un exercice de discrimination, qui est la compétence visée. */
+  assert.ok(choix.includes("が"), "la paire de sonorisation doit être proposée");
+
+  const voisinsDeJi = api.earNeighbours("じ");
+  assert.ok(voisinsDeJi.includes("し") && voisinsDeJi.includes("ち"));
+
+  /* Jamais l'homophone de la réponse, qui rendrait le choix indécidable. */
+  assert.ok(!api.kanaChoicesForSession(ecoute("じ")).includes("ぢ"));
+});
+
+test("un énoncé d'une more est répété, une phrase ne l'est pas", () => {
+  const api = loadApp();
+  /* Une more dure environ 300 ms et le moteur en rogne l'attaque : c'est le signal
+     le plus pauvre possible, et le répéter double l'information pour une demi-seconde. */
+  assert.equal(api.paddedSpeech("か"), "、か、、か、");
+  assert.equal(api.paddedSpeech("えきでともだち"), "、えきでともだち、");
 });
 
 test("aucun kanji isolé n'est envoyé à la synthèse vocale", () => {
