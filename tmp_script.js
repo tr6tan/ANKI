@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260824-1429";
+const BUILD_VERSION = "20260824-1436";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -632,7 +632,9 @@ function jouerEnregistrement(url, replier) {
     if (tts.ok) speechSynthesis.cancel();
     lecteurAudio.pause();
     lecteurAudio.src = url;
-    lecteurAudio.currentTime = 0;
+    /* Pas de currentTime = 0 : affecter src remet déjà la position à zéro, et
+       écrire currentTime alors que readyState vaut HAVE_NOTHING lève une exception
+       sur certains WebKit. */
     const p = lecteurAudio.play();
     /* iOS refuse la lecture hors geste utilisateur, et le refus arrive de façon
        asynchrone : on ne peut le rattraper qu'ici. */
@@ -642,10 +644,19 @@ function jouerEnregistrement(url, replier) {
     return false;
   }
 }
+/* Une carte de sortie explicite, et voici pourquoi elle est nécessaire.
+
+   Sur iPhone, un fichier audio respecte l'interrupteur silencieux, alors que la
+   synthèse vocale l'ignore. Passer aux enregistrements peut donc faire perdre tout
+   son à quelqu'un dont le téléphone est en silencieux, et le repli automatique ne
+   s'en aperçoit pas : la lecture réussit, elle est simplement inaudible. Aucun
+   événement ne distingue « joué » de « joué mais muet », il n'y a donc rien à
+   détecter côté code, seulement un choix à laisser. */
+const sourceAudioForcee = () => app.audioSource === "synthese";
 function speak(text, rate) {
   if (app.mute || !text) return;
   const synthese = () => syntheseVocale(text, rate);
-  const url = enregistrementPour(text);
+  const url = sourceAudioForcee() ? null : enregistrementPour(text);
   if (url && jouerEnregistrement(url, synthese)) return;
   synthese();
 }
@@ -1797,6 +1808,7 @@ function saveState() {
           kb: app.kb,
           sync: app.sync,
           dailyLoad: app.dailyLoad || "normal",
+          audioSource: app.audioSource || "enregistrement",
           dataUpdatedAt: app.dataUpdatedAt || 0,
           sessionUpdatedAt: app.sessionUpdatedAt || 0,
           dailyPlan: app.dailyPlan || null,
@@ -3180,10 +3192,24 @@ function Settings() {
  <p class="faint" style="font-size:12px;line-height:1.6">Compte Google : ${esc(app.auth?.email || "")}</p>
  <hr class="rule">
  <span class="label">Audio</span>
- <p class="faint" style="font-size:13px;line-height:1.7;margin-top:6px">${
-   audioManifest && audioManifest.count
-     ? `<strong>${audioManifest.count} énoncés pré-enregistrés</strong> sont joués en priorité : la lecture est ainsi identique sur tous les appareils, avec un silence propre là où les moteurs rognent l'attaque d'une more. La synthèse du système ne sert que pour le reste.`
-     : "Aucun énoncé pré-enregistré : tout passe par la synthèse du système."
+ <div class="chips" style="margin:8px 0 10px">
+  ${[
+    ["enregistrement", "Enregistrements"],
+    ["synthese", "Synthèse du système"],
+  ]
+    .map(
+      ([v, l]) =>
+        `<button class="chip ${(app.audioSource || "enregistrement") === v ? "on" : ""}" data-source-audio="${v}">${l}</button>`,
+    )
+    .join("")}
+ </div>
+ <p class="faint" style="font-size:12px;line-height:1.6;margin:0 0 10px"><strong>Plus de son du tout ?</strong> Sur iPhone, un fichier audio respecte l'interrupteur silencieux, alors que la synthèse vocale l'ignore. Vérifiez d'abord ce petit interrupteur sur la tranche du téléphone, ou le volume. Sinon, basculez sur la synthèse ci-dessus : c'est le comportement d'avant les enregistrements.</p>
+ <p class="faint" style="font-size:13px;line-height:1.7">${
+   sourceAudioForcee()
+     ? "La synthèse du système est forcée : les énoncés pré-enregistrés sont ignorés."
+     : audioManifest && audioManifest.count
+       ? `<strong>${audioManifest.count} énoncés pré-enregistrés</strong> sont joués en priorité : la lecture est ainsi identique sur tous les appareils, avec un silence propre là où les moteurs rognent l'attaque d'une more. La synthèse du système ne sert que pour le reste.`
+       : "Aucun énoncé pré-enregistré : tout passe par la synthèse du système."
  }</p>
  <p class="faint" style="font-size:13px;line-height:1.7;margin-top:10px">${
    !tts.ok
@@ -4155,7 +4181,8 @@ function bind() {
   const essayer = (texte, forcerSynthese) => {
     const muetAvant = app.mute;
     app.mute = false;
-    const url = forcerSynthese ? null : enregistrementPour(texte);
+    const url =
+      forcerSynthese || sourceAudioForcee() ? null : enregistrementPour(texte);
     if (url) jouerEnregistrement(url, () => syntheseVocale(texte));
     else syntheseVocale(texte);
     app.mute = muetAvant;
@@ -4164,6 +4191,15 @@ function bind() {
     }${forcerSynthese ? ", forcée pour comparaison" : ""}.`;
     render();
   };
+  q("[data-source-audio]").forEach(
+    (e) =>
+      (e.onclick = () => {
+        app.audioSource = e.dataset.sourceAudio;
+        app.audioTestNote = null;
+        saveState();
+        render();
+      }),
+  );
   q("[data-essai]").forEach(
     (e) => (e.onclick = () => essayer(e.dataset.essai, false)),
   );
