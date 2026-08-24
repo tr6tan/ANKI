@@ -125,7 +125,7 @@ function loadApp(opts = {}) {
   context.globalThis = context;
   vm.createContext(context);
   const source = fs.readFileSync("tmp_script.js", "utf8");
-  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS };`;
+  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
   vm.runInContext(source + expose, context, { filename: "tmp_script.js" });
   return Object.assign(context.__appTest, { fsrsCalls });
 }
@@ -909,4 +909,19 @@ test("un Pokémon se débloque seulement lorsque tous ses kana sont maîtrisés"
     api.app.pokemonUnlocks[pokemon.id],
     "un Pokémon débloqué ne doit jamais être reperdu",
   );
+});
+
+test("aucun vestige de la couche de score ni du sélecteur de charge", () => {
+  /* La couche de score et le choix court, normal, long ont été retirés. Des
+     champs morts survivent volontiers à ce genre de retrait : ils ne cassent
+     rien, ils mentent seulement sur ce que fait l'app, et la spec finit par
+     être démentie par son propre code. */
+  const api = loadApp();
+  for (const champ of ["points", "streak", "bestStreak", "totalRuns", "dailyLoad"])
+    assert.equal(champ in api.app, false, `app.${champ} ne devrait plus exister`);
+  assert.ok(api.retires.DAILY_LOADS, "DAILY_LOADS ne devrait plus être déclaré");
+  assert.ok(api.retires.dailyBudget, "dailyBudget() ne devrait plus être déclaré");
+  assert.equal(api.DAILY_BUDGET, 30, "la charge du jour est fixe");
+  api.startSession();
+  assert.equal("fx" in api.app.sess, false, "la session ne porte plus d'effet de score");
 });
