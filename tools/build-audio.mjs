@@ -202,6 +202,23 @@ function synthetiserLocal(texte) {
 }
 
 /* ---------- boucle principale ---------- */
+/* Vérifié avant tout travail : une clé manquante doit se dire une fois, clairement,
+   et non se répéter à chaque énoncé. */
+if (provider === "google" && !process.env.GOOGLE_TTS_API_KEY) {
+  console.error(
+    "GOOGLE_TTS_API_KEY est absent de l'environnement.\n\n" +
+      "  cd " + RACINE + "\n" +
+      '  read -s "GOOGLE_TTS_API_KEY?Colle ta clé, puis Entrée : "\n' +
+      "  export GOOGLE_TTS_API_KEY\n" +
+      "  node tools/build-audio.mjs --provider=google --only=kana\n\n" +
+      "Passer par `read -s` évite que la clé n'atterrisse dans l'historique du shell.",
+  );
+  process.exit(1);
+}
+if (provider !== "google" && provider !== "local") {
+  console.error(`Fournisseur inconnu : ${provider}. Attendu google ou local.`);
+  process.exit(1);
+}
 const enonces = chargerCorpus();
 const retenus = [...enonces].filter(
   ([, cat]) => seulement === "all" || cat === seulement,
