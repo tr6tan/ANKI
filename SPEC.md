@@ -824,8 +824,30 @@ Autres règles :
   le dire explicitement, et dire aussi comment installer une voix de meilleure qualité.
   C'est le gain de diction le plus important disponible, et il n'est pas dans le code.
 
-En production, de l'audio enregistré bat la synthèse. `audioUrl` est prévu sur les
-contextes dans le modèle du §6.2 ; la version 1 le demandait sans l'y mettre.
+### 11.1 Audio pré-enregistré
+
+De l'audio enregistré bat la synthèse, et `tools/build-audio.mjs` le produit. Le
+script lit le corpus depuis l'application elle-même, de sorte qu'une carte ajoutée
+entre automatiquement dans l'audio, et il est idempotent : relancer après un ajout ne
+coûte que le nouveau contenu. Volume mesuré, 792 énoncés pour 2405 caractères.
+
+Deux fournisseurs, un seul format de sortie. `--provider=google` donne des voix
+neuronales, la seule voie qui améliore le modèle de voix, et déclare ses pauses en
+millisecondes par SSML au lieu de les faire deviner par des virgules idéographiques.
+`--provider=local` utilise `say` sur macOS : même voix qu'un téléphone, mais un
+silence propre et un niveau constant, ce qui suffit à valider la chaîne.
+
+La clé d'API se lit dans l'environnement et n'est jamais écrite, ni sur le disque ni
+dans le manifeste.
+
+**L'audio est un supplément, jamais une dépendance.** Le manifeste absent, un énoncé
+sans clip, ou un refus de lecture par iOS hors geste utilisateur : chacun de ces cas
+replie sur la synthèse embarquée. C'est aussi ce qui rend l'application audible pour
+qui n'a aucune voix japonaise installée, cas où elle était muette.
+
+Les noms de fichiers sont des empreintes du contenu, donc immuables : le cache
+d'abord du §13 leur convient exactement, et un changement de voix produit de
+nouveaux noms sans invalider les anciens.
 
 Note : la règle « aucun son par défaut » d'une version antérieure est annulée. Elle
 visait les sons de notification et de gamification, qui restent interdits. La lecture de
