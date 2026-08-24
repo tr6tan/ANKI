@@ -8,20 +8,31 @@
  * silencé aux extrémités, et fonctionne hors ligne. La spec §11 le prévoit depuis
  * l'origine, `audioUrl` figurant déjà dans le modèle.
  *
- * Deux fournisseurs, même format de sortie :
+ * Trois fournisseurs, même format de manifeste.
  *
- *   --provider=google   voix neuronales, la qualité que rien d'autre n'atteint.
- *                       Exige GOOGLE_TTS_API_KEY dans l'environnement. La clé n'est
- *                       jamais écrite sur le disque ni dans le manifeste.
- *   --provider=local    macOS `say`, gratuit et hors ligne. Même voix que le
- *                       téléphone, mais un silence propre et un niveau constant :
- *                       utile pour valider la chaîne, insuffisant pour la qualité.
+ *   --provider=local     macOS `say`, gratuit, sans compte, hors ligne. Même voix
+ *                        que le téléphone, mais silence propre et niveau constant.
+ *                        Corrige la livraison, pas le modèle de voix.
+ *   --provider=voicevox  moteur neuronal libre spécifiquement japonais, gratuit et
+ *                        sans compte, tournant en local. Meilleure qualité
+ *                        atteignable sans payer. Exige l'application VOICEVOX
+ *                        ouverte : https://voicevox.hiroshiba.jp
+ *   --provider=google    voix neuronales hébergées. Exige GOOGLE_TTS_API_KEY dans
+ *                        l'environnement, et un compte de facturation même sous le
+ *                        palier gratuit. La clé n'est jamais écrite sur le disque
+ *                        ni dans le manifeste.
  *
  * Usage :
  *   node tools/build-audio.mjs --provider=local
+ *   node tools/build-audio.mjs --provider=voicevox --list-voices
+ *   node tools/build-audio.mjs --provider=voicevox --voice=3
  *   GOOGLE_TTS_API_KEY=... node tools/build-audio.mjs --provider=google
  *   ... --only=kana        limite aux mores isolées, le cas le plus problématique
  *   ... --force            réécrit les fichiers déjà présents
+ *
+ * Changer de fournisseur ou de voix produit de NOUVEAUX noms de fichiers, l'empreinte
+ * les incluant : les jeux coexistent, le manifeste pointe vers le dernier généré, et
+ * l'on peut comparer avant de trancher.
  *
  * Le script est idempotent : un fichier dont le nom existe déjà n'est pas
  * redemandé. Relancer après un ajout de contenu ne coûte que le nouveau contenu.
@@ -126,8 +137,10 @@ const moresDe = (t) =>
    le débit naturel. Voir spec §11. */
 function debitPour(t) {
   const n = moresDe(t);
-  if (provider === "google") return n <= 2 ? 0.78 : n <= 6 ? 0.9 : 1.0;
-  return n <= 2 ? 105 : n <= 6 ? 135 : 165; // mots par minute pour `say`
+  /* Échelle multiplicative pour les moteurs neuronaux, mots par minute pour `say`. */
+  if (provider === "google" || provider === "voicevox")
+    return n <= 2 ? 0.78 : n <= 6 ? 0.9 : 1.0;
+  return n <= 2 ? 105 : n <= 6 ? 135 : 165;
 }
 /* Les énoncés très courts sont prononcés deux fois : doubler l'information
    acoustique coûte une demi-seconde et change tout sur か/が ou し/ち. */
@@ -138,7 +151,7 @@ const nomFichier = (texte) => {
     .update(`${texte}|${provider}|${VOIX}|${debitPour(texte)}|${repeter(texte)}`)
     .digest("hex")
     .slice(0, 16);
-  return `${h}.${provider === "google" ? "mp3" : "m4a"}`;
+  return `${h}.${provider === "google" ? "mp3" : "m4a"}`; // voicevox et local passent par AAC
 };
 
 /* ---------- fournisseur Google ---------- */
@@ -182,6 +195,72 @@ async function synthetiserGoogle(texte) {
   return Buffer.from(audioContent, "base64");
 }
 
+/* ---------- fournisseur VOICEVOX ---------- */
+/* Moteur neuronal libre, spécifiquement japonais, entièrement local : gratuit, sans
+   compte ni carte, et d'un tout autre ordre que la voix compacte du système. Il
+   expose une API sur 127.0.0.1:50021 dès que l'application VOICEVOX tourne.
+   Contrairement à Google il n'accepte pas de SSML, mais son AudioQuery expose
+   directement le débit et les silences de tête et de queue, ce qui suffit ici. */
+const VOICEVOX_BASE = args.get("voicevox-url") || "http://127.0.0.1:50021";
+async function voicevoxDisponible() {
+  try {
+    const res = await fetch(`${VOICEVOX_BASE}/version`, {
+      signal: AbortSignal.timeout(2500),
+    });
+    return res.ok ? (await res.text()).replace(/"/g, "").trim() : null;
+  } catch (_) {
+    return null;
+  }
+}
+async function voicevoxVoix() {
+  try {
+    const res = await fetch(`${VOICEVOX_BASE}/speakers`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return [];
+    const speakers = await res.json();
+    return speakers.flatMap((s) =>
+      (s.styles || []).map((st) => ({
+        id: st.id,
+        nom: `${s.name} / ${st.name}`,
+      })),
+    );
+  } catch (_) {
+    return [];
+  }
+}
+async function synthetiserVoicevox(texte) {
+  const speaker = Number(args.get("voice")) || 3;
+  const corps = repeter(texte) ? `${texte}、${texte}` : texte;
+  const q = await fetch(
+    `${VOICEVOX_BASE}/audio_query?text=${encodeURIComponent(corps)}&speaker=${speaker}`,
+    { method: "POST" },
+  );
+  if (!q.ok) throw new Error(`audio_query ${q.status} : ${(await q.text()).slice(0, 120)}`);
+  const requete = await q.json();
+  /* Débit selon la longueur, comme partout ailleurs, et un vrai silence aux
+     extrémités : c'est ce qui empêche l'attaque d'être rognée. */
+  requete.speedScale = debitPour(texte);
+  requete.prePhonemeLength = 0.3;
+  requete.postPhonemeLength = 0.3;
+  const s = await fetch(`${VOICEVOX_BASE}/synthesis?speaker=${speaker}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requete),
+  });
+  if (!s.ok) throw new Error(`synthesis ${s.status} : ${(await s.text()).slice(0, 120)}`);
+  const wav = Buffer.from(await s.arrayBuffer());
+  /* VOICEVOX rend du WAV : on compresse comme pour le fournisseur local. */
+  const tmp = path.join(os.tmpdir(), `vv-${process.pid}`);
+  const fWav = `${tmp}.wav`,
+    fM4a = `${tmp}.m4a`;
+  fs.writeFileSync(fWav, wav);
+  execFileSync("afconvert", ["-f", "m4af", "-d", "aac", "-b", "48000", fWav, fM4a]);
+  const buf = fs.readFileSync(fM4a);
+  for (const f of [fWav, fM4a]) fs.rmSync(f, { force: true });
+  return buf;
+}
+
 /* ---------- fournisseur local, macOS ---------- */
 function synthetiserLocal(texte) {
   const tmp = path.join(os.tmpdir(), `tts-${process.pid}`);
@@ -215,9 +294,33 @@ if (provider === "google" && !process.env.GOOGLE_TTS_API_KEY) {
   );
   process.exit(1);
 }
-if (provider !== "google" && provider !== "local") {
-  console.error(`Fournisseur inconnu : ${provider}. Attendu google ou local.`);
+const FOURNISSEURS = ["google", "local", "voicevox"];
+if (!FOURNISSEURS.includes(provider)) {
+  console.error(
+    `Fournisseur inconnu : ${provider}. Attendu ${FOURNISSEURS.join(", ")}.`,
+  );
   process.exit(1);
+}
+/* Préflight : mieux vaut dire tout de suite que le moteur n'écoute pas, plutôt que
+   d'échouer 792 fois. */
+if (provider === "voicevox") {
+  const v = await voicevoxDisponible();
+  if (!v) {
+    console.error(
+      `Aucun moteur VOICEVOX sur ${VOICEVOX_BASE}.\n\n` +
+        "  1. Installez VOICEVOX depuis https://voicevox.hiroshiba.jp (gratuit, sans compte)\n" +
+        "  2. Lancez l'application et laissez-la ouverte\n" +
+        "  3. Relancez cette commande\n\n" +
+        "Le moteur écoute par défaut sur 127.0.0.1:50021 ; sinon passez --voicevox-url=...",
+    );
+    process.exit(1);
+  }
+  console.log(`Moteur VOICEVOX ${v} détecté sur ${VOICEVOX_BASE}.`);
+  if (args.get("list-voices")) {
+    for (const s of await voicevoxVoix()) console.log(`  ${s.id}\t${s.nom}`);
+    console.log("\nChoisissez avec --voice=<id>.");
+    process.exit(0);
+  }
 }
 const enonces = chargerCorpus();
 const retenus = [...enonces].filter(
@@ -247,7 +350,9 @@ for (const [texte, cat] of retenus) {
     const buf =
       provider === "google"
         ? await synthetiserGoogle(texte)
-        : synthetiserLocal(texte);
+        : provider === "voicevox"
+          ? await synthetiserVoicevox(texte)
+          : synthetiserLocal(texte);
     fs.writeFileSync(chemin, buf);
     fichiers[texte] = `audio/${nom}`;
     produits++;

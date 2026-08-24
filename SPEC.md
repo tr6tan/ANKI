@@ -7,7 +7,7 @@ cas de désaccord avec `prototype.html`, ce document tranche également, le prot
 contenant des raccourcis assumés listés au §14.
 
 **Ce que le document décrit, et à quel titre.** Les §1 à §13 et le §16 décrivent le
-**comportement implémenté** à la version de build `20260824-1000`, vérifié contre le
+**comportement implémenté** à la version de build `20260824-1409`, vérifié contre le
 code. Les §6.2, §15 et §17 décrivent en revanche une **architecture visée** : les types
 y sont donnés en TypeScript et l'inventaire en modules, alors que l'implémentation est
 un unique fichier JavaScript de 4530 lignes. Cette divergence est assumée et non
