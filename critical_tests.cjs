@@ -508,12 +508,21 @@ test("les propositions d'écoute privilégient les voisins acoustiques", () => {
   assert.ok(!api.kanaChoicesForSession(ecoute("じ")).includes("ぢ"));
 });
 
-test("un énoncé d'une more est répété, une phrase ne l'est pas", () => {
+test("aucun énoncé n'est répété automatiquement", () => {
   const api = loadApp();
-  /* Une more dure environ 300 ms et le moteur en rogne l'attaque : c'est le signal
-     le plus pauvre possible, et le répéter double l'information pour une demi-seconde. */
-  assert.equal(api.paddedSpeech("か"), "、か、、か、");
-  assert.equal(api.paddedSpeech("えきでともだち"), "、えきでともだち、");
+  /* La répétition doublait l'information acoustique, ce qui était juste en théorie,
+     mais elle se subit des centaines de fois par jour. Retirée sur retour d'usage :
+     une gêne répétée coûte plus qu'un gain marginal de netteté. */
+  for (const t of ["か", "にほん", "えきでともだち"]) {
+    const dit = api.paddedSpeech(t);
+    assert.equal(
+      dit.split(t).length - 1,
+      1,
+      `« ${t} » ne doit être prononcé qu'une fois, obtenu ${dit}`,
+    );
+    /* Le silence encadrant reste : sans lui, le moteur rogne l'attaque. */
+    assert.ok(dit.startsWith("、") && dit.endsWith("、"));
+  }
 });
 
 test("aucun kanji isolé n'est envoyé à la synthèse vocale", () => {

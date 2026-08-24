@@ -7,7 +7,7 @@ cas de désaccord avec `prototype.html`, ce document tranche également, le prot
 contenant des raccourcis assumés listés au §14.
 
 **Ce que le document décrit, et à quel titre.** Les §1 à §13 et le §16 décrivent le
-**comportement implémenté** à la version de build `20260824-1409`, vérifié contre le
+**comportement implémenté** à la version de build `20260824-1429`, vérifié contre le
 code. Les §6.2, §15 et §17 décrivent en revanche une **architecture visée** : les types
 y sont donnés en TypeScript et l'inventaire en modules, alors que l'implémentation est
 un unique fichier JavaScript de 4530 lignes. Cette divergence est assumée et non
@@ -811,6 +811,13 @@ Autres règles :
 - **Encadrer l'énoncé de pauses.** Une more dure environ 300 ms et les moteurs rognent
   l'attaque le temps d'ouvrir le flux : sur あ, c'est un tiers du signal qui saute. Une
   virgule idéographique de part et d'autre fait tomber la troncature sur le silence.
+- **Ne jamais répéter un énoncé automatiquement.** Prononcer deux fois une more isolée
+  double l'information acoustique, et l'argument est juste en théorie. Retiré sur
+  retour d'usage : la répétition se subit des centaines de fois par jour et devient
+  exaspérante. Une gêne répétée coûte plus qu'un gain marginal de netteté, et
+  réécouter se fait d'un tap, ce qui laisse la répétition au choix de l'utilisateur
+  au lieu de la lui imposer. Vaut aussi pour l'audio pré-enregistré, où la
+  répétition serait gravée dans le fichier.
 - **Sélection de voix pondérée d'abord sur la qualité du modèle**, avant la
   reconnaissance du nom. L'écart entre une voix compacte et une voix haute qualité
   s'entend surtout sur les mores isolées, où la compacte diphtongue les voyelles

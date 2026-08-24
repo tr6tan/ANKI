@@ -142,13 +142,15 @@ function debitPour(t) {
     return n <= 2 ? 0.78 : n <= 6 ? 0.9 : 1.0;
   return n <= 2 ? 105 : n <= 6 ? 135 : 165;
 }
-/* Les énoncés très courts sont prononcés deux fois : doubler l'information
-   acoustique coûte une demi-seconde et change tout sur か/が ou し/ち. */
-const repeter = (t) => moresDe(t) <= 2;
+/* Pas de répétition automatique. Elle doublait l'information acoustique, ce qui
+   était juste en théorie, mais se subit des centaines de fois par jour et devient
+   exaspérante : une gêne répétée coûte plus qu'un gain marginal de netteté. Le
+   silence encadrant reste, lui, indispensable contre l'attaque rognée, et réécouter
+   se fait d'un tap dans l'application. */
 
 const nomFichier = (texte) => {
   const h = createHash("sha256")
-    .update(`${texte}|${provider}|${VOIX}|${debitPour(texte)}|${repeter(texte)}`)
+    .update(`${texte}|${provider}|${VOIX}|${debitPour(texte)}`)
     .digest("hex")
     .slice(0, 16);
   return `${h}.${provider === "google" ? "mp3" : "m4a"}`; // voicevox et local passent par AAC
@@ -164,9 +166,7 @@ async function synthetiserGoogle(texte) {
   /* SSML plutôt que des virgules idéographiques : les pauses sont déclarées en
      millisecondes au lieu d'être devinées par le moteur. */
   const pause = (ms) => `<break time="${ms}ms"/>`;
-  const corps = repeter(texte)
-    ? `${pause(250)}${texte}${pause(450)}${texte}${pause(250)}`
-    : `${pause(200)}${texte}${pause(200)}`;
+  const corps = `${pause(250)}${texte}${pause(250)}`;
   const res = await fetch(
     `https://texttospeech.googleapis.com/v1/text:synthesize?key=${encodeURIComponent(cle)}`,
     {
@@ -231,7 +231,7 @@ async function voicevoxVoix() {
 }
 async function synthetiserVoicevox(texte) {
   const speaker = Number(args.get("voice")) || 3;
-  const corps = repeter(texte) ? `${texte}、${texte}` : texte;
+  const corps = texte;
   const q = await fetch(
     `${VOICEVOX_BASE}/audio_query?text=${encodeURIComponent(corps)}&speaker=${speaker}`,
     { method: "POST" },
@@ -267,9 +267,7 @@ function synthetiserLocal(texte) {
   const aiff = `${tmp}.aiff`,
     wav = `${tmp}.wav`,
     m4a = `${tmp}.m4a`;
-  const corps = repeter(texte)
-    ? `、、${texte}、、${texte}、、`
-    : `、${texte}、`;
+  const corps = `、、${texte}、、`;
   execFileSync("say", ["-v", VOIX, "-r", String(debitPour(texte)), "-o", aiff, corps]);
   /* afconvert refuse l'AAC directement depuis un AIFF gros-boutien : on passe par
      un WAV petit-boutien rééchantillonné. */
