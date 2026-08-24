@@ -561,6 +561,17 @@ test("le journal se réunit entre appareils sans doublon ni perte", () => {
     Array.from(api.app.reviewLog.map((e) => e[0] + "|" + e[1])),
     ["h0|1000", "h1|2000"],
   );
+  /* La clé porte sur la ligne entière : deux notations dans la même milliseconde
+     restent distinctes si leur intervalle ou leur stabilité diffèrent. */
+  api.app.reviewLog = [["h2", 3000, 1, 3, 2.3, 0]];
+  const memeMs = api.localPayload();
+  memeMs.reviewLog = [
+    ["h2", 3000, 1, 3, 2.3, 0],
+    ["h2", 3000, 1, 14, 13.8, 3],
+  ];
+  api.app.dataUpdatedAt = 0;
+  api.applyPayload(memeMs);
+  assert.equal(api.app.reviewLog.length, 2, "deux lignes distinctes doivent survivre");
 });
 
 test("une carte ratée huit fois passe en veille et n'est plus servie", () => {
@@ -778,13 +789,12 @@ test("l'aller-retour export puis import restitue l'état à l'identique", () => 
   const prod = api.productionId("h0");
   reviewSpaced(api, api.cards.h0, 3);
   reviewSpaced(api, api.cards[prod], 2);
-  api.app.points = 1234;
   api.app.deckUnlocks = { kata: 1 };
   const avant = JSON.stringify({
     reco: api.cards.h0.goodReps,
     prod: api.cards[prod].goodReps,
     stab: api.cards.h0.stab,
-    points: api.app.points,
+    journal: api.app.reviewLog.length,
   });
 
   const paquet = JSON.parse(JSON.stringify(api.localPayload()));
@@ -800,9 +810,10 @@ test("l'aller-retour export puis import restitue l'état à l'identique", () => 
       due: null,
       modifiedAt: undefined,
     });
-  api.app.points = 0;
   api.app.dataUpdatedAt = 0;
   api.app.deckUnlocks = {};
+  const journalAvantEffacement = api.app.reviewLog.length;
+  api.app.reviewLog = [];
   assert.equal(api.applyPayload(paquet), true);
 
   assert.equal(
@@ -810,10 +821,11 @@ test("l'aller-retour export puis import restitue l'état à l'identique", () => 
       reco: api.cards.h0.goodReps,
       prod: api.cards[prod].goodReps,
       stab: api.cards.h0.stab,
-      points: api.app.points,
+      journal: api.app.reviewLog.length,
     }),
     avant,
   );
+  assert.ok(journalAvantEffacement > 0, "le journal doit avoir été peuplé");
   assert.ok(api.app.deckUnlocks.kata, "un déblocage ne doit pas se perdre");
 });
 

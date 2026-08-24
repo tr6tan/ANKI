@@ -7,7 +7,7 @@ cas de désaccord avec `prototype.html`, ce document tranche également, le prot
 contenant des raccourcis assumés listés au §14.
 
 **Ce que le document décrit, et à quel titre.** Les §1 à §13 et le §16 décrivent le
-**comportement implémenté** à la version de build `20260824-1429`, vérifié contre le
+**comportement implémenté** à la version de build `20260824-1521`, vérifié contre le
 code. Les §6.2, §15 et §17 décrivent en revanche une **architecture visée** : les types
 y sont donnés en TypeScript et l'inventaire en modules, alors que l'implémentation est
 un unique fichier JavaScript de 4530 lignes. Cette divergence est assumée et non
@@ -187,9 +187,12 @@ principale est construit en premier, consulté deux fois, et rend l'app anxiogè
 
 Pendant une session, la navigation disparaît entièrement.
 
-**Étudier**, un objectif : lancer en un tap. Date, carré de comptage exprimé en
-**expositions** (§10.2), ventilation nouvelles et révisions, bouton de départ, choix
-de la charge du jour, puis les échéances à venir. Aucun tableau de bord, aucune
+**Étudier**, un objectif : lancer en un tap, et rien qui n'y serve. Date, carré de
+comptage exprimé en **expositions** (§10.2), une ligne de ventilation, le bouton, les
+trois charges du jour, et une ligne d'échéances à venir. Les trois rangées bordées
+d'échéances sont devenues cette ligne, et les explications ne s'affichent que
+lorsqu'elles expliquent quelque chose : un plafond atteint, un bridage actif, un
+report. Aucun tableau de bord, aucune
 heatmap annuelle : 365 cases de 11 px avec des infobulles inutilisables au doigt
 occupent la moitié de l'écran principal pour une information sur laquelle on ne peut
 pas agir. À la place, la seule question utile avant de lancer une séance : combien de
@@ -900,23 +903,29 @@ Les trois leviers admis, tous non gamifiés :
 - **Les échéances à venir** (§5). Savoir ce qui arrive demain est une raison de
   revenir, et ce n'est ni un score ni une série.
 
-### 12.3 Décision ouverte : la couche de score
+### 12.3 La couche de score, retirée
 
-**Le code implémente ce que le §12.1 interdit** : points, multiplicateurs de combo,
-compteurs de série et de record. Cette divergence n'est pas un bug, c'est un arbitrage
-produit non tranché, et ce document ne peut pas le trancher seul. Les deux options
-cohérentes :
+**Tranché le 24 août 2026 : la couche de score est supprimée.** Points, multiplicateurs
+de combo, compteurs de série et de record ont disparu du code, qui s'aligne donc sur le
+§12.1. La raison tient en une phrase du propriétaire du produit : ce n'est pas une
+application de gamification.
 
-- **Retirer la couche de score.** Aligne le code sur le §12.1. On perd le seul ressort
-  de rétention court terme actuellement en place, et l'on s'appuie entièrement sur le
-  §12.2.
-- **Assumer la couche de score.** Il faut alors réécrire le §12.1 pour dire ce qui reste
-  interdit et pourquoi, et non conserver une interdiction que le produit viole. Une
-  règle violée et maintenue perd son autorité sur les huit autres.
+Ce qui a été retiré : l'attribution de points, les combos, les compteurs de série et de
+record, l'animation de score à la validation, et le bloc de trois nombres du résumé. Le
+résumé revient aux trois nombres du §5, cartes, précision et durée.
 
-Ce qui est déjà tranché, quelle que soit l'option : **la pénalité de « je ne sais pas »
-est égale à celle d'une erreur** (§8.4). C'était le seul élément de la couche de score
-activement nuisible à l'apprentissage.
+Ce qui reste, et pourquoi : le **journal quotidien** continue d'enregistrer tentatives,
+réussites, erreurs et abandons, parce que le bridage adaptatif du §10.3 a besoin du taux
+de réussite des sept derniers jours. Il ne compte plus aucun point. Les anciennes
+charges utiles de synchronisation portent encore un bloc `progress` : on l'ignore sans
+le rejeter, pour qu'une sauvegarde antérieure reste lisible.
+
+L'assiduité repose désormais entièrement sur le §12.2, ce qui était l'objet de sa
+rédaction : le choix de la charge du jour, l'honnêteté des mécanismes, et les échéances
+à venir.
+
+Restait déjà tranché avant cette décision : la pénalité de « je ne sais pas » égalait
+celle d'une erreur (§8.4). La question ne se pose plus, faute de pénalité.
 
 ---
 

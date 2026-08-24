@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260824-1508";
+const BUILD_VERSION = "20260824-1521";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -1784,14 +1784,6 @@ function loadState() {
         : stored?.sessQueue?.length
           ? today
           : null;
-    if (stored?.progress) {
-      Object.assign(app, {
-        points: stored.progress.points || 0,
-        streak: stored.progress.streak || 0,
-        bestStreak: stored.progress.bestStreak || 0,
-        totalRuns: stored.progress.totalRuns || 0,
-        });
-    }
       if (stored?.dailyStats) {
       app.dailyStats = stored.dailyStats;
     }
@@ -1859,12 +1851,6 @@ function saveState() {
         },
         sessionDay: app.sessionDay || null,
         decks,
-        progress: {
-          points: app.points,
-          streak: app.streak,
-          bestStreak: app.bestStreak,
-          totalRuns: app.totalRuns,
-        },
         dailyStats: app.dailyStats || {},
         pokemonUnlocks: app.pokemonUnlocks || {},
         deckUnlocks: app.deckUnlocks || {},
@@ -1918,12 +1904,6 @@ function localPayload() {
     version: 2,
     cards,
     decks,
-    progress: {
-      points: app.points || 0,
-      streak: app.streak || 0,
-      bestStreak: app.bestStreak || 0,
-      totalRuns: app.totalRuns || 0,
-    },
     dailyStats: app.dailyStats || {},
     pokemonUnlocks: app.pokemonUnlocks || {},
     deckUnlocks: app.deckUnlocks || {},
@@ -1972,11 +1952,10 @@ function applyPayload(payload) {
   }
   const remoteUpdated =
     payload.dataUpdatedAt || Date.parse(payload.updatedAt) || 0;
-  if (payload.progress && remoteUpdated >= (app.dataUpdatedAt || 0)) {
-    app.points = payload.progress.points || 0;
-    app.streak = payload.progress.streak || 0;
-    app.bestStreak = payload.progress.bestStreak || 0;
-    app.totalRuns = payload.progress.totalRuns || 0;
+  /* Le journal quotidien reste, il alimente le bridage adaptatif du §10.3.
+     Les anciennes charges utiles portent encore un bloc `progress` : on l'ignore
+     simplement, sans le rejeter, pour qu'une synchro antérieure reste lisible. */
+  if (remoteUpdated >= (app.dataUpdatedAt || 0)) {
     app.dailyStats = payload.dailyStats || {};
     app.dataUpdatedAt = remoteUpdated;
   }
@@ -1994,7 +1973,11 @@ function applyPayload(payload) {
     const vu = new Set();
     const fusion = [];
     for (const e of [...payload.reviewLog, ...(app.reviewLog || [])]) {
-      const cle = e[0] + "|" + e[1];
+      /* Dédoublonnage sur la ligne ENTIÈRE et non sur carte plus horodatage :
+         plusieurs notations peuvent tomber dans la même milliseconde, et la clé
+         courte les écrasait. Deux lignes rigoureusement identiques désignent le
+         même événement synchronisé deux fois, les collapser est donc juste. */
+      const cle = JSON.stringify(e);
       if (vu.has(cle)) continue;
       vu.add(cle);
       fusion.push(e);
@@ -2249,18 +2232,6 @@ function shuffle(a) {
   }
   return a;
 }
-/* Même pénalité pour une mauvaise réponse et pour « je ne sais pas ». Tant que
-   l'abandon coûtait 0 et la tentative -6, le score récompensait le renoncement,
-   alors que les deux envoient Rating.Again au planificateur : conséquence
-   d'apprentissage identique. Or c'est la tentative de récupération, même ratée,
-   qui encode. */
-const WRONG_PENALTY = -6;
-function pointsForResult(good, combo) {
-  if (!good) return WRONG_PENALTY;
-  const tier = Math.floor(Math.max(1, combo) - 1) / 3;
-  const mult = 1 + Math.min(1.75, tier * 0.25);
-  return Math.round(10 * mult);
-}
 function dayKey(d = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
@@ -2274,17 +2245,18 @@ function normalizeDailyState() {
   }
 }
 function dailyDefault() {
-  return { points: 0, attempts: 0, good: 0, wrong: 0, skip: 0 };
+  return { attempts: 0, good: 0, wrong: 0, skip: 0 };
 }
 function getDailyStats() {
   if (!app.dailyStats) app.dailyStats = {};
   return app.dailyStats;
 }
-function noteDailyProgress(delta, outcome) {
+/* Ne sert plus qu'au bridage adaptatif du §10.3, qui a besoin du taux de réussite
+   des sept derniers jours. Aucun point n'y est plus compté. */
+function noteDailyProgress(outcome) {
   const stats = getDailyStats();
   const key = dayKey();
   const day = stats[key] || (stats[key] = dailyDefault());
-  day.points = (day.points || 0) + Math.max(0, delta || 0);
   day.attempts = (day.attempts || 0) + 1;
   day[outcome] = (day[outcome] || 0) + 1;
   app.dailyStats = stats;
@@ -2796,67 +2768,72 @@ function Login() {
 }
 function Home() {
   normalizeDailyState();
-  const hasPausedSession = !!app.pausedSession?.queue?.length;
-  const resumeToday = hasPausedSession;
-  const canStart = !hasPausedSession;
-  const sessionQueue = resumeToday ? app.pausedSession.queue : queueFor();
-  const remaining = sessionQueue.length;
-  const newCount = sessionQueue.filter((c) => c.reps === 0).length;
-  const reviewCount = remaining - newCount;
-  const d = new Date().toLocaleDateString("fr-FR", {
+  const reprise = !!app.pausedSession?.queue?.length;
+  const file = reprise ? app.pausedSession.queue : queueFor();
+  const restantes = file.length;
+  const neuves = file.filter((c) => c.reps === 0).length;
+  const revisions = restantes - neuves;
+  /* Une nouveauté est vue deux fois le jour de son introduction : on annonce donc
+     des expositions, pas des cartes distinctes. Voir §10.2. */
+  const expositions = neuves * EXPOSURES_PER_NEW_CARD + revisions;
+  const jour = new Date().toLocaleDateString("fr-FR", {
     weekday: "long",
     day: "numeric",
     month: "long",
   });
-  /* Le compteur annonçait le nombre de cartes du plan, alors qu'une nouveauté est
-     vue deux fois : on promettait 15 et on en présentait 30. On affiche donc les
-     expositions, et la ventilation dit d'où elles viennent. */
-  const exposures = newCount * EXPOSURES_PER_NEW_CARD + reviewCount;
-  const upcoming = dueOutlook();
-  return `<div class="scroll pad" style="position:relative"><span class="mono faint" style="position:absolute;top:10px;right:0;font-size:11px;letter-spacing:.04em">v${BUILD_VERSION}</span><p class="label" style="margin-top:24px">${esc(d)}</p>
-  <div style="display:flex;justify-content:center;margin:36px 0 12px">
-    <div class="sq" style="width:146px"><span class="mono" style="font-size:60px">${resumeToday ? remaining : exposures}</span></div></div>
-    <p class="muted" style="text-align:center;font-size:14px;margin:0 0 6px">${resumeToday ? "cartes restantes" : "cartes au programme"}</p>
-    ${resumeToday ? "" : `<p class="faint" style="text-align:center;font-size:12px;line-height:1.5;margin:0 0 20px">Les cartes ratées reviennent dans la séance, en plus de ce total.</p>`}
-    ${
-      remaining
-        ? `<div class="row"><span class="muted">Nouvelles cartes${newCount ? ` <span class="faint" style="font-size:12px">(vues deux fois)</span>` : ""}</span><span class="mono">${newCount}</span></div><div class="row" style="margin-bottom:18px"><span class="muted">Révisions</span><span class="mono">${reviewCount}</span></div>`
-        : ""
-    }
-    ${
-      !schedulerReady()
-        ? `<div class="empty" style="padding:12px 0 0;color:var(--shu)">Planificateur indisponible. La bibliothèque d'ordonnancement ne s'est pas chargée, et sans elle aucune révision ne peut être datée correctement. Reconnectez-vous une fois au réseau : elle sera mise en cache et l'application refonctionnera hors ligne. Rien n'est perdu, votre progression est intacte.</div>`
-        : canStart && remaining
+  const aVenir = dueOutlook();
+
+  /* Un seul objectif ici : lancer en un tap (§5). Tout ce qui n'aide pas à décider
+     de lancer a été retiré ou réduit à une ligne. Les trois lignes d'échéances sont
+     devenues une phrase, la ventilation deux rangées bordées est devenue une ligne
+     grise, et les explications ne s'affichent que lorsqu'elles expliquent vraiment
+     quelque chose. */
+  return `<div class="scroll pad" style="position:relative">
+  <span class="mono faint" style="position:absolute;top:10px;right:0;font-size:11px;letter-spacing:.04em">v${BUILD_VERSION}</span>
+  <p class="label" style="margin-top:24px">${esc(jour)}</p>
+
+  <div style="display:flex;justify-content:center;margin:44px 0 14px">
+   <div class="sq" style="width:146px"><span class="mono" style="font-size:60px">${reprise ? restantes : expositions}</span></div>
+  </div>
+  <p class="muted" style="text-align:center;font-size:14px;margin:0 0 4px">${reprise ? "cartes restantes" : "cartes à voir"}</p>
+  ${
+    restantes && !reprise
+      ? `<p class="faint" style="text-align:center;font-size:12px;margin:0 0 28px">${neuves} nouvelle${neuves > 1 ? "s" : ""}${revisions ? ` · ${revisions} révision${revisions > 1 ? "s" : ""}` : ""}</p>`
+      : `<div style="height:24px"></div>`
+  }
+
+  ${
+    !schedulerReady()
+      ? `<div class="empty" style="padding:0;color:var(--shu)">Planificateur indisponible : sans lui aucune révision ne peut être datée. Reconnectez-vous une fois au réseau, il sera mis en cache. Votre progression est intacte.</div>`
+      : reprise
+        ? `<button class="btn" data-start="resume">Reprendre</button>`
+        : restantes
           ? `<button class="btn" data-start="">Commencer</button>`
-          : ""
-    }
-  ${resumeToday ? `<button class="btn" data-start="resume">Reprendre · ${remaining} restantes</button>` : ""}
-  ${canStart && !remaining ? `<div class="empty" style="padding:12px 0 0">Rien à réviser pour le moment. Les prochaines cartes reviendront à leur échéance.</div>` : ""}
+          : `<div class="empty" style="padding:0">Rien à réviser. Les prochaines cartes reviendront à leur échéance.</div>`
+  }
+
   ${
-    canStart
-      ? `<div style="margin-top:18px"><span class="label">Charge du jour</span>
-  <div class="chips" style="margin-top:8px">${DAILY_LOADS.map(
-    (l) =>
-      `<button class="chip ${(app.dailyLoad || "normal") === l.id ? "on" : ""}" data-load="${l.id}">${l.label} · ${l.budget}</button>`,
-  ).join("")}</div>${
-    loadNote(newCount, reviewCount)
-      ? `<p class="faint" style="font-size:12px;line-height:1.6;margin:8px 0 0">${esc(loadNote(newCount, reviewCount))}</p>`
-      : ""
-  }</div>`
+    reprise
+      ? ""
+      : `<div class="chips" style="margin-top:20px;justify-content:center">${DAILY_LOADS.map(
+          (l) =>
+            `<button class="chip ${(app.dailyLoad || "normal") === l.id ? "on" : ""}" data-load="${l.id}">${l.label}</button>`,
+        ).join("")}</div>`
+  }
+  ${
+    !reprise && loadNote(neuves, revisions)
+      ? `<p class="faint" style="font-size:12px;line-height:1.6;margin:10px 0 0;text-align:center">${esc(loadNote(neuves, revisions))}</p>`
       : ""
   }
-  <hr class="rule">
-  <span class="label">À venir</span>
-  <div class="row" style="margin-top:6px"><span class="muted">Demain</span><span class="mono">${upcoming.tomorrow}</span></div>
-  <div class="row"><span class="muted">Sept prochains jours</span><span class="mono">${upcoming.week}</span></div>
-  <div class="row"><span class="muted">Cartes en circulation</span><span class="mono">${upcoming.circulating}</span></div>
-  ${
-    app.deferredReviews
-      ? `<div class="row"><span class="muted">Reportées à demain</span><span class="mono t-lrn">${app.deferredReviews}</span></div>
-  <p class="faint" style="font-size:12px;line-height:1.6;margin:8px 0 0">Plus de révisions dues que la charge du jour ne permet. Les plus en retard passent d'abord ; le reste attend, sans pénalité.</p>`
-      : ""
-  }
-  <p class="faint" style="font-size:12px;line-height:1.6;margin:10px 0 0">${esc(upcoming.hint)}</p>
+
+  <p class="faint" style="font-size:12px;line-height:1.7;margin:28px 0 0;text-align:center">${
+    aVenir.circulating
+      ? `Demain ${aVenir.tomorrow} · sur sept jours ${aVenir.week}` +
+        (app.deferredReviews
+          ? `<br>${app.deferredReviews} révision${app.deferredReviews > 1 ? "s" : ""} reportée${app.deferredReviews > 1 ? "s" : ""} à demain, les plus en retard passent d'abord.`
+          : "")
+      : "Aucune carte encore commencée."
+  }</p>
   <div style="height:24px"></div></div>`;
 }
 /* Remplace la heatmap annuelle : 365 cases de 11 px avec des infobulles
@@ -2874,7 +2851,7 @@ function loadNote(newCount, reviewCount) {
   const acc = recentAccuracy();
   const factor = newCardFactor();
   if (factor < 1)
-    return `Apport de nouveautés réduit au minimum : ${Math.round(acc * 100)} % de réussite sur les sept derniers jours, pour ${Math.round(THROTTLE_START * 100)} % attendus. Mieux vaut consolider que d'empiler ; cela remontera de soi-même.`;
+    return `Nouveautés réduites : ${Math.round(acc * 100)} % de réussite sur sept jours, pour ${Math.round(THROTTLE_START * 100)} % attendus. Mieux vaut consolider que d'empiler.`;
   const slots = Math.floor(
     Math.max(0, dailyBudget() - reviewCount) / EXPOSURES_PER_NEW_CARD,
   );
@@ -2886,9 +2863,10 @@ function loadNote(newCount, reviewCount) {
     available += pool;
     capped += Math.min(dk.newPerDay, pool);
   }
-  if (available > capped)
-    return "Le budget n'est pas atteint : chaque deck a son propre plafond de nouvelles cartes, réglable dans Collection › le deck › Réglages.";
-  return "Le budget n'est pas atteint : il n'y a pas plus de contenu disponible pour l'instant. Les prochains decks s'ouvriront à mesure des progrès.";
+  /* Court, parce que c'est l'écran de lancement : le détail vit dans les réglages du
+     deck, là où l'on va justement pour changer le plafond. */
+  if (available > capped) return "Plafonné par les réglages de chaque deck.";
+  return "Tout le contenu ouvert est déjà en cours.";
 }
 function dueOutlook() {
   const now = Date.now();
@@ -2930,18 +2908,6 @@ function Collection() {
   <div><strong class="mono">${studied}</strong><span>étudiées</span></div>
   <div><strong class="mono">${mastered}</strong><span>maîtrisées</span></div>
   <p>Une carte est maîtrisée après ${MASTERY_REPS} réussites espacées, quand son intervalle dépasse ${MASTERY_STABILITY} jours. Un caractère devient lisible bien avant : c'est ce qui débloque la suite.</p>
-  </div>
-  <div style="display:flex;gap:12px;margin:0 0 4px">
-   ${[
-     ["points", app.points || 0],
-     ["série", app.streak || 0],
-     ["record", app.bestStreak || 0],
-   ]
-     .map(
-       ([l, v]) =>
-         `<div style="flex:1;border:1px solid var(--rule);border-radius:var(--radius);padding:10px 12px"><div class="mono" style="font-size:22px">${v}</div><div class="label" style="margin-top:4px">${l}</div></div>`,
-     )
-     .join("")}
   </div>
   <div class="label" style="margin:12px 0 10px">Collections JLPT</div>
   ${levelRowsHtml()}
@@ -3419,10 +3385,6 @@ function startSession(id) {
       startTime: null,
       feedback: null,
       fx: null,
-      fxTimer: null,
-      runPoints: 0,
-      runCombo: 0,
-      runBestCombo: 0,
       exposureCap: Math.round(dailyBudget() * SESSION_OVERSHOOT),
     };
     nextCard();
@@ -3454,10 +3416,6 @@ function startSession(id) {
     startTime: null,
     feedback: null,
     fx: null,
-    fxTimer: null,
-    runPoints: 0,
-    runCombo: 0,
-    runBestCombo: 0,
     exposureCap: Math.round(dailyBudget() * SESSION_OVERSHOOT),
   };
   nextCard();
@@ -3466,8 +3424,6 @@ function startSession(id) {
 function nextCard() {
   const s = app.sess;
   clearTimeout(s.timer);
-  clearTimeout(s.fxTimer);
-  s.fx = null;
   if (!s.queue.length) {
     s.dur = Date.now() - s.t0;
     go("summary");
@@ -3947,7 +3903,7 @@ function Session() {
   <div class="s-top"><div class="s-chrome"><button class="x${s.confirmQuit ? " warn" : ""}" data-quit="">${s.confirmQuit ? "quitter ?" : "✕"}</button>
    <span class="ct mono">${s.seen + 1} / ${s.seen + s.queue.length}</span>
    <button class="mu${app.mute ? " off" : ""}" data-mute="" aria-label="sound">${app.mute ? muteIcon(18) : speakerIcon(18)}</button></div><div class="s-feedback">${feedbackHtml}</div></div>
-    <div class="s-body${done ? " done" : ""}"${done && s.st !== "near" && !app.detailed && dk.grading !== "self" ? ' data-next=""' : ""}>${s.fx ? `<div class="score-fx ${s.fx.kind}${s.fx.boost ? " boost" : ""}"><span class="pts">${s.fx.delta > 0 ? "+" : ""}${s.fx.delta}</span></div>` : ""}${body}${rev}</div>${input}
+    <div class="s-body${done ? " done" : ""}"${done && s.st !== "near" && !app.detailed && dk.grading !== "self" ? ' data-next=""' : ""}>${body}${rev}</div>${input}
   <div id="kb" class="${showKb ? "on" : ""}${isKanaKb ? " kana" : ""}">${showKb ? KB(mode) : ""}</div></div>`;
 }
 function KB(mode) {
@@ -4070,14 +4026,7 @@ function commit(outcome, elapsed) {
      et noteDailyProgress() écrivent dans les trois. */
   s.undoSnapshot = {
     card: { ...s.cur },
-    points: app.points,
-    streak: app.streak,
-    bestStreak: app.bestStreak,
-    totalRuns: app.totalRuns,
     dailyStats: JSON.parse(JSON.stringify(app.dailyStats || {})),
-    runCombo: s.runCombo,
-    runBestCombo: s.runBestCombo,
-    runPoints: s.runPoints,
     seen: s.seen,
     ok: s.ok,
     queue: s.queue.slice(),
@@ -4087,24 +4036,9 @@ function commit(outcome, elapsed) {
     setAsideItems: (s.setAsideItems || []).slice(),
   };
   const good = outcome === "good";
-  const combo = good ? s.runCombo + 1 : 0;
-  const delta =
-    outcome === "good" ? pointsForResult(true, combo) : WRONG_PENALTY;
-  if (good) s.runCombo = combo;
-  else s.runCombo = 0;
-  s.runBestCombo = Math.max(s.runBestCombo, s.runCombo);
-  s.runPoints += delta;
-  app.points = Math.max(0, (app.points || 0) + delta);
-  app.streak = good ? combo : 0;
-  app.bestStreak = Math.max(
-    app.bestStreak || 0,
-    good ? combo : 0,
-    s.runBestCombo || 0,
-  );
-  app.totalRuns = (app.totalRuns || 0) + 1;
   app.dataUpdatedAt = Date.now();
   app.sessionUpdatedAt = app.dataUpdatedAt;
-  noteDailyProgress(delta, outcome);
+  noteDailyProgress(outcome);
   /* « je ne sais pas » et une mauvaise réponse envoient le même verdict au
      planificateur : c'est ce qui justifie la pénalité identique du §8.4. */
   grade(s.cur, outcome === "good", elapsed || 8000);
@@ -4139,23 +4073,6 @@ function commit(outcome, elapsed) {
     s.drilled[s.cur.id] = drills + 1;
     requeue(s, s.cur);
   }
-  s.fx =
-    outcome === "skip"
-      ? null
-      : {
-          kind: outcome,
-          delta,
-          combo: s.runCombo,
-          total: app.points,
-          boost: good && combo > 1,
-        };
-  clearTimeout(s.fxTimer);
-  s.fxTimer = setTimeout(() => {
-    if (app.sess === s) {
-      s.fx = null;
-      render();
-    }
-  }, 950);
   saveState();
 }
 maybeAutoPush();
@@ -4171,15 +4088,8 @@ function undoGoodAnswer() {
      neuve) : un simple Object.assign les laisserait en place. */
   for (const k of Object.keys(live)) if (!(k in u.card)) delete live[k];
   Object.assign(live, u.card);
-  app.points = u.points;
-  app.streak = u.streak;
-  app.bestStreak = u.bestStreak;
-  app.totalRuns = u.totalRuns;
   app.dailyStats = u.dailyStats;
   Object.assign(s, {
-    runCombo: u.runCombo,
-    runBestCombo: u.runBestCombo,
-    runPoints: u.runPoints,
     seen: u.seen,
     ok: u.ok,
     queue: u.queue,
@@ -4222,18 +4132,6 @@ function Summary() {
     .map(
       ([l, v]) =>
         `<div style="flex:1"><div class="mono" style="font-size:30px">${v}</div><div class="label" style="margin-top:6px">${l}</div></div>`,
-    )
-    .join("")}</div>
- <div style="height:24px"></div>
- <div style="display:flex;gap:12px;text-align:center">
-  ${[
-    ["points", s.runPoints || 0],
-    ["meilleure série", s.runBestCombo || 0],
-    ["points totaux", app.points || 0],
-  ]
-    .map(
-      ([l, v]) =>
-        `<div style="flex:1"><div class="mono" style="font-size:24px">${v}</div><div class="label" style="margin-top:6px">${l}</div></div>`,
     )
     .join("")}</div>
  ${
@@ -4642,10 +4540,6 @@ function bind() {
           delete cards[id].suspended;
           delete cards[id].suspendedAt;
         }
-        app.points = 0;
-        app.streak = 0;
-        app.bestStreak = 0;
-        app.totalRuns = 0;
         app.pokemonUnlocks = {};
         app.deckUnlocks = {};
         app.reviewLog = [];

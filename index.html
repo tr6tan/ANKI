@@ -997,40 +997,6 @@
       .feedback.good {
         animation: feedback-good-pop 300ms var(--ease);
       }
-      .score-fx {
-        position: absolute;
-        top: 18px;
-        right: 16px;
-        z-index: 4;
-        pointer-events: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 54px;
-        height: 28px;
-        padding: 0 10px;
-        border: 1px solid currentColor;
-        border-radius: 999px;
-        background: var(--surface);
-        font-family: var(--f-mono);
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        animation: score-fx 900ms var(--ease) forwards;
-      }
-      .score-fx.good {
-        color: var(--seiji);
-      }
-      .score-fx.bad {
-        color: var(--shu);
-      }
-      .score-fx.boost {
-        animation-duration: 1200ms;
-        transform-origin: center;
-      }
-      .score-fx.boost .pts {
-        font-size: 14px;
-      }
       .hm-wrap {
         margin: 0 -4px;
         padding: 2px 4px 0;
@@ -1092,24 +1058,6 @@
         letter-spacing: 0.06em;
         text-transform: uppercase;
         white-space: nowrap;
-      }
-      @keyframes score-fx {
-        0% {
-          opacity: 0;
-          transform: translateY(10px) scale(0.92);
-        }
-        12% {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-        68% {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-        100% {
-          opacity: 0;
-          transform: translateY(-12px) scale(0.96);
-        }
       }
       @keyframes feedback-good-pop {
         0% {
@@ -1351,6 +1299,6 @@
     ></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="tmp_script.js?v=20260824-1508"></script>
+    <script src="tmp_script.js?v=20260824-1521"></script>
   </body>
 </html>
