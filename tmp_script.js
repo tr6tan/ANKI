@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260824-1450-b";
+const BUILD_VERSION = "20260824-1508";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -1420,7 +1420,7 @@ COMP.split("|").forEach((s, n) => {
   });
 });
 const COMP_EXT =
-  "会社 かいしゃ company|会話 かいわ conversation|家族 かぞく family|勉強 べんきょう study|質問 しつもん question|問題 もんだい problem|意味 いみ meaning|使用 しよう use|使用 しよう usage|運転 うんてん driving|運動 うんどう exercise|自動車 じどうしゃ automobile|新聞 しんぶん newspaper|地図 ちず,ちづ map|世界 せかい world|旅行 りょこう travel|飛行機 ひこうき airplane|映画 えいが movie|音楽 おんがく music|病院 びょういん hospital|医者 いしゃ doctor|銀行 ぎんこう bank|警察 けいさつ police|時間 じかん time|時計 とけい clock|昨日 きのう yesterday|明日 あした,あす tomorrow|今週 こんしゅう this week|来週 らいしゅう next week|先週 せんしゅう last week|全部 ぜんぶ everything|一部 いちぶ one part|部屋 へや room|台所 だいどころ kitchen|居間 いま living room|寝室 しんしつ bedroom|洗面所 せんめんじょ washroom|通行 つうこう passage|通学 つうがく commuting to school|通勤 つうきん commuting to work|開始 かいし start|終了 しゅうりょう end|開店 かいてん shop opening|閉店 へいてん shop closing|入学 にゅうがく school entry|卒業 そつぎょう graduation|高校 こうこう high school|大学 だいがく university|生徒 せいと pupil|学生 がくせい student|先生 せんせい teacher|授業 じゅぎょう class|教室 きょうしつ classroom|試験 しけん exam|経験 けいけん experience|運命 うんめい destiny|同時 どうじ simultaneous|同意 どうい agreement|不安 ふあん anxiety|不思議 ふしぎ mysterious|感謝 かんしゃ gratitude|感動 かんどう emotion|決定 けってい decision|決心 けっしん determination|安心 あんしん peace of mind|安全 あんぜん safety|信用 しんよう trust|信号 しんごう traffic light|商品 しょうひん product|商店 しょうてん store|生産 せいさん production|工業 こうぎょう manufacturing|農業 のうぎょう agriculture|政治 せいじ politics|政府 せいふ government|法律 ほうりつ law|法学 ほうがく law studies|文化 ぶんか culture|文学 ぶんがく literature|文字 もじ letter, character|漢字 かんじ kanji|外国 がいこく foreign country|外国人 がいこくじん foreigner|市民 しみん citizen|国民 こくみん nation, people|民主 みんしゅ democracy|東京 とうきょう Tokyo|京都 きょうと Kyoto|洋服 ようふく western clothes|和服 わふく Japanese clothes|洋食 ようしょく western food|和食 わしょく Japanese food|注意 ちゅうい caution|注文 ちゅうもん order|質問 dup skip|発見 はっけん discovery|発明 はつめい invention|発表 はっぴょう announcement|発展 はってん development|準備 じゅんび preparation|完全 かんぜん complete|完成 かんせい completion|理解 りかい understanding|説明 せつめい explanation|意見 いけん opinion|会議 かいぎ meeting|会員 かいいん member|社員 しゃいん employee|社会 しゃかい society|会長 かいちょう chairman|課長 かちょう section chief|部長 ぶちょう department chief|専門 せんもん specialty|専攻 せんこう major|研究 けんきゅう research|開発 かいはつ development|技術 ぎじゅつ technology|情報 じょうほう information|通信 つうしん communication";
+  "会社 かいしゃ company|会話 かいわ conversation|家族 かぞく family|勉強 べんきょう study|質問 しつもん question|問題 もんだい problem|意味 いみ meaning|使用 しよう use|使用 しよう usage|運転 うんてん driving|運動 うんどう exercise|自動車 じどうしゃ automobile|新聞 しんぶん newspaper|地図 ちず,ちづ map|世界 せかい world|旅行 りょこう travel|飛行機 ひこうき airplane|映画 えいが movie|音楽 おんがく music|病院 びょういん hospital|医者 いしゃ doctor|銀行 ぎんこう bank|警察 けいさつ police|時間 じかん time|時計 とけい clock|昨日 きのう yesterday|明日 あした,あす tomorrow|今週 こんしゅう this week|来週 らいしゅう next week|先週 せんしゅう last week|全部 ぜんぶ everything|一部 いちぶ one part|部屋 へや room|台所 だいどころ kitchen|居間 いま living room|寝室 しんしつ bedroom|洗面所 せんめんじょ washroom|通行 つうこう passage|通学 つうがく commuting to school|通勤 つうきん commuting to work|開始 かいし start|終了 しゅうりょう end|開店 かいてん shop opening|閉店 へいてん shop closing|入学 にゅうがく school entry|卒業 そつぎょう graduation|高校 こうこう high school|大学 だいがく university|生徒 せいと pupil|学生 がくせい student|先生 せんせい teacher|授業 じゅぎょう class|教室 きょうしつ classroom|試験 しけん exam|経験 けいけん experience|運命 うんめい destiny|同時 どうじ simultaneous|同意 どうい agreement|不安 ふあん anxiety|不思議 ふしぎ mysterious|感謝 かんしゃ gratitude|感動 かんどう emotion|決定 けってい decision|決心 けっしん determination|安心 あんしん peace of mind|安全 あんぜん safety|信用 しんよう trust|信号 しんごう traffic light|商品 しょうひん product|商店 しょうてん store|生産 せいさん production|工業 こうぎょう manufacturing|農業 のうぎょう agriculture|政治 せいじ politics|政府 せいふ government|法律 ほうりつ law|法学 ほうがく law studies|文化 ぶんか culture|文学 ぶんがく literature|文字 もじ letter, character|漢字 かんじ kanji|外国 がいこく foreign country|外国人 がいこくじん foreigner|市民 しみん citizen|国民 こくみん nation, people|民主 みんしゅ democracy|東京 とうきょう Tokyo|京都 きょうと Kyoto|洋服 ようふく western clothes|和服 わふく Japanese clothes|洋食 ようしょく western food|和食 わしょく Japanese food|注意 ちゅうい caution|注文 ちゅうもん order|質問 dup skip|発見 はっけん discovery|発明 はつめい invention|発表 はっぴょう announcement|発展 はってん development|準備 じゅんび preparation|完全 かんぜん complete|完成 かんせい completion|理解 りかい understanding|説明 せつめい explanation|意見 いけん opinion|会議 かいぎ meeting|会員 かいいん member|社員 しゃいん employee|社会 しゃかい society|会長 かいちょう chairman|課長 かちょう section chief|部長 ぶちょう department chief|専門 せんもん specialty|専攻 せんこう major|研究 けんきゅう research|開発 かいはつ development|技術 ぎじゅつ technology|情報 じょうほう information|通信 つうしん communication|木曜日 もくようび Thursday|お金 おかね money|土曜日 どようび Saturday|目 め eye|耳 みみ ear|五分 ごふん five minutes|半分 はんぶん half|飲み物 のみもの a drink|二人 ふたり two people|三日 みっか the third, three days|四月 しがつ April|五十 ごじゅう fifty|六月 ろくがつ June|七月 しちがつ July|八月 はちがつ August|九月 くがつ September|十月 じゅうがつ October|百円 ひゃくえん one hundred yen|千円 せんえん one thousand yen|一万 いちまん ten thousand|何時 なんじ what time|名前 なまえ name|白 しろ white|出口 でぐち exit|読書 どくしょ reading books|日本語 にほんご Japanese language|古本 ふるほん secondhand book|言語 げんご language|国立 こくりつ national";
 COMP_EXT.split("|").forEach((s, n) => {
   const p = s.split(" ");
   if (!p[0] || (p[2] === "dup" && p[3] === "skip")) return;
@@ -1456,6 +1456,17 @@ for (const i of ITEMS) ITEM_BY_ID[i.id] = i;
 /* accepte une clé de carte comme un identifiant d'item : c'est ce qui laisse tous
    les appels existants fonctionner sans les reprendre un par un. */
 const item = (id) => ITEM_BY_ID[baseId(id)];
+/* Applique les corrections de verso conservées par l'utilisateur. Elles ne portent
+   jamais sur le recto : la graphie sert d'index aux prérequis, la modifier
+   désynchroniserait KIDX et le calcul des atomes du §7. */
+function appliquerSurcharges() {
+  for (const id in app.itemEdits || {}) {
+    const i = ITEM_BY_ID[id];
+    if (!i) continue;
+    for (const [champ, valeur] of Object.entries(app.itemEdits[id] || {}))
+      if (["gloss", "keyword", "en", "rom"].includes(champ)) i[champ] = valeur;
+  }
+}
 const STORAGE_KEY = "anki-jp-state-v1";
 /* une carte n'est un prérequis fiable qu'après plusieurs rappels réussis,
    pas dès la première exposition : évite de débloquer kanji/mots/pokémon
@@ -1790,6 +1801,13 @@ function loadState() {
     if (stored?.deckUnlocks) {
       app.deckUnlocks = stored.deckUnlocks;
     }
+    if (Array.isArray(stored?.reviewLog)) {
+      app.reviewLog = stored.reviewLog;
+    }
+    if (stored?.itemEdits) {
+      app.itemEdits = stored.itemEdits;
+      appliquerSurcharges();
+    }
     if (stored?.decks) {
       for (const dk of stored.decks) {
         const target = DECKS.find((d) => d.id === dk.id);
@@ -1850,6 +1868,8 @@ function saveState() {
         dailyStats: app.dailyStats || {},
         pokemonUnlocks: app.pokemonUnlocks || {},
         deckUnlocks: app.deckUnlocks || {},
+        itemEdits: app.itemEdits || {},
+        reviewLog: app.reviewLog || [],
         sessQueue:
           app.pausedSession?.queue?.map((c) => c.id) ||
           (app.sess ? app.sess.queue.map((c) => c.id) : null),
@@ -1907,6 +1927,8 @@ function localPayload() {
     dailyStats: app.dailyStats || {},
     pokemonUnlocks: app.pokemonUnlocks || {},
     deckUnlocks: app.deckUnlocks || {},
+    itemEdits: app.itemEdits || {},
+    reviewLog: app.reviewLog || [],
     dailyPlan: app.dailyPlan || null,
     session: {
       day: app.sessionDay || null,
@@ -1962,6 +1984,24 @@ function applyPayload(payload) {
   /* union, jamais remplacement : un déblocage obtenu sur un autre appareil ne doit
      pas disparaître parce que ce navigateur ne l'avait pas encore vu. */
   app.deckUnlocks = { ...(payload.deckUnlocks || {}), ...(app.deckUnlocks || {}) };
+  if (payload.itemEdits) {
+    app.itemEdits = { ...(payload.itemEdits || {}), ...(app.itemEdits || {}) };
+    appliquerSurcharges();
+  }
+  /* Le journal est en ajout seul : deux appareils produisent des lignes distinctes
+     qu'il faut réunir, et non remplacer. Dédoublonnage sur carte et horodatage. */
+  if (Array.isArray(payload.reviewLog)) {
+    const vu = new Set();
+    const fusion = [];
+    for (const e of [...payload.reviewLog, ...(app.reviewLog || [])]) {
+      const cle = e[0] + "|" + e[1];
+      if (vu.has(cle)) continue;
+      vu.add(cle);
+      fusion.push(e);
+    }
+    fusion.sort((x, y) => (x[1] || 0) - (y[1] || 0));
+    app.reviewLog = fusion.slice(-REVIEW_LOG_MAX);
+  }
   if (
     payload.dailyPlan?.day === dayKey() &&
     (payload.dailyPlan.createdAt || 0) >= (app.dailyPlan?.createdAt || 0)
@@ -2123,6 +2163,39 @@ function fsrsCard(c, now, prevSeen) {
     last_review: prevSeen ? new Date(prevSeen) : undefined,
   };
 }
+/* Journal de révisions. L'application ne conservait que l'état agrégé de chaque
+   carte, ce qui interdit trois choses : optimiser les poids FSRS, qui se calculent
+   sur l'historique complet ; produire une statistique honnête ; et surtout réparer
+   après coup un bug d'ordonnancement. On vient d'en vivre un, neuf mois d'intervalles
+   corrompus en silence, et sans journal les dégâts étaient définitifs. C'est
+   l'assurance qui manquait exactement quand elle aurait servi.
+
+   Une ligne par notation : carte, horodatage, verdict, intervalle attribué,
+   stabilité, et écart réellement observé depuis la révision précédente. Ce dernier
+   champ est celui qui aurait rendu le bug visible. Format tabulaire et non objet,
+   pour que le poids reste raisonnable. */
+/* Sangsue. La mise de côté existante n'était qu'un coupe-circuit de séance : une
+   carte ratée chaque jour revenait chaque jour, sans marque, sans veille, et sans
+   moyen de l'écarter. Anki suspend au bout de huit rechutes ; on fait de même, en
+   comptant les rechutes cumulées que FSRS tient déjà. Une carte qu'on échoue huit
+   fois n'a pas un problème de planification, elle a un problème d'énoncé. */
+const LEECH_TOTAL = 8;
+const REVIEW_LOG_MAX = 20000;
+function logReview(c, good, prevSeen) {
+  if (!app.reviewLog) app.reviewLog = [];
+  app.reviewLog.push([
+    c.id,
+    c.lastSeen,
+    good ? 1 : 0,
+    c.fsrsScheduledDays ?? null,
+    Math.round((c.stab || 0) * 100) / 100,
+    prevSeen ? Math.round(((c.lastSeen - prevSeen) / DAY) * 100) / 100 : 0,
+  ]);
+  /* Plafond glissant : environ 800 Ko au maximum, largement sous la limite du
+     stockage local, et les entrées les plus anciennes sont les moins utiles. */
+  if (app.reviewLog.length > REVIEW_LOG_MAX)
+    app.reviewLog.splice(0, app.reviewLog.length - REVIEW_LOG_MAX);
+}
 const schedulerReady = () => !!fsrsScheduler;
 /* Sans planificateur, on ne note RIEN. L'ancien code retombait sur un ordonnanceur
    maison, celui-là même que la spec §14 dit de remplacer : une panne de CDN
@@ -2160,6 +2233,12 @@ function grade(c, good, elapsed) {
   c.fsrsScheduledDays = next.scheduled_days;
   c.fsrsState = next.state;
   c.fsrsLearningSteps = next.learning_steps || 0;
+  logReview(c, good, prevSeen);
+  if (!good && (c.lapses || 0) >= LEECH_TOTAL && !c.suspended) {
+    c.suspended = true;
+    c.suspendedAt = c.lastSeen;
+    app.leechJustSuspended = c.id;
+  }
   saveState();
   return true;
 }
@@ -2303,7 +2382,9 @@ function validateDeckData() {
    même item fournit deux cartes à introduire, à deux moments différents. */
 function unseenPool(dk) {
   const items = deckVisibleItems(dk);
-  const fresh = items.filter((i) => cards[i.id].reps === 0);
+  const fresh = items.filter(
+    (i) => cards[i.id].reps === 0 && !cards[i.id].suspended,
+  );
   const ordered = dk.ordered
     ? fresh.slice().sort((a, b) => a.idx - b.idx)
     : // pré-mélange puis tri stable : voir pickCtx
@@ -2322,7 +2403,9 @@ function unseenPool(dk) {
      entamé vaut mieux que laisser grossir une dette de production. */
   const siblings = items
     .map((i) => productionId(i.id))
-    .filter((p) => p && cards[p].reps === 0 && learned(baseId(p)));
+    .filter(
+      (p) => p && cards[p].reps === 0 && !cards[p].suspended && learned(baseId(p)),
+    );
   let pool = [...siblings, ...ordered.map((i) => i.id)];
   /* Garde-fou : les lectures de kanji se tapent en hiragana. Redondant avec la
      porte du deck, mais il protège le cas où le deck a été débloqué puis les
@@ -2445,7 +2528,8 @@ function queueFor(id) {
     for (const i of deckVisibleItems(dk))
       for (const cardId of cardIdsFor(i.id)) {
         const c = cards[cardId];
-        if (c && c.due !== null && c.due <= now) due.push(c);
+        // une carte en veille ne revient pas d'elle-même : voir LEECH_TOTAL
+        if (c && !c.suspended && c.due !== null && c.due <= now) due.push(c);
       }
   if (id) return burySiblings(shuffle([...due, ...newFor(deck(id))]));
   /* Les révisions dues n'étaient bornées par rien : seules les nouveautés
@@ -2913,6 +2997,7 @@ function DeckCards(dk) {
     new: (i) => cardIdsFor(i.id).every((id) => cards[id].reps === 0),
     learning: (i) => !known(i.id) && anyCard(i, (c) => c.reps > 0),
     due: (i) => anyCard(i, (c) => c.due !== null && c.due <= Date.now()),
+    veille: (i) => anyCard(i, (c) => !!c.suspended),
   };
   if (!F[app.filter]) app.filter = "all";
   const info = deckUnlockInfo(dk);
@@ -2939,6 +3024,7 @@ function DeckCards(dk) {
     ["new", "Pas commencées"],
     ["learning", "En cours"],
     ["due", "À réviser"],
+    ["veille", "En veille"],
   ]
     .map(
       ([value, label]) =>
@@ -2955,13 +3041,17 @@ function DeckCards(dk) {
             const prod = productionId(i.id);
             /* On affiche l'avancement des deux directions : c'est la seule façon de
                voir qu'un caractère se lit sans qu'on sache l'écrire. */
-            const status = known(i.id)
-              ? "maîtrisée"
-              : cardIdsFor(i.id).some((id) => cards[id].reps > 0)
-                ? prod
-                  ? `lire ${cards[i.id].goodReps || 0}/${MASTERY_REPS} · écrire ${cards[prod].goodReps || 0}/${MASTERY_REPS}`
-                  : `${c.goodReps || 0}/${MASTERY_REPS} réussites`
-                : "pas commencée";
+            const enVeille = cardIdsFor(i.id).some((id) => cards[id].suspended);
+            const entamee = cardIdsFor(i.id).some((id) => cards[id].reps > 0);
+            const status = enVeille
+              ? "en veille"
+              : known(i.id)
+                ? "maîtrisée"
+                : entamee
+                  ? prod
+                    ? `lire ${cards[i.id].goodReps || 0}/${MASTERY_REPS} · écrire ${cards[prod].goodReps || 0}/${MASTERY_REPS}`
+                    : `${c.goodReps || 0}/${MASTERY_REPS} réussites`
+                  : "pas commencée";
             /* échéance la plus proche des deux directions */
             const nextDue = cardIdsFor(i.id)
               .map((id) => cards[id])
@@ -3114,8 +3204,10 @@ function Editor() {
   return `<div class="hdr"><button class="back" data-go="deck">←</button><h1>Carte</h1>
   <button class="faint" data-speak="${esc(i.kana || i.read || i.ja || i.glyph)}">${speakerIcon(18)}</button></div>
  <div class="scroll pad"><div style="height:16px"></div>
- <label class="field"><span class="label">Recto</span><input id="e-a" value="${esc(a)}" style="font-family:var(--f-jp)"></label>
- <label class="field"><span class="label">Verso</span><input id="e-b" value="${esc(b)}"></label>
+ <label class="field"><span class="label">Recto</span><input id="e-a" value="${esc(a)}" style="font-family:var(--f-jp)" readonly></label>
+ <p class="note" style="margin-top:-16px">Le recto n'est pas modifiable : la graphie sert d'index aux prérequis du §7, et la changer désynchroniserait le calcul des atomes.</p>
+ <label class="field" style="margin-top:20px"><span class="label">Verso</span><input id="e-b" value="${esc(b)}"></label>
+ <p class="note" style="margin-top:-16px">Modifié ici, le verso est conservé. Les corrections survivent au rechargement et suivent la synchronisation.</p>
  ${
    at.length
      ? `<p class="label">Prérequis</p><div class="atoms">${at
@@ -3125,6 +3217,13 @@ function Editor() {
          )
          .join("")}</div>
   <p class="note">${unknownIn(at) ? unknownIn(at) + " prérequis encore inconnus." : "Tous maîtrisés."}</p>`
+     : ""
+ }
+ ${
+   cardIdsFor(i.id).some((id) => cards[id].suspended)
+     ? `<hr class="rule"><p class="label">En veille</p>
+  <p class="note">Cette carte a été ratée ${LEECH_TOTAL} fois et ne revient plus d'elle-même. Une carte qu'on échoue autant n'a pas un problème de planification : corrigez le verso, ou remettez-la en circulation.</p>
+  <button class="btn ghost" style="height:44px;margin-top:10px" data-reactiver="${esc(i.id)}">Remettre en circulation</button>`
      : ""
  }
  <hr class="rule"><p class="label" style="margin-bottom:12px">Aperçu</p>
@@ -4217,6 +4316,21 @@ function bind() {
     }${forcerSynthese ? ", forcée pour comparaison" : ""}.`;
     render();
   };
+  q("[data-reactiver]").forEach(
+    (e) =>
+      (e.onclick = () => {
+        for (const id of cardIdsFor(e.dataset.reactiver)) {
+          delete cards[id].suspended;
+          delete cards[id].suspendedAt;
+          /* Les rechutes cumulées sont remises à zéro, sinon la carte repartirait
+             en veille à la première erreur suivante. */
+          cards[id].lapses = 0;
+          cards[id].modifiedAt = Date.now();
+        }
+        saveState();
+        render();
+      }),
+  );
   q("[data-source-audio]").forEach(
     (e) =>
       (e.onclick = () => {
@@ -4284,15 +4398,24 @@ function bind() {
     if (el)
       el.oninput = debounce(() => {
         const i = item(app.editing);
-        if (!i) return;
-        const front = id === "e-a";
-        if (i.kind === "lex")
-          front ? (i.surface = el.value) : (i.gloss = el.value);
-        else if (i.kind === "kanji")
-          front ? (i.glyph = el.value) : (i.keyword = el.value);
-        else if (i.kind === "name")
-          front ? (i.ja = el.value) : (i.en = el.value);
-        else front ? (i.glyph = el.value) : (i.rom = el.value.trim());
+        if (!i || id !== "e-b") return; // le recto est en lecture seule, voir Editor
+        /* ITEMS est reconstruit depuis les données littérales à chaque démarrage :
+           écrire dedans se perdait au rechargement, ce qui faisait de l'éditeur une
+           promesse vide. On conserve donc une couche de surcharge, appliquée au
+           chargement et transportée par la synchronisation. */
+        const champ =
+          i.kind === "lex"
+            ? "gloss"
+            : i.kind === "kanji"
+              ? "keyword"
+              : i.kind === "name"
+                ? "en"
+                : "rom";
+        const valeur = champ === "rom" ? el.value.trim() : el.value;
+        if (!app.itemEdits) app.itemEdits = {};
+        app.itemEdits[i.id] = { ...(app.itemEdits[i.id] || {}), [champ]: valeur };
+        i[champ] = valeur;
+        saveState();
         render();
       }, 250);
   });
@@ -4516,6 +4639,8 @@ function bind() {
           delete cards[id].fsrsScheduledDays;
           delete cards[id].fsrsElapsedDays;
           delete cards[id].fsrsLearningSteps;
+          delete cards[id].suspended;
+          delete cards[id].suspendedAt;
         }
         app.points = 0;
         app.streak = 0;
@@ -4523,6 +4648,8 @@ function bind() {
         app.totalRuns = 0;
         app.pokemonUnlocks = {};
         app.deckUnlocks = {};
+        app.reviewLog = [];
+        app.itemEdits = {};
         app.dailyStats = {};
         app.dataUpdatedAt = Date.now();
         app.pausedSession = null;

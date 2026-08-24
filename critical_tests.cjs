@@ -406,7 +406,7 @@ test("le katakana s'ouvre sur des hiragana lisibles, pas maîtrisés", () => {
   );
   assert.ok(
     !hira.some((i) => api.known(i.id)),
-    "aucun n'est encore maîtrisé — c'est tout l'intérêt",
+    "aucun n'est encore maîtrisé , c'est tout l'intérêt",
   );
   assert.equal(api.deckUnlockInfo(kata).open, true);
 });
@@ -525,6 +525,77 @@ test("aucun énoncé n'est répété automatiquement", () => {
   }
 });
 
+test("chaque révision laisse une trace dans le journal", () => {
+  const api = loadApp();
+  const card = api.cards.h0;
+  api.grade(card, true, 4000); // première révision, aujourd'hui
+  /* Sans reviewSpaced, qui recule déjà les horodatages jusqu'à l'échéance : le
+     cumuler avec ce recul-ci comptait l'écart deux fois. */
+  const gap = 3 * 864e5;
+  card.lastSeen -= gap;
+  card.due -= gap;
+  api.grade(card, true, 4000); // trois jours plus tard
+
+  const j = api.app.reviewLog;
+  assert.equal(j.length, 2, "une ligne par notation");
+  const [id, ts, verdict, intervalle, stab, ecart] = j[1];
+  assert.equal(id, "h0");
+  assert.ok(ts > 0 && verdict === 1 && intervalle > 0 && stab > 0);
+  /* L'écart réellement observé est le champ qui aurait rendu visible le bug
+     d'ordonnancement : il valait 0 à chaque révision pendant neuf mois. */
+  assert.ok(Math.abs(ecart - 3) < 0.01, `écart observé ${ecart}, attendu 3`);
+});
+
+test("le journal se réunit entre appareils sans doublon ni perte", () => {
+  const api = loadApp();
+  api.app.reviewLog = [["h0", 1000, 1, 3, 2.3, 0]];
+  api.app.dataUpdatedAt = 0;
+  const distant = api.localPayload();
+  distant.reviewLog = [
+    ["h0", 1000, 1, 3, 2.3, 0], // déjà connue
+    ["h1", 2000, 0, 1, 0.5, 5], // venue d'un autre appareil
+  ];
+  api.applyPayload(distant);
+  assert.equal(api.app.reviewLog.length, 2, "réunion, pas remplacement");
+  assert.deepEqual(
+    Array.from(api.app.reviewLog.map((e) => e[0] + "|" + e[1])),
+    ["h0|1000", "h1|2000"],
+  );
+});
+
+test("une carte ratée huit fois passe en veille et n'est plus servie", () => {
+  const api = loadApp();
+  const card = api.cards.h0;
+  card.reps = 5;
+  card.goodReps = 5;
+  card.stab = 30;
+  for (let n = 0; n < 8; n++) api.grade(card, false, 4000);
+  /* La mise de côté existante n'était qu'un coupe-circuit de séance : la carte
+     revenait chaque jour, sans marque et sans moyen de l'écarter. */
+  assert.equal(card.suspended, true, `en veille après ${card.lapses} rechutes`);
+  card.due = Date.now() - 1000;
+  assert.ok(
+    !api.queueFor().some((c) => c.id === "h0"),
+    "une carte en veille ne doit plus entrer en session",
+  );
+});
+
+test("une correction de verso survit au rechargement", () => {
+  const api = loadApp();
+  api.app.itemEdits = { j0: { keyword: "soleil, jour" } };
+  const paquet = JSON.parse(JSON.stringify(api.localPayload()));
+  assert.equal(paquet.itemEdits.j0.keyword, "soleil, jour");
+
+  /* ITEMS étant reconstruit depuis les littéraux à chaque démarrage, la surcharge
+     est la seule façon pour une correction de survivre : sans elle, l'éditeur
+     promettait sans tenir. */
+  const frais = loadApp();
+  assert.notEqual(frais.ITEMS.find((i) => i.id === "j0").keyword, "soleil, jour");
+  frais.app.dataUpdatedAt = 0;
+  frais.applyPayload(paquet);
+  assert.equal(frais.ITEMS.find((i) => i.id === "j0").keyword, "soleil, jour");
+});
+
 test("aucun kanji isolé n'est envoyé à la synthèse vocale", () => {
   const api = loadApp();
   const ideogrammeSeul = /^[㐀-鿿]$/;
@@ -564,7 +635,7 @@ test("le plan quotidien conserve les mêmes nouvelles cartes", () => {
   assert.deepEqual(planned, [...api.app.dailyPlan.newIds].sort());
   /* Au premier jour, seul l'hiragana est ouvert et son `newPerDay` vaut 10 : c'est
      un plafond par deck, pas un poids à redistribuer. Le budget de 30 expositions
-     autoriserait 15 nouveautés, mais aucun autre deck ne peut en fournir — une
+     autoriserait 15 nouveautés, mais aucun autre deck ne peut en fournir , une
      session sous le plafond est normale, c'est le réglage qui commande. */
   assert.equal(planned.length, 10);
   assert.equal(api.deck("hira").newPerDay, 10);
