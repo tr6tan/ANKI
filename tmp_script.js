@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260824-1409";
+const BUILD_VERSION = "20260824-1413";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -3101,6 +3101,50 @@ function Editor() {
  <div style="height:24px"></div></div>`;
 }
 
+/* Panneau d'essai audio. Il existe pour une raison précise : juger une diction
+   demande d'écouter la même chose deux fois, une fois enregistrée et une fois
+   synthétisée, et de le faire sur les paires qui posent réellement problème. Sans
+   ça il faut lancer une session et attendre que la bonne carte tombe. */
+const PAIRES_DIFFICILES = [
+  { titre: "Sonorisation", kana: ["か", "が"] },
+  { titre: "Sifflantes", kana: ["し", "ち", "じ"] },
+  { titre: "つ contre す", kana: ["つ", "す", "ず"] },
+  { titre: "は contre わ", kana: ["は", "わ"] },
+];
+function AudioTest() {
+  const source = (t) => (enregistrementPour(t) ? "enregistré" : "synthèse");
+  const pastille = (t) =>
+    `<button class="chip" data-essai="${esc(t)}" style="height:40px;min-width:44px;font-family:var(--f-jp);font-size:20px;color:var(--ink)">${esc(t)}</button>`;
+  return `<hr class="rule">
+ <span class="label">Essayer l'audio</span>
+ <p class="faint" style="font-size:12px;line-height:1.6;margin:6px 0 10px">Touchez un caractère pour l'entendre. Ces paires sont celles que l'oreille confond ; si vous les distinguez ici, la face d'écoute ne devrait plus vous piéger.</p>
+ ${PAIRES_DIFFICILES.map(
+   (p) => `<div style="margin-bottom:10px">
+   <div class="faint" style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">${p.titre}</div>
+   <div class="chips">${p.kana.map(pastille).join("")}</div>
+  </div>`,
+ ).join("")}
+ <div class="faint" style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin:14px 0 4px">Mot et phrase</div>
+ <div class="chips">${["むし", "にほん", "駅で友達を待っている。"].map(
+   (t) =>
+     `<button class="chip" data-essai="${esc(t)}" style="height:40px;font-family:var(--f-jp);font-size:15px;color:var(--ink)">${esc(t.length > 8 ? t.slice(0, 8) + "…" : t)}</button>`,
+ ).join("")}</div>
+ <div class="faint" style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin:14px 0 4px">Comparer sur し</div>
+ <div class="chips">
+  <button class="chip" data-essai="し" style="height:40px;color:var(--ink)">Enregistrement</button>
+  <button class="chip" data-essai-synthese="し" style="height:40px;color:var(--ink)">Synthèse du système</button>
+ </div>
+ <p class="faint" style="font-size:12px;line-height:1.6;margin:10px 0 0">${
+   app.audioTestNote
+     ? esc(app.audioTestNote)
+     : `Prêt. « し » est actuellement servi par : ${source("し")}.`
+ }</p>
+ ${
+   app.mute
+     ? `<p style="font-size:12px;line-height:1.6;margin:8px 0 0;color:var(--shu)">Le son est coupé pour les sessions, mais ces essais restent audibles.</p>`
+     : ""
+ }`;
+}
 function Settings() {
   const sw = (k, l, on) =>
     `<div class="sw"><span>${l}</span><button class="tg ${on ? "on" : ""}" data-tg="${k}"><i></i></button></div>`;
@@ -3150,6 +3194,7 @@ function Settings() {
      ? `<br><br><strong>Une voix haute qualité est gratuite chez Apple</strong>, sans compte, et elle change nettement la diction : la version compacte diphtongue les voyelles longues, ce qui s'entend surtout sur les kana isolés.<br><br>Sur iPhone : Réglages, Accessibilité, Contenu énoncé, Voix, Japonais, puis une voix marquée « Qualité supérieure ».<br><br>Sur Mac : Réglages Système, Accessibilité, Contenu énoncé, Voix du système, Gérer les voix, Japonais.<br><br>L'application la reprendra d'elle-même : la sélection pondère la qualité du modèle avant tout le reste.`
      : ""
  }</p>
+ ${AudioTest()}
  <p class="faint" style="font-size:13px;line-height:1.7;margin-top:16px">La progression, les réglages et l'historique sont conservés dans ce navigateur. Les noms Pokémon sont utilisés uniquement pour l'étude personnelle.</p>
  <hr class="rule">
  <button class="btn ghost" data-logout="" style="height:44px">Se déconnecter</button>
@@ -4102,6 +4147,26 @@ function bind() {
   );
   q("[data-speak]").forEach(
     (e) => (e.onclick = () => speak(e.dataset.speak, 0.75)),
+  );
+  /* Essais audio des réglages. Le mode muet est contourné : l'utilisateur vient
+     d'appuyer sur un bouton d'écoute, le couper serait une panne apparente. */
+  const essayer = (texte, forcerSynthese) => {
+    const muetAvant = app.mute;
+    app.mute = false;
+    const url = forcerSynthese ? null : enregistrementPour(texte);
+    if (url) jouerEnregistrement(url, () => syntheseVocale(texte));
+    else syntheseVocale(texte);
+    app.mute = muetAvant;
+    app.audioTestNote = `« ${texte} » joué par : ${
+      url ? "l'enregistrement" : "la synthèse du système"
+    }${forcerSynthese ? ", forcée pour comparaison" : ""}.`;
+    render();
+  };
+  q("[data-essai]").forEach(
+    (e) => (e.onclick = () => essayer(e.dataset.essai, false)),
+  );
+  q("[data-essai-synthese]").forEach(
+    (e) => (e.onclick = () => essayer(e.dataset.essaiSynthese, true)),
   );
   q("[data-tg]").forEach(
     (e) =>
