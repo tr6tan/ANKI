@@ -7,7 +7,7 @@ cas de désaccord avec `prototype.html`, ce document tranche également, le prot
 contenant des raccourcis assumés listés au §14.
 
 **Ce que le document décrit, et à quel titre.** Les §1 à §13 et le §16 décrivent le
-**comportement implémenté** à la version de build `20260824-1521`, vérifié contre le
+**comportement implémenté** à la version de build `20260824-1619`, vérifié contre le
 code. Les §6.2, §15 et §17 décrivent en revanche une **architecture visée** : les types
 y sont donnés en TypeScript et l'inventaire en modules, alors que l'implémentation est
 un unique fichier JavaScript de 4530 lignes. Cette divergence est assumée et non
@@ -706,9 +706,9 @@ la présentation puis la reprise du pas d'apprentissage : elle consomme donc deu
 Sans cette convention, une journée sans révision servait 30 nouveautés, soit 60 cartes à
 l'écran, pour un budget annoncé de 30.
 
-**La charge du jour est réglable** : 15, 30 ou 60 expositions. C'est le premier levier
-d'assiduité, et le moins gamifié qui existe. Un budget figé impose la même dose un jour
-chargé et un jour disponible, et une séance sautée coûte plus qu'une séance courte.
+**La charge du jour est FIXE**, 30 expositions. Un sélecteur court, normal, long a
+existé et a été retiré : une habitude tient sur la constance, et un choix quotidien est
+une décision de plus à prendre avant même d'avoir commencé. Même dose chaque jour.
 
 `newPerDay` est un **plafond par deck**, pas un poids. En version 1 la valeur était
 divisée par la somme de tous les decks : un deck réglé à 10 sur un total de 46 recevait
@@ -825,6 +825,16 @@ Autres règles :
   reconnaissance du nom. L'écart entre une voix compacte et une voix haute qualité
   s'entend surtout sur les mores isolées, où la compacte diphtongue les voyelles
   longues.
+- **Amorcer les deux canaux au premier geste.** iOS n'ouvre la barrière audio qu'une
+  fois, et seulement depuis la pile d'appel d'un geste. Or la face d'écoute déclenche
+  le son au RENDU de la carte : l'élément n'était jamais débloqué, et le repli partant
+  d'un minuteur se trouvait lui aussi hors geste, si bien que la synthèse échouait à
+  son tour et que l'énoncé restait muet là où il EST la question. On joue donc un
+  silence inaudible au premier geste de la page, sur l'élément audio comme sur la
+  synthèse.
+- **Passer la route à « session » AVANT la première carte.** `nextCard` ne rend et ne
+  prononce que s'il se sait en séance : appelé avant le changement de route, il laissait
+  la première carte de chaque séance sans audio.
 - **iOS Safari n'autorise le premier `speak()` que dans la pile d'appel du geste
   utilisateur.** Le différer, même d'un tick, le fait échouer en silence. Quand rien ne
   parle, appeler directement ; quand quelque chose parle, l'audio est débloqué et l'on
@@ -895,8 +905,9 @@ est arrivé.
 
 Les trois leviers admis, tous non gamifiés :
 
-- **Le choix de la charge du jour** (§10.2). Adapter la dose est ce qui évite la séance
-  sautée, et une séance sautée est le début de l'abandon.
+- **La constance.** Même charge chaque jour, sans réglage : l'habitude vient de ce que
+  rien ne change, et non d'un curseur à ajuster. Le choix de charge qui figurait ici a
+  été retiré pour cette raison.
 - **L'honnêteté des mécanismes.** Dire pourquoi il n'y a que 10 nouvelles cartes,
   pourquoi des révisions sont reportées, pourquoi l'apport est bridé. Un utilisateur qui
   comprend une limite l'accepte ; une limite muette ressemble à une panne.

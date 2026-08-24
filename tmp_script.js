@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260824-1521";
+const BUILD_VERSION = "20260824-1619";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -626,6 +626,41 @@ function enregistrementPour(text) {
 }
 /* Renvoie false si la lecture n'a pas pu même démarrer, pour que l'appelant
    replie immédiatement au lieu de rester silencieux. */
+/* Amorçage. iOS n'ouvre la barrière audio qu'une fois, et seulement depuis la pile
+   d'appel d'un geste utilisateur. Or la face d'écoute déclenche le son AU RENDU de la
+   carte, pas sur un tap : l'élément n'était donc jamais débloqué, et le repli partant
+   d'un minuteur se trouvait lui aussi hors geste, si bien que la synthèse échouait à
+   son tour. Résultat, silence complet là où l'énoncé EST la question.
+
+   On franchit donc les deux barrières, audio et synthèse, au premier geste de la
+   page, avec un silence inaudible. Tout ce qui suit fonctionne alors, geste ou pas. */
+const SILENCE_WAV =
+  "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=";
+let audioAmorce = false;
+function amorcerAudio() {
+  if (audioAmorce) return;
+  audioAmorce = true;
+  try {
+    if (!lecteurAudio) lecteurAudio = new Audio();
+    lecteurAudio.src = SILENCE_WAV;
+    const p = lecteurAudio.play();
+    if (p && typeof p.catch === "function") p.catch(() => {});
+  } catch (_) {
+    /* rien à signaler : l'amorçage est une tentative, pas une garantie */
+  }
+  try {
+    if (tts.ok) {
+      const u = new SpeechSynthesisUtterance(" ");
+      u.volume = 0;
+      speechSynthesis.speak(u);
+    }
+  } catch (_) {
+    /* idem */
+  }
+}
+for (const ev of ["pointerdown", "touchstart", "click", "keydown"])
+  document.addEventListener(ev, amorcerAudio, { once: true, capture: true });
+
 let audioSeq = 0;
 let minuteurAudio = null;
 function jouerEnregistrement(url, replier) {
@@ -1843,7 +1878,6 @@ function saveState() {
           detailed: app.detailed,
           kb: app.kb,
           sync: app.sync,
-          dailyLoad: app.dailyLoad || "normal",
           audioSource: app.audioSource || "enregistrement",
           dataUpdatedAt: app.dataUpdatedAt || 0,
           sessionUpdatedAt: app.sessionUpdatedAt || 0,
@@ -2410,19 +2444,11 @@ function allocateNewBudget(remaining) {
   }
   return alloc;
 }
-/* Charge quotidienne réglable : c'est le premier levier d'abandon. Un budget figé
-   force la même dose un jour chargé et un jour disponible ; laisser choisir vaut
-   mieux qu'une session sautée. Exprimé en expositions, donc en cartes à l'écran. */
+/* Charge quotidienne FIXE, exprimée en expositions, donc en cartes à l'écran.
+   Un sélecteur court, normal, long a existé : retiré à la demande, parce qu'une
+   habitude tient sur la constance, et qu'un choix quotidien est une décision de plus
+   à prendre avant même d'avoir commencé. Même dose chaque jour. */
 const DAILY_BUDGET = 30;
-const DAILY_LOADS = [
-  { id: "court", label: "Court", budget: 15 },
-  { id: "normal", label: "Normal", budget: 30 },
-  { id: "long", label: "Long", budget: 60 },
-];
-const dailyBudget = () => {
-  const chosen = DAILY_LOADS.find((l) => l.id === app.dailyLoad);
-  return chosen ? chosen.budget : DAILY_BUDGET;
-};
 /* Une carte neuve est vue deux fois le jour de son introduction : la présentation,
    puis la reprise du pas d'apprentissage. Le budget se compte en expositions, donc
    une nouveauté en consomme deux ; sans quoi une journée sans révision servait
@@ -2477,7 +2503,7 @@ function newCardFactor() {
 function ensureDailyPlan(dueCount) {
   const today = dayKey();
   if (app.dailyPlan?.day === today) return app.dailyPlan;
-  const room = Math.max(0, dailyBudget() - dueCount);
+  const room = Math.max(0, DAILY_BUDGET - dueCount);
   const full = Math.floor(room / EXPOSURES_PER_NEW_CARD);
   const factor = newCardFactor();
   const slots =
@@ -2511,7 +2537,7 @@ function queueFor(id) {
      que de reporter une carte tout juste échue. Le surplus reste dû et revient
      demain, sans pénalité : FSRS n'a pas de notion de retard. */
   due.sort((a, b) => a.due - b.due);
-  const budget = dailyBudget();
+  const budget = DAILY_BUDGET;
   const kept = due.slice(0, budget);
   app.deferredReviews = due.length - kept.length;
   const plan = ensureDailyPlan(kept.length);
@@ -2813,14 +2839,6 @@ function Home() {
   }
 
   ${
-    reprise
-      ? ""
-      : `<div class="chips" style="margin-top:20px;justify-content:center">${DAILY_LOADS.map(
-          (l) =>
-            `<button class="chip ${(app.dailyLoad || "normal") === l.id ? "on" : ""}" data-load="${l.id}">${l.label}</button>`,
-        ).join("")}</div>`
-  }
-  ${
     !reprise && loadNote(neuves, revisions)
       ? `<p class="faint" style="font-size:12px;line-height:1.6;margin:10px 0 0;text-align:center">${esc(loadNote(neuves, revisions))}</p>`
       : ""
@@ -2853,7 +2871,7 @@ function loadNote(newCount, reviewCount) {
   if (factor < 1)
     return `Nouveautés réduites : ${Math.round(acc * 100)} % de réussite sur sept jours, pour ${Math.round(THROTTLE_START * 100)} % attendus. Mieux vaut consolider que d'empiler.`;
   const slots = Math.floor(
-    Math.max(0, dailyBudget() - reviewCount) / EXPOSURES_PER_NEW_CARD,
+    Math.max(0, DAILY_BUDGET - reviewCount) / EXPOSURES_PER_NEW_CARD,
   );
   if (newCount >= slots) return "";
   let capped = 0,
@@ -3385,10 +3403,14 @@ function startSession(id) {
       startTime: null,
       feedback: null,
       fx: null,
-      exposureCap: Math.round(dailyBudget() * SESSION_OVERSHOOT),
+      exposureCap: Math.round(DAILY_BUDGET * SESSION_OVERSHOOT),
     };
+    /* La route AVANT nextCard : celui-ci ne rend et ne prononce l'énoncé que s'il
+       se sait déjà en session, si bien que la première carte d'une séance n'a
+       jamais reçu son audio. C'est ce qui rendait la face d'écoute muette, où
+       l'énoncé EST la question. */
+    app.route = "session";
     nextCard();
-    go("session");
     return;
   }
   /* Plus de verrou « une session par jour ». Il rendait muet le bouton
@@ -3416,10 +3438,10 @@ function startSession(id) {
     startTime: null,
     feedback: null,
     fx: null,
-    exposureCap: Math.round(dailyBudget() * SESSION_OVERSHOOT),
+    exposureCap: Math.round(DAILY_BUDGET * SESSION_OVERSHOOT),
   };
+  app.route = "session"; // voir la note ci-dessus sur l'ordre
   nextCard();
-  go("session");
 }
 function nextCard() {
   const s = app.sess;
@@ -4168,18 +4190,6 @@ function bind() {
           q: "",
           filter: "all",
         })),
-  );
-  q("[data-load]").forEach(
-    (e) =>
-      (e.onclick = () => {
-        app.dailyLoad = e.dataset.load;
-        /* Le plan du jour est mémorisé : changer la charge doit le recalculer,
-           sinon le réglage ne prendrait effet que demain. Jamais pendant une
-           session en cours, pour ne pas déplacer le sol sous les pieds. */
-        if (!app.sess && !app.pausedSession?.queue?.length) app.dailyPlan = null;
-        saveState();
-        render();
-      }),
   );
   const undo = view.querySelector("[data-undo]");
   if (undo)

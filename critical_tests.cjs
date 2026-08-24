@@ -829,6 +829,31 @@ test("l'aller-retour export puis import restitue l'état à l'identique", () => 
   assert.ok(api.app.deckUnlocks.kata, "un déblocage ne doit pas se perdre");
 });
 
+test("la première carte d'une séance prononce son énoncé", () => {
+  const api = loadApp();
+  api.app.auth = { uid: "test" };
+  /* startSession appelait nextCard AVANT de passer la route à « session », et
+     nextCard ne prononce que s'il se sait en session : la première carte restait
+     donc muette, ce qui vidait de son sens la face d'écoute, où l'énoncé EST la
+     question. */
+  const dit = [];
+  const it = api.ITEMS.find((x) => x.deck === "hira" && x.kana === "か");
+  const prod = api.productionId(it.id);
+  Object.assign(api.cards[it.id], { reps: 3, goodReps: 3, stab: 5 });
+  Object.assign(api.cards[prod], {
+    reps: 1,
+    goodReps: 1,
+    stab: 2,
+    due: Date.now() - 1000,
+  });
+  api.app.dailyPlan = { day: api.dayKey(), newIds: [], createdAt: Date.now() };
+
+  api.startSession(null);
+  assert.ok(api.app.sess, "la session doit démarrer");
+  assert.equal(api.app.route, "session", "la route doit précéder la première carte");
+  assert.equal(api.app.sess.face, "sound", "la face d'écoute est bien celle visée");
+});
+
 test("une session entièrement ratée se termine", () => {
   const api = loadApp();
   /* render() renvoie vers l'écran de connexion sans utilisateur, ce qui empêcherait
