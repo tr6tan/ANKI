@@ -125,7 +125,7 @@ function loadApp(opts = {}) {
   context.globalThis = context;
   vm.createContext(context);
   const source = fs.readFileSync("tmp_script.js", "utf8");
-  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
+  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, WORDCTX, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
   vm.runInContext(source + expose, context, { filename: "tmp_script.js" });
   return Object.assign(context.__appTest, { fsrsCalls });
 }
@@ -459,6 +459,28 @@ test("aucune lecture romaji ne laisse fuir de caractère japonais", () => {
   /* La table maison ne couvrait pas les sons étrangers du katakana : ファ ディ シェ
      フォ fuyaient tels quels, et onze cartes Pokémon affichaient « fuァiyaa ». */
   assert.deepEqual(Array.from(fuites), []);
+});
+
+test("les emprunts katakana ajoutés au contexte sont propres", () => {
+  /* Amélioration du 28/08/2026 (SPEC §14) : le deck Katakana ne contexte plus
+     ses caractères qu'avec des mots hiragana convertis mécaniquement (すし→スシ,
+     artificiel). WORDCTX contient désormais aussi de vrais emprunts japonais
+     (コーヒー, テレビ...). Ce test vérifie que ce corpus ajouté est bien formé :
+     romaji sans fuite de japonais, découpage en unités cohérent avec le mot. */
+  const api = loadApp();
+  const emprunts = api.WORDCTX.filter((w) => w.id.startsWith("kw"));
+  assert.ok(emprunts.length >= 30, "le corpus d'emprunts doit être substantiel");
+  for (const w of emprunts) {
+    assert.ok(
+      /^[\u30A0-\u30FFー]+$/.test(w.word),
+      `${w.word} doit être écrit entièrement en katakana`,
+    );
+    assert.ok(
+      !/[^\x00-\x7F]/.test(w.rom),
+      `la romanisation de ${w.word} (${w.rom}) ne doit laisser fuir aucun japonais`,
+    );
+    assert.ok(w.units.length > 0, `${w.word} doit produire au moins une unité kana`);
+  }
 });
 
 test("les sons étrangers du katakana se tapent en romaji naturel", () => {

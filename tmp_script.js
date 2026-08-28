@@ -1442,6 +1442,27 @@ KWORDS.split("|").forEach((s, n) => {
     rom: toRomaji(w),
   });
 });
+/* Vrais emprunts en katakana, distincts des mots hiragana ci-dessus (SPEC §14 : un
+   mot hiragana converti mécaniquement en katakana — すし rendu スシ — est artificiel
+   et n'entraîne jamais sur ー ni sur les sons composés propres aux emprunts. Ce
+   corpus est écrit nativement en katakana : kanaUnits() gère déjà ー/ッ et les
+   digrammes, donc aucune conversion n'est nécessaire pour l'alimenter. */
+const KATA_WORDS =
+  "コーヒー coffee|テレビ television|パン bread|バス bus|ノート notebook|ペン pen|カメラ camera|ホテル hotel|レストラン restaurant|タクシー taxi|メニュー menu|サラダ salad|ジュース juice|ケーキ cake|ピザ pizza|シャツ shirt|カード card|チケット ticket|ボール ball|ゲーム game|ニュース news|テスト test|コップ cup|ナイフ knife|フォーク fork|ドア door|テーブル table|ソファ sofa|ラジオ radio|カレンダー calendar|エレベーター elevator|スーパー supermarket|コンビニ convenience store|デパート department store|アパート apartment|パソコン computer|インターネット internet|メール email|カメラマン photographer|プレゼント present|パーティー party|クラス class|グループ group|チーム team|スポーツ sports|サッカー soccer|テニス tennis|バレエ ballet|ピアノ piano|ギター guitar|アイスクリーム ice cream|チョコレート chocolate|ハンバーガー hamburger|サンドイッチ sandwich|ジャム jam|バター butter|ミルク milk|ヨーグルト yogurt|チーズ cheese|ワイン wine|ビール beer|タオル towel|シャワー shower|トイレ toilet|エアコン air conditioner|カレー curry|スープ soup|サイズ size|カラー color|デザイン design|アイデア idea|イメージ image|システム system|データ data|レベル level|ページ page|ボタン button|マスク mask|ポケット pocket|ズボン trousers|コート coat|セーター sweater|スカート skirt|ジーンズ jeans|ハンカチ handkerchief|バッグ bag|ノック knock|サイン sign|チャンス chance|ストレス stress|エネルギー energy|イベント event|マナー manner|ルール rule|レポート report|ファイル file|プリンター printer|スクリーン screen|ボリューム volume|チャンネル channel";
+const KATAWORDCTX = [];
+KATA_WORDS.split("|").forEach((s, n) => {
+  const i = s.indexOf(" ");
+  const w = s.slice(0, i),
+    en = s.slice(i + 1);
+  KATAWORDCTX.push({
+    id: "kw" + n,
+    word: w,
+    en,
+    units: kanaUnits(w),
+    rom: toRomaji(w),
+  });
+});
+WORDCTX.push(...KATAWORDCTX);
 /* composés kanji : contextes des items kanji */
 const COMPCTX = [];
 COMP.split("|").forEach((s, n) => {
