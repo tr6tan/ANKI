@@ -379,23 +379,33 @@ signale sans échouer les items incomplets.
 
 ### 6.4 Inventaire livré
 
+Mesuré directement dans le code au 28/08/2026, pas recopié d'une version antérieure —
+les chiffres ci-dessous divergent de ceux mesurés le 24/08 : le corpus a été enrichi
+entre-temps (kanji N4-N1 introduits, composés et emprunts ajoutés), preuve qu'un
+inventaire chiffré se périme et doit se remesurer, pas se supposer stable.
+
 | Deck | kind | answer | grading | items | cartes | complets |
 |---|---|---|---|---|---|---|
 | Hiragana | glyph | romaji | typed | 104 | 208 | oui |
 | Katakana | glyph | romaji | typed | 104 | 208 | oui |
-| Kanji N5 | kanji | kana | self | 81 | 162 | 50 sur 81 |
+| Kanji N5 | kanji | kana | self | 81 | 162 | 81 sur 81 |
 | Phrases N5 | lex | kana | typed | 10 | 20 | oui, 30 phrases |
 | Pokémon 151 | name | kana | typed | 151 | 151 | oui |
-| Kanji N4 | kanji | kana | self | 182 | 364 | 68 sur 182 |
+| Kanji N4 | kanji | kana | self | 182 | 364 | 69 sur 182 |
 | Kanji N3 | kanji | kana | self | 292 | 584 | 17 sur 292 |
 | Kanji N2 | kanji | kana | self | 285 | 570 | 6 sur 285 |
 | Kanji N1 | kanji | kana | self | 225 | 450 | 0 sur 225 |
 
-Contextes disponibles : 106 mots en kana, 157 composés kanji, 30 phrases.
+Contextes disponibles : 206 mots en kana (dont ~95 emprunts katakana natifs, ajoutés le
+28/08/2026 pour ne plus contextualiser le katakana avec des mots hiragana convertis —
+voir §14), 186 composés kanji, 30 phrases.
 
-Le déséquilibre est le premier chantier de contenu, et il ne se règle pas par du code.
-Priorité : les 31 kanji N5 encore sans lecture, puis N4. Ajouter des kanji
-supplémentaires avant d'avoir complété les existants aggrave le problème.
+Le déséquilibre reste le premier chantier de contenu au-delà du N5, et il ne se règle
+pas par du code. Le N5 est désormais complet à 100 % (81/81 kanji avec au moins une
+lecture et un composé prononçable) ; le trou se concentre sur N4 (62 %), N3 (94 %), N2
+(98 %) et N1 (100 % incomplet), des niveaux encore verrouillés pour un apprenant qui
+débute. Priorité, une fois N4 débloqué : ses 113 kanji encore sans lecture, avant
+d'introduire du contenu N3.
 
 **La politique est une propriété du deck, jamais une règle globale codée en dur.**
 C'est ce qui permet aux decks kana d'accepter le romaji en réponse quand tous les
@@ -1030,11 +1040,13 @@ d'architecture.
   `@sglkc/kuromoji`, le `kuromoji.js` d'origine n'étant plus maintenu. Le dictionnaire
   pèse plusieurs mégaoctets : il se charge une fois et se met en cache, acceptable à
   l'import, jamais dans la boucle de révision.
-- **Les mots du deck katakana sont des mots hiragana convertis** (すし rendu スシ). C'est
-  artificiel, les vrais mots en katakana sont des emprunts. Cela marche pour driller le
-  glyphe, mais un deck katakana sérieux mérite sa propre liste d'emprunts ; les noms
-  propres jouent déjà ce rôle une fois débloqués. C'est aussi pourquoi le §9.1 compte :
-  une vraie liste d'emprunts est pleine de ファ et de ディ.
+- **Les mots du deck katakana étaient des mots hiragana convertis** (すし rendu スシ) —
+  corrigé le 28/08/2026 : `WORDCTX` inclut désormais ~95 vrais emprunts japonais écrits
+  nativement en katakana (コーヒー, テレビ, パソコン…), utilisés comme contexte des
+  caractères katakana au même titre que les mots hiragana pour les caractères hiragana.
+  Un deck katakana dédié (au-delà du simple glyphe) mérite encore sa propre liste
+  d'emprunts comme item à part entière, avec sa progression propre — ce n'est pas
+  encore le cas, seul le contexte de révision a été corrigé.
 - **Données Pokémon** dérivées d'un jeu issu de Bulbapedia. Les noms sont des marques de
   The Pokémon Company. Usage personnel, ne pas distribuer.
 - **Bypass d'authentification en développement.** Toléré, mais conditionné au nom d'hôte
