@@ -125,7 +125,7 @@ function loadApp(opts = {}) {
   context.globalThis = context;
   vm.createContext(context);
   const source = fs.readFileSync("tmp_script.js", "utf8");
-  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, WORDCTX, ensureLocalDataBelongsTo, emptyCard, saveState, Home, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
+  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, WORDCTX, ensureLocalDataBelongsTo, emptyCard, saveState, Home, Editor, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
   vm.runInContext(source + expose, context, { filename: "tmp_script.js" });
   return Object.assign(context.__appTest, { fsrsCalls });
 }
@@ -1057,4 +1057,25 @@ test("la durée estimée de session n'apparaît qu'avec un historique réel", ()
     /~\d+ min/.test(api.Home()),
     "avec un historique de temps de réponse, une estimation doit apparaître",
   );
+});
+
+test("la carte en veille précise quelle direction est bloquée", () => {
+  const api = loadApp();
+  const id = "h0";
+  const prod = api.productionId(id);
+  api.app.editing = id;
+
+  api.cards[id].suspended = true;
+  assert.match(api.Editor(), /Le sens lecture/, "lecture seule en veille");
+
+  delete api.cards[id].suspended;
+  api.cards[prod].suspended = true;
+  assert.match(api.Editor(), /Le sens écriture/, "écriture seule en veille");
+
+  api.cards[id].suspended = true;
+  assert.match(api.Editor(), /Les deux sens/, "les deux directions en veille");
+
+  delete api.cards[id].suspended;
+  delete api.cards[prod].suspended;
+  assert.ok(!api.Editor().includes("En veille"), "rien en veille : pas de bloc affiché");
 });

@@ -3350,11 +3350,20 @@ function Editor() {
      : ""
  }
  ${
-   cardIdsFor(i.id).some((id) => cards[id].suspended)
-     ? `<hr class="rule"><p class="label">En veille</p>
-  <p class="note">Cette carte a été ratée ${LEECH_TOTAL} fois et ne revient plus d'elle-même. Une carte qu'on échoue autant n'a pas un problème de planification : corrigez le verso, ou remettez-la en circulation.</p>
-  <button class="btn ghost" style="height:44px;margin-top:10px" data-reactiver="${esc(i.id)}">Remettre en circulation</button>`
-     : ""
+   (() => {
+     const p = productionId(i.id);
+     const recoDown = cards[i.id]?.suspended;
+     const prodDown = p && cards[p]?.suspended;
+     if (!recoDown && !prodDown) return "";
+     const cote = recoDown && prodDown
+       ? "Les deux sens (lecture et écriture)"
+       : recoDown
+         ? "Le sens lecture"
+         : "Le sens écriture";
+     return `<hr class="rule"><p class="label">En veille</p>
+ <p class="note">${esc(cote)} de cette carte a été raté ${LEECH_TOTAL} fois et ne revient plus de lui-même. Une carte qu'on échoue autant a souvent un problème d'énoncé plutôt qu'un problème de mémoire : corrigez le verso, ou remettez-la en circulation telle quelle.</p>
+ <button class="btn ghost" style="height:44px;margin-top:10px" data-reactiver="${esc(i.id)}">Remettre en circulation</button>`;
+   })()
  }
  <hr class="rule"><p class="label" style="margin-bottom:12px">Aperçu</p>
  <div style="border:1px solid var(--rule);border-radius:var(--radius);padding:16px">${prev}</div>
