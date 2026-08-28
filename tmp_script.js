@@ -3399,7 +3399,6 @@ function Settings() {
  ${sw("mute", "Couper le son", app.mute)}
  ${sw("theme", "Thème sombre", app.theme === "dark")}
  ${sw("detailed", "Évaluation détaillée", app.detailed)}
- ${sw("kb", "Simuler le clavier logiciel", app.kb)}
  <hr class="rule">
  ${sw("sync-enabled", "Synchronisation cloud", sync.enabled)}
  ${sw("sync-auto", "Envoi cloud automatique", sync.auto)}
@@ -3417,8 +3416,12 @@ function Settings() {
  <input id="import-file" type="file" accept="application/json,.json" style="display:none">
  <p class="faint" style="font-size:12px;line-height:1.6;margin:8px 0 0">L'import fusionne : pour chaque carte, la version la plus récemment modifiée est retenue. Rien n'est effacé.</p>
  ${app.importNote ? `<p style="font-size:13px;line-height:1.6;margin:8px 0 0;color:var(--seiji)">${esc(app.importNote)}</p>` : ""}
- <p class="faint" style="font-size:12px;line-height:1.6;margin-top:10px">Dernière synchronisation : ${esc(syncStamp)}${sync.lastDirection ? ` · ${esc(sync.lastDirection)}` : ""}${sync.lastError ? ` · erreur : ${esc(sync.lastError)}` : ""}</p>
- <p class="faint" style="font-size:12px;line-height:1.6">Compte Google : ${esc(app.auth?.email || "")}</p>
+ ${sync.lastError ? `<p class="faint" style="font-size:12px;line-height:1.6;margin-top:10px;color:var(--shu)">Erreur de synchronisation : ${esc(sync.lastError)}</p>` : ""}
+ <details style="margin-top:10px"${app.settingsDetailsOpen ? " open" : ""}>
+  <summary class="faint" style="font-size:12px;cursor:pointer">Détails techniques</summary>
+  <p class="faint" style="font-size:12px;line-height:1.6;margin-top:6px">Dernière synchronisation : ${esc(syncStamp)}${sync.lastDirection ? ` · ${esc(sync.lastDirection)}` : ""}</p>
+  <p class="faint" style="font-size:12px;line-height:1.6">Compte Google : ${esc(app.auth?.email || "")}</p>
+ </details>
  <hr class="rule">
  <span class="label">Audio</span>
  <div class="chips" style="margin:8px 0 10px">
@@ -4379,6 +4382,16 @@ function bind() {
   q("[data-essai-synthese]").forEach(
     (e) => (e.onclick = () => essayer(e.dataset.essaiSynthese, true)),
   );
+  /* Un <details> natif garde son état d'ouverture dans le DOM, mais render()
+     reconstruit tout le HTML dès qu'un événement asynchrone survient ailleurs
+     (voix TTS chargées, manifeste audio arrivé) : sans ce suivi, le clic
+     rouvrait puis se refermait aussitôt à la moindre coïncidence de timing. */
+  const settingsDetails = view.querySelector("details");
+  if (settingsDetails) {
+    settingsDetails.addEventListener("toggle", () => {
+      app.settingsDetailsOpen = settingsDetails.open;
+    });
+  }
   q("[data-tg]").forEach(
     (e) =>
       (e.onclick = () => {
