@@ -1,2 +1,9 @@
 # cache local de déploiement Firebase, régénéré à chaque deploy
 .firebase/
+
+# La PWA Next.js (tr6tan/anki-pwa) est un projet séparé, avec son propre
+# dépôt git — jamais suivi ici pour que ce repo reste uniquement le
+# prototype déployé sur Firebase (flashcard-1d3b9.web.app).
+pwa/
+node_modules/
+.playwright-mcp/
