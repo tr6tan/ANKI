@@ -1748,8 +1748,29 @@ function syncPokemonUnlocks() {
   }
   return changed;
 }
-function levelRowsHtml() {
-  return LEVELS.map((l) => {
+/* N4 à N1 restent verrouillés pendant des mois d'usage réel (déblocage à 90 % de
+   consolidation du niveau précédent) : les afficher en entier, un par un, à
+   chaque visite de Collection, c'est beaucoup d'espace pour une information
+   qu'on ne peut pas encore utiliser. On les regroupe dans un <details> replié,
+   avec un résumé qui dit où on en est sans qu'il faille l'ouvrir — natif HTML,
+   pas de nouvel état JS à synchroniser, l'ouverture reste au clavier comme à la
+   souris. Reste ouvert de lui-même dès qu'au moins un de ces niveaux est
+   accessible : ce n'est plus un horizon lointain, ça mérite la visibilité. */
+function beyondN5Html() {
+  const beyond = LEVELS.filter((l) => l.id !== "n5");
+  const anyOpen = beyond.some((l) => levelUnlockInfo(l.id).open);
+  const items = beyond.flatMap((l) => decksForLevel(l.id).flatMap((dk) => allDeckItems(dk.id)));
+  const masteredBeyond = items.filter((i) => known(i.id)).length;
+  return `<details class="level-card" ${anyOpen ? "open" : ""} style="padding:0">
+  <summary style="cursor:pointer;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <span class="level-sub"><strong>N4 → N1</strong> · ${masteredBeyond}/${items.length} maîtrisées${anyOpen ? "" : " · verrouillés"}</span>
+    <span class="deck-chevron" style="font-size:16px">▾</span>
+  </summary>
+  <div style="padding:0 16px 14px">${levelRowsHtml(beyond)}</div>
+  </details>`;
+}
+function levelRowsHtml(levels) {
+  return levels.map((l) => {
     const info = levelUnlockInfo(l.id);
     const decks = decksForLevel(l.id);
     const levelItems = decks.flatMap((dk) => allDeckItems(dk.id));
@@ -1782,8 +1803,21 @@ function levelRowsHtml() {
         const missingHtml = dkInfo.missing?.length
           ? `<div class="atoms">${dkInfo.missing.map((g) => `<span class="new">${esc(g)}</span>`).join("")}${dkInfo.missing.length >= 12 ? `<span class="new" style="border:none;color:var(--ink-faint)">…</span>` : ""}</div>`
           : "";
+        /* Bouton de révision directe : jusqu'ici, réviser un deck précis depuis
+           Collection exigeait de cliquer la ligne, atterrir sur le détail, puis
+           cliquer un second bouton « Étudier · N » — deux écrans pour lancer une
+           session ciblée. queueFor(dk.id) est la même fonction que le détail du
+           deck utilise pour afficher son propre compteur, donc le nombre annoncé
+           ici reste exact. stopPropagation empêche le clic sur le bouton de
+           déclencher aussi la navigation portée par la ligne parente. */
+        const dueCount = dkInfo.open ? queueFor(dk.id).length : 0;
+        const reviewBtn =
+          dueCount > 0
+            ? `<button class="chip" data-quick-start="${esc(dk.id)}" style="height:32px;flex:none">Réviser · ${dueCount}</button>`
+            : "";
         return `<div class="deck-link ${dkInfo.open ? "open" : "locked"}" data-deck="${dk.id}">
       <span class="deck-progress-main"><strong>${esc(dk.name)}</strong><small>${dkInfo.open ? `${mastered}/${deckItems.length} maîtrisées · ${learning} en cours · ${due} à réviser` : `Verrouillé · ${esc(dkInfo.need || "Terminez l'étape précédente")}`}</small>${missingHtml}</span>
+       ${reviewBtn}
        <span class="deck-chevron">›</span>
       </div>`;
       })
@@ -3005,7 +3039,8 @@ function Collection() {
   <p>Une carte est maîtrisée après ${MASTERY_REPS} réussites espacées, quand son intervalle dépasse ${MASTERY_STABILITY} jours. Un caractère devient lisible bien avant : c'est ce qui débloque la suite.</p>
   </div>
   <div class="label" style="margin:12px 0 10px">Collections JLPT</div>
-  ${levelRowsHtml()}
+  ${levelRowsHtml(LEVELS.filter((l) => l.id === "n5"))}
+  ${beyondN5Html()}
   <div class="label" style="margin:22px 0 10px">Pokémon collection</div>
   <div class="level-card ${pkmn.open ? "open" : "locked"}" data-deck="pkmn">
    <div class="level-row">
@@ -4265,6 +4300,13 @@ function bind() {
           q: "",
           filter: "all",
         })),
+  );
+  q("[data-quick-start]").forEach(
+    (e) =>
+      (e.onclick = (ev) => {
+        ev.stopPropagation();
+        startSession(e.dataset.quickStart);
+      }),
   );
   const undo = view.querySelector("[data-undo]");
   if (undo)

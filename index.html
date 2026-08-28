@@ -318,6 +318,18 @@
       .level-card.locked {
         opacity: 0.92;
       }
+      /* N4 → N1 se replient dans un <details> natif (Collection) : retirer le
+         triangle du navigateur, on dessine le chevron nous-mêmes pour rester
+         cohérent avec .deck-chevron ailleurs sur la page. */
+      details.level-card summary {
+        list-style: none;
+      }
+      details.level-card summary::-webkit-details-marker {
+        display: none;
+      }
+      details.level-card[open] summary .deck-chevron {
+        transform: rotate(180deg);
+      }
       .level-decks {
         margin-top: 12px;
         padding-left: 12px;
@@ -358,6 +370,7 @@
         flex: none;
         color: var(--ink-faint);
         font-size: 24px;
+        transition: transform var(--dur) var(--ease);
       }
       .collection-progress {
         width: 100%;
