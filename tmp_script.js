@@ -2929,6 +2929,12 @@ function Home() {
   <span class="mono faint" style="position:absolute;top:10px;right:0;font-size:11px;letter-spacing:.04em">v${BUILD_VERSION}</span>
   <p class="label" style="margin-top:24px">${esc(jour)}</p>
 
+  ${
+    !aVenir.circulating
+      ? `<p class="faint" style="font-size:13px;line-height:1.7;margin:16px 0 0;text-align:center">Chaque carte revient un peu plus tard à chaque bonne réponse, et plus vite après une erreur. Rien à régler : le rythme s'ajuste tout seul à mesure que vous répondez.</p>`
+      : ""
+  }
+
   <div style="display:flex;justify-content:center;margin:44px 0 14px">
    <div class="sq" style="width:146px"><span class="mono" style="font-size:60px">${reprise ? restantes : expositions}</span></div>
   </div>

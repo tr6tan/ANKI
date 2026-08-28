@@ -125,7 +125,7 @@ function loadApp(opts = {}) {
   context.globalThis = context;
   vm.createContext(context);
   const source = fs.readFileSync("tmp_script.js", "utf8");
-  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, WORDCTX, ensureLocalDataBelongsTo, emptyCard, saveState, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
+  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, WORDCTX, ensureLocalDataBelongsTo, emptyCard, saveState, Home, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
   vm.runInContext(source + expose, context, { filename: "tmp_script.js" });
   return Object.assign(context.__appTest, { fsrsCalls });
 }
@@ -1024,4 +1024,17 @@ test("aucun vestige de la couche de score ni du sélecteur de charge", () => {
   assert.equal(api.DAILY_BUDGET, 30, "la charge du jour est fixe");
   api.startSession();
   assert.equal("fx" in api.app.sess, false, "la session ne porte plus d'effet de score");
+});
+
+test("le texte d'accueil pour les nouveaux ne s'affiche qu'avant la toute première réponse", () => {
+  const api = loadApp();
+  assert.ok(
+    api.Home().includes("Chaque carte revient un peu plus tard"),
+    "un compte vierge doit voir l'explication",
+  );
+  api.cards["h0"].reps = 1;
+  assert.ok(
+    !api.Home().includes("Chaque carte revient un peu plus tard"),
+    "dès la première réponse, l'explication ne doit plus jamais revenir",
+  );
 });
