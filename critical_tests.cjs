@@ -125,7 +125,7 @@ function loadApp(opts = {}) {
   context.globalThis = context;
   vm.createContext(context);
   const source = fs.readFileSync("tmp_script.js", "utf8");
-  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, WORDCTX, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
+  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, WORDCTX, ensureLocalDataBelongsTo, emptyCard, saveState, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
   vm.runInContext(source + expose, context, { filename: "tmp_script.js" });
   return Object.assign(context.__appTest, { fsrsCalls });
 }
@@ -459,6 +459,40 @@ test("aucune lecture romaji ne laisse fuir de caractère japonais", () => {
   /* La table maison ne couvrait pas les sons étrangers du katakana : ファ ディ シェ
      フォ fuyaient tels quels, et onze cartes Pokémon affichaient « fuァiyaa ». */
   assert.deepEqual(Array.from(fuites), []);
+});
+
+test("changer de compte sur le même appareil vide les données locales", () => {
+  /* Faille corrigée le 28/08/2026 : STORAGE_KEY n'est pas scopée par uid. Sur un
+     appareil partagé, se connecter avec un second compte gardait en mémoire toutes
+     les cartes/progression du premier tant qu'un pull cloud n'avait pas écrasé les
+     valeurs — et la fusion latest-wins pouvait alors renvoyer les progrès du
+     premier compte vers le cloud du second. ensureLocalDataBelongsTo() doit tout
+     remettre à vide dès qu'un uid différent du dernier connu se présente. */
+  const api = loadApp();
+  const someId = api.ITEMS[0].id;
+  Object.assign(api.cards[someId], { reps: 5, goodReps: 5, stab: 10, modifiedAt: Date.now() });
+  api.app.dailyStats = { "2026-08-28": { attempts: 10, good: 8, wrong: 2, skip: 0 } };
+  api.app.pokemonUnlocks = { p1: { shiny: false } };
+  api.app.lastUid = "user-a";
+
+  // Le même compte se reconnecte : rien ne doit être perdu.
+  api.ensureLocalDataBelongsTo("user-a");
+  assert.equal(api.cards[someId].reps, 5, "même compte : les données restent");
+
+  // Un second compte se connecte sur cet appareil : tout doit repartir à vide.
+  api.ensureLocalDataBelongsTo("user-b");
+  assert.equal(api.cards[someId].reps, 0, "changement de compte : la carte redevient vierge");
+  assert.equal(api.cards[someId].stab, 0);
+  assert.equal(
+    Object.keys(api.app.dailyStats || {}).length,
+    0,
+    "le journal du premier compte ne doit pas fuiter",
+  );
+  assert.equal(
+    Object.keys(api.app.pokemonUnlocks || {}).length,
+    0,
+    "les déblocages du premier compte ne doivent pas fuiter",
+  );
 });
 
 test("les emprunts katakana ajoutés au contexte sont propres", () => {

@@ -1879,6 +1879,7 @@ function loadState() {
       app.itemEdits = stored.itemEdits;
       appliquerSurcharges();
     }
+    app.lastUid = stored?.lastUid || null;
     if (stored?.decks) {
       for (const dk of stored.decks) {
         const target = DECKS.find((d) => d.id === dk.id);
@@ -1940,6 +1941,7 @@ function saveState() {
         sessSeen:
           app.pausedSession?.seen ?? (app.sess ? app.sess.seen : undefined),
         sessOk: app.pausedSession?.ok ?? (app.sess ? app.sess.ok : undefined),
+        lastUid: app.auth?.uid || app.lastUid || null,
       }),
     );
   } catch (e) {
@@ -2183,6 +2185,26 @@ ITEMS.forEach((i) => {
   const p = productionId(i.id);
   if (p) cards[p] = emptyCard(p);
 });
+/* Isolation multi-compte. `localStorage` n'est pas scopé par utilisateur (une seule
+   clé STORAGE_KEY) : sur un appareil partagé, se connecter avec un second compte
+   Google chargeait encore les cartes/progression du premier tant qu'un pull cloud
+   n'avait pas écrasé les valeurs les plus récentes — et la fusion latest-wins
+   d'applyPayload() pouvait alors renvoyer les progrès du premier compte vers le
+   cloud du second si ses horodatages étaient plus récents. Corrigé le 28/08/2026 :
+   avant tout pull, si l'uid connecté diffère du dernier uid connu localement, on
+   repart d'un état vierge — jamais d'un mélange entre deux comptes. */
+function ensureLocalDataBelongsTo(uid) {
+  if (!uid || !app.lastUid || app.lastUid === uid) return;
+  for (const id in cards) Object.assign(cards[id], emptyCard(id));
+  app.dailyStats = {};
+  app.pokemonUnlocks = {};
+  app.deckUnlocks = {};
+  app.itemEdits = {};
+  app.reviewLog = [];
+  app.dailyPlan = null;
+  app.pausedSession = null;
+  app.dataUpdatedAt = 0;
+}
 const deckCards = (deckId) =>
   allDeckItems(deckId).flatMap((i) => cardIdsFor(i.id).map((id) => cards[id]));
 function stateOf(c) {
@@ -4846,11 +4868,13 @@ async function initializeApp() {
           photoURL: user.photoURL || "",
         }
       : null;
+    if (user) ensureLocalDataBelongsTo(user.uid);
     app.loginError = "";
     app.route = user ? (app.route === "login" ? "home" : app.route) : "login";
     render();
     if (user && syncReady()) await runSync("pull");
     else syncHydrated = true;
+    if (user) saveState();
   });
 }
 initializeApp().catch((e) => {
