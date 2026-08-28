@@ -2529,17 +2529,32 @@ function queueFor(id) {
         // une carte en veille ne revient pas d'elle-même : voir LEECH_TOTAL
         if (c && !c.suspended && c.due !== null && c.due <= now) due.push(c);
       }
-  if (id) return burySiblings(shuffle([...due, ...newFor(deck(id))]));
   /* Les révisions dues n'étaient bornées par rien : seules les nouveautés
      l'étaient. Après une semaine d'absence, « Normal · 30 » servait donc deux
      cents cartes. On plafonne, en commençant par les PLUS EN RETARD ; ce sont
      celles dont la rétention se dégrade le plus, et les reporter coûte davantage
      que de reporter une carte tout juste échue. Le surplus reste dû et revient
-     demain, sans pénalité : FSRS n'a pas de notion de retard. */
+     demain, sans pénalité : FSRS n'a pas de notion de retard.
+
+     Corrigé le 28/08/2026 : cette règle ne s'appliquait qu'à la session globale
+     (queueFor() sans deck). Étudier un deck précis depuis sa page (queueFor(id))
+     contournait entièrement le plafond et le bridage adaptatif — un deck en
+     retard de plusieurs jours servait toutes ses cartes dues d'un coup (mesuré :
+     jusqu'à 67 cartes en une session, sans coupure). Le même plafond s'applique
+     désormais aux deux chemins. */
   due.sort((a, b) => a.due - b.due);
   const budget = DAILY_BUDGET;
   const kept = due.slice(0, budget);
   app.deferredReviews = due.length - kept.length;
+  if (id) {
+    const factor = newCardFactor();
+    const room = Math.max(0, budget - kept.length);
+    const dk = deck(id);
+    const cap = Math.min(dk.newPerDay, room);
+    const slots =
+      factor < 1 && cap > 0 ? Math.max(THROTTLE_MIN_NEW, Math.floor(cap * factor)) : cap;
+    return burySiblings(shuffle([...kept, ...newFor(dk, Math.max(0, slots))]));
+  }
   const plan = ensureDailyPlan(kept.length);
   const existing = new Set(kept.map((c) => c.id));
   const out = kept.slice();

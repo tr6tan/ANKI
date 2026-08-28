@@ -696,6 +696,29 @@ test("les révisions les plus en retard passent en premier", () => {
   assert.ok(!kept.has(ids[99]), "la moins en retard doit être reportée");
 });
 
+test("étudier un deck précis reste aussi plafonné par la charge du jour", () => {
+  /* Bug corrigé le 28/08/2026 : queueFor(id) — le chemin emprunté en étudiant un
+     deck depuis sa propre page — servait toutes ses cartes échues d'un coup, sans
+     jamais passer par le plafond DAILY_BUDGET ni par ensureDailyPlan. Mesuré en
+     usage réel : un deck en retard de plusieurs jours produisait jusqu'à 67 cartes
+     en une seule session, très au-delà du plafond dur de 1,5x annoncé par le §10.3.
+     Ce test verrouille que les deux chemins (session globale et session ciblée sur
+     un deck) respectent la même charge quotidienne. */
+  const api = loadApp();
+  const ids = api.ITEMS.filter((i) => i.deck === "hira")
+    .slice(0, 100)
+    .map((i) => i.id);
+  for (const id of ids) {
+    Object.assign(api.cards[id], { reps: 3, goodReps: 3, stab: 5 });
+    api.cards[id].due = Date.now() - 86400000;
+  }
+  const q = api.queueFor("hira");
+  assert.ok(
+    q.length <= 30,
+    `étudier un deck précis doit rester sous la charge du jour, obtenu ${q.length}`,
+  );
+});
+
 test("une précision effondrée bride les nouveautés sans jamais les tarir", () => {
   const api = loadApp();
   const today = api.dayKey();
