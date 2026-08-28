@@ -1586,7 +1586,18 @@ function deckUnlockInfo(dk) {
   const kanjiSolid = solidCount("kanji");
   const kanaReady =
     hiraSolid >= KANJI_NEEDS_HIRA_SOLID && kataLearned >= KANJI_NEEDS_KATA;
-  const gate = (id, rawOpen, label, need) => {
+  /* Le seuil de déblocage est un COMPTE ("90/104 lisibles"), pas une liste figée :
+     n'importe quels 90 suffisent. Pour autant, savoir LESQUELS manquent est
+     l'information qui aide vraiment à progresser — Collection l'affichait pour
+     Pokémon (atomsOf un mot précis) mais pas ici, alors que c'est la même
+     mécanique de déblocage. On liste les items pas encore appris, triés pour
+     rester lisibles même sur les grands decks. */
+  const missingGlyphs = (deckId, pred, cap) =>
+    allDeckItems(deckId)
+      .filter((i) => !pred(i.id))
+      .slice(0, cap)
+      .map((i) => i.glyph);
+  const gate = (id, rawOpen, label, need, missing) => {
     if (rawOpen) markDeckUnlocked(id);
     const open = rawOpen || deckUnlocked(id);
     return {
@@ -1595,6 +1606,7 @@ function deckUnlockInfo(dk) {
       limit: open ? totalCount(id) : 0,
       label,
       need,
+      missing: open ? [] : missing || [],
     };
   };
   if (dk.id === "hira")
@@ -1610,6 +1622,7 @@ function deckUnlockInfo(dk) {
       hiraLearned >= KATA_NEEDS_HIRA,
       "Katakana",
       `${Math.min(hiraLearned, KATA_NEEDS_HIRA)}/${KATA_NEEDS_HIRA} hiragana lisibles`,
+      missingGlyphs("hira", learned, 12),
     );
   if (dk.id === "kanji")
     return gate(
@@ -1617,6 +1630,9 @@ function deckUnlockInfo(dk) {
       kanaReady,
       "Kanji N5",
       `${Math.min(hiraSolid, KANJI_NEEDS_HIRA_SOLID)}/${KANJI_NEEDS_HIRA_SOLID} hiragana consolidés · ${Math.min(kataLearned, KANJI_NEEDS_KATA)}/${KANJI_NEEDS_KATA} katakana lisibles`,
+      hiraSolid < KANJI_NEEDS_HIRA_SOLID
+        ? missingGlyphs("hira", solid, 12)
+        : missingGlyphs("kata", learned, 12),
     );
   if (dk.id === "vocab")
     return gate(
@@ -1738,8 +1754,15 @@ function levelRowsHtml() {
         const due = cs.filter(
           (c) => c.due !== null && c.due <= Date.now(),
         ).length;
+        /* Le compte seul ("80/90 lisibles") ne dit pas QUOI réviser en priorité.
+           On affiche les premiers caractères encore manquants, dans le même style
+           que les atomes de prérequis déjà utilisés pour Pokémon — la mécanique de
+           déblocage est identique, l'affichage doit l'être aussi. */
+        const missingHtml = dkInfo.missing?.length
+          ? `<div class="atoms">${dkInfo.missing.map((g) => `<span class="new">${esc(g)}</span>`).join("")}${dkInfo.missing.length >= 12 ? `<span class="new" style="border:none;color:var(--ink-faint)">…</span>` : ""}</div>`
+          : "";
         return `<div class="deck-link ${dkInfo.open ? "open" : "locked"}" data-deck="${dk.id}">
-      <span class="deck-progress-main"><strong>${esc(dk.name)}</strong><small>${dkInfo.open ? `${mastered}/${deckItems.length} maîtrisées · ${learning} en cours · ${due} à réviser` : `Verrouillé · ${esc(dkInfo.need || "Terminez l'étape précédente")}`}</small></span>
+      <span class="deck-progress-main"><strong>${esc(dk.name)}</strong><small>${dkInfo.open ? `${mastered}/${deckItems.length} maîtrisées · ${learning} en cours · ${due} à réviser` : `Verrouillé · ${esc(dkInfo.need || "Terminez l'étape précédente")}`}</small>${missingHtml}</span>
        <span class="deck-chevron">›</span>
       </div>`;
       })

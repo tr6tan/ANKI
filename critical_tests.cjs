@@ -411,6 +411,27 @@ test("le katakana s'ouvre sur des hiragana lisibles, pas maîtrisés", () => {
   assert.equal(api.deckUnlockInfo(kata).open, true);
 });
 
+test("la porte verrouillée liste les caractères qui manquent encore", () => {
+  /* Amélioration du 28/08/2026 : le compte seul ("80/90 lisibles") ne dit pas
+     lesquels réviser. deckUnlockInfo() expose désormais `missing`, la liste des
+     glyphes pas encore appris — vide une fois la porte ouverte. */
+  const api = loadApp();
+  const kata = api.deck("kata");
+  const before = api.deckUnlockInfo(kata);
+  assert.equal(before.open, false);
+  assert.ok(before.missing.length > 0, "des hiragana manquants doivent être listés");
+  assert.ok(
+    before.missing.every((g) => typeof g === "string" && g.length > 0),
+    "chaque entrée doit être un glyphe affichable",
+  );
+
+  const hira = api.ITEMS.filter((i) => i.deck === "hira").slice(0, 90);
+  for (const i of hira) reviewSpaced(api, api.cards[i.id], 2);
+  const after = api.deckUnlockInfo(kata);
+  assert.equal(after.open, true);
+  assert.equal(after.missing.length, 0, "une porte ouverte n'a plus rien à lister");
+});
+
 test("une porte franchie ne se referme pas après une rechute", () => {
   const api = loadApp();
   const hira = api.ITEMS.filter((i) => i.deck === "hira").slice(0, 90);
