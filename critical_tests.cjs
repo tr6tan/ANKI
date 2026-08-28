@@ -1038,3 +1038,23 @@ test("le texte d'accueil pour les nouveaux ne s'affiche qu'avant la toute premi�
     "dès la première réponse, l'explication ne doit plus jamais revenir",
   );
 });
+
+test("la durée estimée de session n'apparaît qu'avec un historique réel", () => {
+  const api = loadApp();
+  assert.ok(
+    !/~\d+ min/.test(api.Home()),
+    "sans aucune réponse enregistrée, aucun chiffre deviné ne doit s'afficher",
+  );
+  let n = 0;
+  for (const id in api.cards) {
+    if (id.startsWith("h") && n < 20) {
+      api.cards[id].responseCount = 5;
+      api.cards[id].responseAvg = 8000;
+      n++;
+    }
+  }
+  assert.ok(
+    /~\d+ min/.test(api.Home()),
+    "avec un historique de temps de réponse, une estimation doit apparaître",
+  );
+});

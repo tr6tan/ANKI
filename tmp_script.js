@@ -2903,6 +2903,26 @@ function Login() {
     </div>
   </div>`;
 }
+/* Durée estimée d'une session : moyenne du temps de réponse réellement observé
+   sur les cartes déjà vues (c.responseAvg, en ms), pondérée par leur nombre de
+   réponses. Sans historique, aucune estimation n'est affichée : un chiffre
+   deviné de mémoire serait une fausse information, pas une aide. */
+function estimatedMinutes(expositions) {
+  if (!expositions) return null;
+  let totalMs = 0,
+    totalCount = 0;
+  for (const id in cards) {
+    const c = cards[id];
+    if (c.responseCount > 0) {
+      totalMs += c.responseAvg * c.responseCount;
+      totalCount += c.responseCount;
+    }
+  }
+  if (!totalCount) return null;
+  const avgMs = totalMs / totalCount;
+  const minutes = Math.round((avgMs * expositions) / 60000);
+  return minutes < 1 ? "moins d'une minute" : `~${minutes} min`;
+}
 function Home() {
   normalizeDailyState();
   const reprise = !!app.pausedSession?.queue?.length;
@@ -2941,7 +2961,7 @@ function Home() {
   <p class="muted" style="text-align:center;font-size:14px;margin:0 0 4px">${reprise ? "cartes restantes" : "cartes à voir"}</p>
   ${
     restantes && !reprise
-      ? `<p class="faint" style="text-align:center;font-size:12px;margin:0 0 28px">${neuves} nouvelle${neuves > 1 ? "s" : ""}${revisions ? ` · ${revisions} révision${revisions > 1 ? "s" : ""}` : ""}</p>`
+      ? `<p class="faint" style="text-align:center;font-size:12px;margin:0 0 28px">${neuves} nouvelle${neuves > 1 ? "s" : ""}${revisions ? ` · ${revisions} révision${revisions > 1 ? "s" : ""}` : ""}${(() => { const est = estimatedMinutes(expositions); return est ? ` · ${est}` : ""; })()}</p>`
       : `<div style="height:24px"></div>`
   }
 
