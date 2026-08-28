@@ -1112,6 +1112,39 @@
         border-color: var(--seiji);
         color: var(--seiji);
       }
+      /* Avancement par item (liste des cartes d'un deck). Remplace le texte
+         "lire 2/5 · ecrire 1/5" par des petits carres, un par reussite
+         attendue (MASTERY_REPS = 5). Un jeu par direction quand l'item a une
+         face de production distincte, sinon un seul jeu. */
+      .item-progress {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 3px;
+      }
+      .item-progress .dirs {
+        display: flex;
+        gap: 3px;
+      }
+      .item-progress .dir-label {
+        font-size: 10px;
+        color: var(--ink-faint);
+        width: 10px;
+      }
+      .item-progress .cells {
+        display: flex;
+        gap: 2px;
+      }
+      .item-progress .cells span {
+        width: 9px;
+        height: 9px;
+        border: 1px solid var(--rule);
+        border-radius: 1px;
+      }
+      .item-progress .cells span.filled {
+        border-color: var(--seiji);
+        background: var(--seiji);
+      }
       .grade {
         display: flex;
         gap: 10px;

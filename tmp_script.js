@@ -3139,14 +3139,22 @@ function DeckCards(dk) {
                voir qu'un caractère se lit sans qu'on sache l'écrire. */
             const enVeille = cardIdsFor(i.id).some((id) => cards[id].suspended);
             const entamee = cardIdsFor(i.id).some((id) => cards[id].reps > 0);
+            const cells = (n) =>
+              `<span class="cells">${Array.from(
+                { length: MASTERY_REPS },
+                (_, k) =>
+                  `<span class="${k < n ? "filled" : ""}"></span>`,
+              ).join("")}</span>`;
             const status = enVeille
               ? "en veille"
               : known(i.id)
                 ? "maîtrisée"
                 : entamee
-                  ? prod
-                    ? `lire ${cards[i.id].goodReps || 0}/${MASTERY_REPS} · écrire ${cards[prod].goodReps || 0}/${MASTERY_REPS}`
-                    : `${c.goodReps || 0}/${MASTERY_REPS} réussites`
+                  ? `<span class="item-progress">${
+                      prod
+                        ? `<span class="dirs"><span class="dir-label">L</span>${cells(cards[i.id].goodReps || 0)}</span><span class="dirs"><span class="dir-label">É</span>${cells(cards[prod].goodReps || 0)}</span>`
+                        : cells(c.goodReps || 0)
+                    }</span>`
                   : "pas commencée";
             /* échéance la plus proche des deux directions */
             const nextDue = cardIdsFor(i.id)
