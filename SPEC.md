@@ -25,6 +25,40 @@ toujours été en français, et personne n'a arbitré pendant neuf mois : la ré
 gagne. Seul le japonais échappe à cette règle, et les gloses de contexte restent en
 anglais parce qu'elles proviennent des données sources.
 
+## Comment lire ce document, et comment le faire évoluer
+
+Ce document a deux natures différentes, et les confondre le rend soit dangereux soit
+paralysant.
+
+**Deux niveaux.**
+
+1. **Garde-fous.** Ce qui protège contre un bug silencieux, une fausse information
+   affichée comme un fait, ou une triche qui invalide la mesure d'apprentissage (§9
+   validation des réponses, §10.1 contrat FSRS, §13 intégrité de la synchronisation,
+   §18 invariants testables). Ces règles-là restent strictes : les assouplir revient à
+   réintroduire exactement les défauts que la v1 a payés neuf mois. Toute proposition
+   qui touche à un garde-fou doit garder ou remplacer le test qui le vérifie — jamais le
+   supprimer sans le remplacer.
+2. **Choix de conception.** Direction artistique (§1-§4), inventaire de composants
+   (§15), ordre d'implémentation (§17), certains réglages d'assiduité (§12.2). Ce sont
+   des décisions prises à un moment donné, avec leurs raisons écrites à côté — pas des
+   lois. Elles peuvent changer si l'usage réel le justifie, à condition de documenter le
+   changement et la raison, comme le fait déjà ce document pour chaque écart avec la
+   version 1 (voir le tableau ci-dessous). Une préférence qui n'a jamais été testée en
+   usage réel n'a pas plus d'autorité qu'une proposition nouvelle.
+
+**Faire évoluer une section de conception :** proposer le changement, dire en une
+phrase le problème réel qu'il résout (pas une préférence esthétique abstraite),
+l'appliquer, puis mettre à jour ce document pour qu'il décrive à nouveau exactement ce
+que fait le code — jamais un état désiré non vérifié. C'est la même règle que pour tout
+le reste : ce document dit le vrai, ou il ne dit rien.
+
+**Ne pas faire évoluer un garde-fou sans son remplacement testé :** si une règle de
+validation de réponse, une propriété du planificateur, ou un invariant du §18 doit
+changer, le nouveau comportement a besoin d'un test avant d'être considéré acquis —
+exactement comme l'ancien en avait besoin. Le risque n'est pas la sévérité de la règle,
+c'est l'absence de vérification derrière elle.
+
 ## Ce que la version 2 corrige
 
 La version 1 était très précise sur ce qui se voit et vague sur ce qui se mesure :
@@ -48,8 +82,10 @@ seul si l'utilisateur apprend.
 ## 1. Direction artistique
 
 **原稿用紙, Swiss et International appliqués à la typographie pédagogique japonaise.**
-Décision prise, pas une option. Ne pas produire de variante, ne pas proposer de thème
-alternatif.
+Direction retenue à ce jour, choisie pour servir la lisibilité du japonais plutôt que
+pour elle-même. Un changement de direction reste possible s'il sert mieux cet objectif
+— mais ce n'est pas un thème à faire varier au gré de l'humeur : une proposition de
+variante doit dire ce qu'elle améliore concrètement pour l'apprentissage.
 
 Grille stricte, marges généreuses, filets d'un pixel, aucune ombre portée, aucun
 dégradé, aucun arrondi au-dessus de 4 px. La personnalité vient du système
@@ -60,9 +96,10 @@ chaque glyphe occupe un carré. Le compteur d'accueil est un carré, la cellule 
 remplir dans une phrase est un carré bordé d'un filet clair avec un point central,
 comme une case de papier quadrillé de rédaction.
 
-Interdits explicites : gamification visuelle (badges, confettis, mascotte), cartes
-flottantes à ombre douce et coins à 16 px, fond crème avec serif haute-contraste et
-accent terracotta. Ce sont des défauts d'époque, pas des choix.
+Ce que cette direction évite, et pourquoi ça reste une bonne idée : la gamification
+visuelle (badges, confettis, mascotte) et les cartes flottantes à ombre douce
+détournent l'attention du texte japonais lui-même, qui est ce qu'on apprend à lire.
+Rien n'empêche de proposer une esthétique différente qui préserve ce principe.
 
 ---
 
@@ -879,7 +916,9 @@ la réponse est de l'information, pas de la décoration.
 
 ### 12.1 Contraintes anti-distraction
 
-À traiter comme des règles de lint, pas des recommandations.
+À traiter comme des règles par défaut, pas comme des options qu'on active parfois. Elles
+protègent contre un défaut précis (distraction, fausse impression de progrès, triche
+silencieuse) : y déroger doit se justifier par un problème réel constaté, pas par goût.
 
 1. Aucune animation au-dessus de 150 ms, uniquement `opacity` et `transform`.
    `prefers-reduced-motion` respecté.
