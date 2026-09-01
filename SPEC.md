@@ -37,11 +37,11 @@ paralysant.
    validation des réponses, §10.1 contrat FSRS, §13 intégrité de la synchronisation,
    §18 invariants testables). Ces règles-là restent strictes : les assouplir revient à
    réintroduire exactement les défauts que la v1 a payés neuf mois. Toute proposition
-   qui touche à un garde-fou doit garder ou remplacer le test qui le vérifie — jamais le
+   qui touche à un garde-fou doit garder ou remplacer le test qui le vérifie, jamais le
    supprimer sans le remplacer.
 2. **Choix de conception.** Direction artistique (§1-§4), inventaire de composants
    (§15), ordre d'implémentation (§17), certains réglages d'assiduité (§12.2). Ce sont
-   des décisions prises à un moment donné, avec leurs raisons écrites à côté — pas des
+   des décisions prises à un moment donné, avec leurs raisons écrites à côté, pas des
    lois. Elles peuvent changer si l'usage réel le justifie, à condition de documenter le
    changement et la raison, comme le fait déjà ce document pour chaque écart avec la
    version 1 (voir le tableau ci-dessous). Une préférence qui n'a jamais été testée en
@@ -50,12 +50,12 @@ paralysant.
 **Faire évoluer une section de conception :** proposer le changement, dire en une
 phrase le problème réel qu'il résout (pas une préférence esthétique abstraite),
 l'appliquer, puis mettre à jour ce document pour qu'il décrive à nouveau exactement ce
-que fait le code — jamais un état désiré non vérifié. C'est la même règle que pour tout
+que fait le code, jamais un état désiré non vérifié. C'est la même règle que pour tout
 le reste : ce document dit le vrai, ou il ne dit rien.
 
 **Ne pas faire évoluer un garde-fou sans son remplacement testé :** si une règle de
 validation de réponse, une propriété du planificateur, ou un invariant du §18 doit
-changer, le nouveau comportement a besoin d'un test avant d'être considéré acquis —
+changer, le nouveau comportement a besoin d'un test avant d'être considéré acquis,
 exactement comme l'ancien en avait besoin. Le risque n'est pas la sévérité de la règle,
 c'est l'absence de vérification derrière elle.
 
@@ -83,8 +83,8 @@ seul si l'utilisateur apprend.
 
 **原稿用紙, Swiss et International appliqués à la typographie pédagogique japonaise.**
 Direction retenue à ce jour, choisie pour servir la lisibilité du japonais plutôt que
-pour elle-même. Un changement de direction reste possible s'il sert mieux cet objectif
-— mais ce n'est pas un thème à faire varier au gré de l'humeur : une proposition de
+pour elle-même. Un changement de direction reste possible s'il sert mieux cet objectif,
+mais ce n'est pas un thème à faire varier au gré de l'humeur : une proposition de
 variante doit dire ce qu'elle améliore concrètement pour l'apprentissage.
 
 Grille stricte, marges généreuses, filets d'un pixel, aucune ombre portée, aucun
@@ -379,8 +379,8 @@ signale sans échouer les items incomplets.
 
 ### 6.4 Inventaire livré
 
-Mesuré directement dans le code au 28/08/2026, pas recopié d'une version antérieure —
-les chiffres ci-dessous divergent de ceux mesurés le 24/08 : le corpus a été enrichi
+Mesuré directement dans le code au 28/08/2026, pas recopié d'une version antérieure.
+Les chiffres ci-dessous divergent de ceux mesurés le 24/08 : le corpus a été enrichi
 entre-temps (kanji N4-N1 introduits, composés et emprunts ajoutés), preuve qu'un
 inventaire chiffré se périme et doit se remesurer, pas se supposer stable.
 
@@ -397,7 +397,7 @@ inventaire chiffré se périme et doit se remesurer, pas se supposer stable.
 | Kanji N1 | kanji | kana | self | 225 | 450 | 0 sur 225 |
 
 Contextes disponibles : 206 mots en kana (dont ~95 emprunts katakana natifs, ajoutés le
-28/08/2026 pour ne plus contextualiser le katakana avec des mots hiragana convertis —
+28/08/2026 pour ne plus contextualiser le katakana avec des mots hiragana convertis,
 voir §14), 186 composés kanji, 30 phrases.
 
 Le déséquilibre reste le premier chantier de contenu au-delà du N5, et il ne se règle
@@ -1040,12 +1040,12 @@ d'architecture.
   `@sglkc/kuromoji`, le `kuromoji.js` d'origine n'étant plus maintenu. Le dictionnaire
   pèse plusieurs mégaoctets : il se charge une fois et se met en cache, acceptable à
   l'import, jamais dans la boucle de révision.
-- **Les mots du deck katakana étaient des mots hiragana convertis** (すし rendu スシ) —
-  corrigé le 28/08/2026 : `WORDCTX` inclut désormais ~95 vrais emprunts japonais écrits
+- **Les mots du deck katakana étaient des mots hiragana convertis** (すし rendu スシ).
+  Corrigé le 28/08/2026 : `WORDCTX` inclut désormais ~95 vrais emprunts japonais écrits
   nativement en katakana (コーヒー, テレビ, パソコン…), utilisés comme contexte des
   caractères katakana au même titre que les mots hiragana pour les caractères hiragana.
   Un deck katakana dédié (au-delà du simple glyphe) mérite encore sa propre liste
-  d'emprunts comme item à part entière, avec sa progression propre — ce n'est pas
+  d'emprunts comme item à part entière, avec sa progression propre. Ce n'est pas
   encore le cas, seul le contexte de révision a été corrigé.
 - **Données Pokémon** dérivées d'un jeu issu de Bulbapedia. Les noms sont des marques de
   The Pokémon Company. Usage personnel, ne pas distribuer.
