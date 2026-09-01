@@ -125,7 +125,7 @@ function loadApp(opts = {}) {
   context.globalThis = context;
   vm.createContext(context);
   const source = fs.readFileSync("tmp_script.js", "utf8");
-  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, WORDCTX, ensureLocalDataBelongsTo, emptyCard, saveState, Home, Editor, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
+  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, WORDCTX, ensureLocalDataBelongsTo, emptyCard, saveState, Home, Editor, reviewTimingLabel, DeckCards, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
   vm.runInContext(source + expose, context, { filename: "tmp_script.js" });
   return Object.assign(context.__appTest, { fsrsCalls });
 }
@@ -414,7 +414,7 @@ test("le katakana s'ouvre sur des hiragana lisibles, pas maîtrisés", () => {
 test("la porte verrouillée liste les caractères qui manquent encore", () => {
   /* Amélioration du 28/08/2026 : le compte seul ("80/90 lisibles") ne dit pas
      lesquels réviser. deckUnlockInfo() expose désormais `missing`, la liste des
-     glyphes pas encore appris — vide une fois la porte ouverte. */
+     glyphes pas encore appris, vide une fois la porte ouverte. */
   const api = loadApp();
   const kata = api.deck("kata");
   const before = api.deckUnlockInfo(kata);
@@ -465,7 +465,7 @@ test("changer de compte sur le même appareil vide les données locales", () => 
   /* Faille corrigée le 28/08/2026 : STORAGE_KEY n'est pas scopée par uid. Sur un
      appareil partagé, se connecter avec un second compte gardait en mémoire toutes
      les cartes/progression du premier tant qu'un pull cloud n'avait pas écrasé les
-     valeurs — et la fusion latest-wins pouvait alors renvoyer les progrès du
+     valeurs, et la fusion latest-wins pouvait alors renvoyer les progrès du
      premier compte vers le cloud du second. ensureLocalDataBelongsTo() doit tout
      remettre à vide dès qu'un uid différent du dernier connu se présente. */
   const api = loadApp();
@@ -774,8 +774,8 @@ test("les révisions les plus en retard passent en premier", () => {
 });
 
 test("étudier un deck précis reste aussi plafonné par la charge du jour", () => {
-  /* Bug corrigé le 28/08/2026 : queueFor(id) — le chemin emprunté en étudiant un
-     deck depuis sa propre page — servait toutes ses cartes échues d'un coup, sans
+  /* Bug corrigé le 28/08/2026 : queueFor(id), le chemin emprunté en étudiant un
+     deck depuis sa propre page, servait toutes ses cartes échues d'un coup, sans
      jamais passer par le plafond DAILY_BUDGET ni par ensureDailyPlan. Mesuré en
      usage réel : un deck en retard de plusieurs jours produisait jusqu'à 67 cartes
      en une seule session, très au-delà du plafond dur de 1,5x annoncé par le §10.3.
@@ -1078,4 +1078,26 @@ test("la carte en veille précise quelle direction est bloquée", () => {
   delete api.cards[id].suspended;
   delete api.cards[prod].suspended;
   assert.ok(!api.Editor().includes("En veille"), "rien en veille : pas de bloc affiché");
+});
+
+test("une carte jamais révisée n'annonce pas deux fois qu'elle n'a pas commencé", () => {
+  /* « pas commencée » et « pas encore planifiée » tombaient toujours ensemble,
+     puisque due ne vaut null que pour une carte à zéro révision. Deux étiquettes
+     pour un seul état, dans une liste déjà dense. */
+  const api = loadApp();
+  const neuve = api.cards["h5"];
+  assert.equal(neuve.reps, 0);
+  assert.equal(neuve.due, null);
+  assert.equal(api.reviewTimingLabel(neuve), "", "aucune échéance à annoncer");
+
+  api.app.tab = "cards";
+  api.app.filter = "new";
+  const html = api.DeckCards(api.deck("hira"));
+  assert.ok(html.includes("pas commencée"), "l'état doit rester visible");
+  assert.ok(!html.includes("planifiée"), "mais une seule fois");
+
+  /* Une carte entamée garde son échéance : la colonne ne se vide que sur du vide. */
+  api.grade(neuve, true, 3000, false);
+  assert.notEqual(neuve.due, null);
+  assert.notEqual(api.reviewTimingLabel(neuve), "");
 });

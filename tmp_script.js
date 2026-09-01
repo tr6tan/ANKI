@@ -1,5 +1,5 @@
 "use strict";
-const BUILD_VERSION = "20260824-1631";
+const BUILD_VERSION = "20260901-1120";
 const PK =
   "1 フシギダネ Bulbasaur Grass/Poison,2 フシギソウ Ivysaur Grass/Poison,3 フシギバナ Venusaur Grass/Poison,4 ヒトカゲ Charmander Fire,5 リザード Charmeleon Fire,6 リザードン Charizard Fire/Flying,7 ゼニガメ Squirtle Water,8 カメール Wartortle Water,9 カメックス Blastoise Water,10 キャタピー Caterpie Bug,11 トランセル Metapod Bug,12 バタフリー Butterfree Bug/Flying,13 ビードル Weedle Bug/Poison,14 コクーン Kakuna Bug/Poison,15 スピアー Beedrill Bug/Poison,16 ポッポ Pidgey Normal/Flying,17 ピジョン Pidgeotto Normal/Flying,18 ピジョット Pidgeot Normal/Flying,19 コラッタ Rattata Normal,20 ラッタ Raticate Normal,21 オニスズメ Spearow Normal/Flying,22 オニドリル Fearow Normal/Flying,23 アーボ Ekans Poison,24 アーボック Arbok Poison,25 ピカチュウ Pikachu Electric,26 ライチュウ Raichu Electric,27 サンド Sandshrew Ground,28 サンドパン Sandslash Ground,29 ニドラン♀ Nidoran♀ Poison,30 ニドリーナ Nidorina Poison,31 ニドクイン Nidoqueen Poison/Ground,32 ニドラン♂ Nidoran♂ Poison,33 ニドリーノ Nidorino Poison,34 ニドキング Nidoking Poison/Ground,35 ピッピ Clefairy Fairy,36 ピクシー Clefable Fairy,37 ロコン Vulpix Fire,38 キュウコン Ninetales Fire,39 プリン Jigglypuff Normal/Fairy,40 プクリン Wigglytuff Normal/Fairy,41 ズバット Zubat Poison/Flying,42 ゴルバット Golbat Poison/Flying,43 ナゾノクサ Oddish Grass/Poison,44 クサイハナ Gloom Grass/Poison,45 ラフレシア Vileplume Grass/Poison,46 パラス Paras Bug/Grass,47 パラセクト Parasect Bug/Grass,48 コンパン Venonat Bug/Poison,49 モルフォン Venomoth Bug/Poison,50 ディグダ Diglett Ground,51 ダグトリオ Dugtrio Ground,52 ニャース Meowth Normal,53 ペルシアン Persian Normal,54 コダック Psyduck Water,55 ゴルダック Golduck Water,56 マンキー Mankey Fighting,57 オコリザル Primeape Fighting,58 ガーディ Growlithe Fire,59 ウインディ Arcanine Fire,60 ニョロモ Poliwag Water,61 ニョロゾ Poliwhirl Water,62 ニョロボン Poliwrath Water/Fighting,63 ケーシィ Abra Psychic,64 ユンゲラー Kadabra Psychic,65 フーディン Alakazam Psychic,66 ワンリキー Machop Fighting,67 ゴーリキー Machoke Fighting,68 カイリキー Machamp Fighting,69 マダツボミ Bellsprout Grass/Poison,70 ウツドン Weepinbell Grass/Poison,71 ウツボット Victreebel Grass/Poison,72 メノクラゲ Tentacool Water/Poison,73 ドククラゲ Tentacruel Water/Poison,74 イシツブテ Geodude Rock/Ground,75 ゴローン Graveler Rock/Ground,76 ゴローニャ Golem Rock/Ground,77 ポニータ Ponyta Fire,78 ギャロップ Rapidash Fire,79 ヤドン Slowpoke Water/Psychic,80 ヤドラン Slowbro Water/Psychic,81 コイル Magnemite Electric/Steel,82 レアコイル Magneton Electric/Steel,83 カモネギ Farfetch'd Normal/Flying,84 ドードー Doduo Normal/Flying,85 ドードリオ Dodrio Normal/Flying,86 パウワウ Seel Water,87 ジュゴン Dewgong Water/Ice,88 ベトベター Grimer Poison,89 ベトベトン Muk Poison,90 シェルダー Shellder Water,91 パルシェン Cloyster Water/Ice,92 ゴース Gastly Ghost/Poison,93 ゴースト Haunter Ghost/Poison,94 ゲンガー Gengar Ghost/Poison,95 イワーク Onix Rock/Ground,96 スリープ Drowzee Psychic,97 スリーパー Hypno Psychic,98 クラブ Krabby Water,99 キングラー Kingler Water,100 ビリリダマ Voltorb Electric,101 マルマイン Electrode Electric,102 タマタマ Exeggcute Grass/Psychic,103 ナッシー Exeggutor Grass/Psychic,104 カラカラ Cubone Ground,105 ガラガラ Marowak Ground,106 サワムラー Hitmonlee Fighting,107 エビワラー Hitmonchan Fighting,108 ベロリンガ Lickitung Normal,109 ドガース Koffing Poison,110 マタドガス Weezing Poison,111 サイホーン Rhyhorn Ground/Rock,112 サイドン Rhydon Ground/Rock,113 ラッキー Chansey Normal,114 モンジャラ Tangela Grass,115 ガルーラ Kangaskhan Normal,116 タッツー Horsea Water,117 シードラ Seadra Water,118 トサキント Goldeen Water,119 アズマオウ Seaking Water,120 ヒトデマン Staryu Water,121 スターミー Starmie Water/Psychic,122 バリヤード Mr. Mime Psychic/Fairy,123 ストライク Scyther Bug/Flying,124 ルージュラ Jynx Ice/Psychic,125 エレブー Electabuzz Electric,126 ブーバー Magmar Fire,127 カイロス Pinsir Bug,128 ケンタロス Tauros Normal,129 コイキング Magikarp Water,130 ギャラドス Gyarados Water/Flying,131 ラプラス Lapras Water/Ice,132 メタモン Ditto Normal,133 イーブイ Eevee Normal,134 シャワーズ Vaporeon Water,135 サンダース Jolteon Electric,136 ブースター Flareon Fire,137 ポリゴン Porygon Normal,138 オムナイト Omanyte Rock/Water,139 オムスター Omastar Rock/Water,140 カブト Kabuto Rock/Water,141 カブトプス Kabutops Rock/Water,142 プテラ Aerodactyl Rock/Flying,143 カビゴン Snorlax Normal,144 フリーザー Articuno Ice/Flying,145 サンダー Zapdos Electric/Flying,146 ファイヤー Moltres Fire/Flying,147 ミニリュウ Dratini Dragon,148 ハクリュー Dragonair Dragon,149 カイリュー Dragonite Dragon/Flying,150 ミュウツー Mewtwo Psychic,151 ミュウ Mew Psychic";
 const KROWS = [
@@ -1443,7 +1443,7 @@ KWORDS.split("|").forEach((s, n) => {
   });
 });
 /* Vrais emprunts en katakana, distincts des mots hiragana ci-dessus (SPEC §14 : un
-   mot hiragana converti mécaniquement en katakana — すし rendu スシ — est artificiel
+   mot hiragana converti mécaniquement en katakana (すし rendu スシ) est artificiel
    et n'entraîne jamais sur ー ni sur les sons composés propres aux emprunts. Ce
    corpus est écrit nativement en katakana : kanaUnits() gère déjà ー/ッ et les
    digrammes, donc aucune conversion n'est nécessaire pour l'alimenter. */
@@ -1609,7 +1609,7 @@ function deckUnlockInfo(dk) {
     hiraSolid >= KANJI_NEEDS_HIRA_SOLID && kataLearned >= KANJI_NEEDS_KATA;
   /* Le seuil de déblocage est un COMPTE ("90/104 lisibles"), pas une liste figée :
      n'importe quels 90 suffisent. Pour autant, savoir LESQUELS manquent est
-     l'information qui aide vraiment à progresser — Collection l'affichait pour
+     l'information qui aide vraiment à progresser. Collection l'affichait pour
      Pokémon (atomsOf un mot précis) mais pas ici, alors que c'est la même
      mécanique de déblocage. On liste les items pas encore appris, triés pour
      rester lisibles même sur les grands decks. */
@@ -1752,7 +1752,7 @@ function syncPokemonUnlocks() {
    consolidation du niveau précédent) : les afficher en entier, un par un, à
    chaque visite de Collection, c'est beaucoup d'espace pour une information
    qu'on ne peut pas encore utiliser. On les regroupe dans un <details> replié,
-   avec un résumé qui dit où on en est sans qu'il faille l'ouvrir — natif HTML,
+   avec un résumé qui dit où on en est sans qu'il faille l'ouvrir. Natif HTML,
    pas de nouvel état JS à synchroniser, l'ouverture reste au clavier comme à la
    souris. Reste ouvert de lui-même dès qu'au moins un de ces niveaux est
    accessible : ce n'est plus un horizon lointain, ça mérite la visibilité. */
@@ -1798,14 +1798,14 @@ function levelRowsHtml(levels) {
         ).length;
         /* Le compte seul ("80/90 lisibles") ne dit pas QUOI réviser en priorité.
            On affiche les premiers caractères encore manquants, dans le même style
-           que les atomes de prérequis déjà utilisés pour Pokémon — la mécanique de
+           que les atomes de prérequis déjà utilisés pour Pokémon : la mécanique de
            déblocage est identique, l'affichage doit l'être aussi. */
         const missingHtml = dkInfo.missing?.length
           ? `<div class="atoms">${dkInfo.missing.map((g) => `<span class="new">${esc(g)}</span>`).join("")}${dkInfo.missing.length >= 12 ? `<span class="new" style="border:none;color:var(--ink-faint)">…</span>` : ""}</div>`
           : "";
         /* Bouton de révision directe : jusqu'ici, réviser un deck précis depuis
            Collection exigeait de cliquer la ligne, atterrir sur le détail, puis
-           cliquer un second bouton « Étudier · N » — deux écrans pour lancer une
+           cliquer un second bouton « Étudier · N », soit deux écrans pour lancer une
            session ciblée. queueFor(dk.id) est la même fonction que le détail du
            deck utilise pour afficher son propre compteur, donc le nombre annoncé
            ici reste exact. stopPropagation empêche le clic sur le bouton de
@@ -2222,11 +2222,11 @@ ITEMS.forEach((i) => {
 /* Isolation multi-compte. `localStorage` n'est pas scopé par utilisateur (une seule
    clé STORAGE_KEY) : sur un appareil partagé, se connecter avec un second compte
    Google chargeait encore les cartes/progression du premier tant qu'un pull cloud
-   n'avait pas écrasé les valeurs les plus récentes — et la fusion latest-wins
+   n'avait pas écrasé les valeurs les plus récentes, et la fusion latest-wins
    d'applyPayload() pouvait alors renvoyer les progrès du premier compte vers le
    cloud du second si ses horodatages étaient plus récents. Corrigé le 28/08/2026 :
    avant tout pull, si l'uid connecté diffère du dernier uid connu localement, on
-   repart d'un état vierge — jamais d'un mélange entre deux comptes. */
+   repart d'un état vierge, jamais d'un mélange entre deux comptes. */
 function ensureLocalDataBelongsTo(uid) {
   if (!uid || !app.lastUid || app.lastUid === uid) return;
   for (const id in cards) Object.assign(cards[id], emptyCard(id));
@@ -2638,7 +2638,7 @@ function queueFor(id) {
 
      Corrigé le 28/08/2026 : cette règle ne s'appliquait qu'à la session globale
      (queueFor() sans deck). Étudier un deck précis depuis sa page (queueFor(id))
-     contournait entièrement le plafond et le bridage adaptatif — un deck en
+     contournait entièrement le plafond et le bridage adaptatif : un deck en
      retard de plusieurs jours servait toutes ses cartes dues d'un coup (mesuré :
      jusqu'à 67 cartes en une session, sans coupure). Le même plafond s'applique
      désormais aux deux chemins. */
@@ -3101,8 +3101,12 @@ function Deck() {
    .join("")}</div>
  ${{ cards: DeckCards, settings: DeckSettings, stats: DeckStats }[app.tab](dk)}`;
 }
+/* Une carte jamais révisée n'a pas de date. L'annoncer ajoutait une seconde
+   étiquette pour un état que « pas commencée » et le compteur à zéro disaient
+   déjà : deux mentions qui tombent toujours ensemble, donc une de trop dans
+   une liste déjà dense. Colonne vide, une ligne, une information. */
 function reviewTimingLabel(c) {
-  if (c.due === null) return "pas encore planifiée";
+  if (!c || c.due === null) return "";
   const remaining = c.due - Date.now();
   if (remaining <= 0) return "à réviser maintenant";
   const hours = Math.ceil(remaining / 36e5);
@@ -3110,6 +3114,11 @@ function reviewTimingLabel(c) {
   const days = Math.ceil(remaining / DAY);
   return `dans ${days} j`;
 }
+/* Le point médian ne sépare que deux informations réelles. */
+const avancementNote = (label, c) =>
+  [`${label} ${c.goodReps || 0}/${MASTERY_REPS}`, reviewTimingLabel(c)]
+    .filter(Boolean)
+    .join(" · ");
 function DeckCards(dk) {
   /* Les filtres portent sur l'ITEM, en interrogeant ses deux directions : une carte
      dont seule la production est due doit apparaître sous « à réviser ». */
@@ -3367,12 +3376,12 @@ function Editor() {
  }
  <hr class="rule"><p class="label" style="margin-bottom:12px">Aperçu</p>
  <div style="border:1px solid var(--rule);border-radius:var(--radius);padding:16px">${prev}</div>
- <p class="note">Reconnaissance ${c.goodReps || 0}/${MASTERY_REPS} · ${reviewTimingLabel(c)}</p>
+ <p class="note">${avancementNote("Reconnaissance", c)}</p>
  ${
    productionId(i.id)
      ? (() => {
          const p = cards[productionId(i.id)];
-         return `<p class="note" style="margin-top:4px">Production ${p.goodReps || 0}/${MASTERY_REPS} · ${reviewTimingLabel(p)}</p>`;
+         return `<p class="note" style="margin-top:4px">${avancementNote("Production", p)}</p>`;
        })()
      : ""
  }
