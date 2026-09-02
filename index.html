@@ -1145,6 +1145,15 @@
         border-color: var(--seiji);
         background: var(--seiji);
       }
+      /* La production attend son tour derriere le debit d'introduction du deck
+         (newPerDay) : rien a faire, ce n'est pas la meme chose que "pas encore
+         commence". Un simple mot, pas une case vide qui laisserait croire a un
+         blocage. */
+      .item-progress .waiting {
+        font-size: 10px;
+        color: var(--ink-faint);
+        font-style: italic;
+      }
       .grade {
         display: flex;
         gap: 10px;

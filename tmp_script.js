@@ -3204,7 +3204,11 @@ function DeckCards(dk) {
                 : entamee
                   ? `<span class="item-progress">${
                       prod
-                        ? `<span class="dirs"><span class="dir-label">L</span>${cells(cards[i.id].goodReps || 0)}</span><span class="dirs"><span class="dir-label">É</span>${cells(cards[prod].goodReps || 0)}</span>`
+                        ? `<span class="dirs"><span class="dir-label">L</span>${cells(cards[i.id].goodReps || 0)}</span><span class="dirs"><span class="dir-label">É</span>${
+                            cards[prod].reps === 0 && learned(i.id)
+                              ? `<span class="waiting">en attente</span>`
+                              : cells(cards[prod].goodReps || 0)
+                          }</span>`
                         : cells(c.goodReps || 0)
                     }</span>`
                   : "pas commencée";
@@ -3296,6 +3300,15 @@ function DeckStats(dk) {
     const p = productionId(i.id);
     return p ? cardKnown(p) : cardKnown(i.id);
   }).length;
+  /* La production ne s'introduit qu'une fois la lecture acquise, et au même
+     débit que les nouveaux caractères (newPerDay) : un item lu ne devient donc
+     pas immédiatement une carte à écrire, il rejoint une file. Sans ce chiffre,
+     l'écart entre « lecture avancée » et « écriture immobile » ressemble à une
+     panne alors que c'est le débit d'intro qui borne, pas la maîtrise. */
+  const prodWaiting = deckItems.filter((i) => {
+    const p = productionId(i.id);
+    return p && cards[p].reps === 0 && !cards[p].suspended && learned(baseId(i.id));
+  }).length;
   const successRate = attempts ? Math.round((successes / attempts) * 100) : 0;
   const masteryRate = total ? Math.round((mastered / total) * 100) : 0;
   const rows = [
@@ -3328,7 +3341,11 @@ function DeckStats(dk) {
  <div class="label" style="margin:26px 0 6px">Par direction</div>
  <div class="row"><div><div style="font-size:14px">Reconnaissance</div><div class="faint" style="font-size:12px;margin-top:3px">Lire la graphie</div></div><span class="mono" style="font-size:18px">${recoDone}<span class="faint" style="font-size:13px">/${total}</span></span></div>
  <div class="row"><div><div style="font-size:14px">Production</div><div class="faint" style="font-size:12px;margin-top:3px">Écrire depuis le sens ou le son</div></div><span class="mono" style="font-size:18px">${prodDone}<span class="faint" style="font-size:13px">/${total}</span></span></div>
- <p class="faint" style="font-size:12px;line-height:1.6;margin:10px 0 0">Chaque direction a son propre intervalle : reconnaître un caractère et savoir l'écrire ne s'oublient pas au même rythme.</p>
+ <p class="faint" style="font-size:12px;line-height:1.6;margin:10px 0 0">Chaque direction a son propre intervalle : reconnaître un caractère et savoir l'écrire ne s'oublient pas au même rythme.${
+   prodWaiting
+     ? ` ${prodWaiting} caractère${prodWaiting > 1 ? "s" : ""} déjà lisible${prodWaiting > 1 ? "s" : ""} attend${prodWaiting > 1 ? "ent" : ""} son tour pour l'écriture, introduit${prodWaiting > 1 ? "s" : ""} à raison de ${dk.newPerDay} nouvelle${dk.newPerDay > 1 ? "s" : ""} carte${dk.newPerDay > 1 ? "s" : ""} par jour maximum (lecture et écriture confondues).`
+     : ""
+ }</p>
  <div class="label" style="margin:26px 0 6px">Historique</div>
  <div class="row"><span class="muted">Réponses</span><span class="mono">${attempts}</span></div>
  <div class="row"><span class="muted">Réussite</span><span class="mono">${successRate}%</span></div>

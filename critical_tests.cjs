@@ -1114,3 +1114,19 @@ test("maybeAutoPull ne fait rien sans synchronisation configurée", () => {
   const api = loadApp();
   assert.doesNotThrow(() => api.maybeAutoPull());
 });
+
+test("l'écriture 'en attente' se distingue du blocage réel", () => {
+  /* Un item lisible en reconnaissance n'ouvre pas immédiatement sa carte de
+     production : elle rejoint une file bornée par newPerDay (débit d'intro du
+     deck). Sans distinction visuelle, cela ressemblait à une progression à
+     l'arrêt en écriture, alors que rien n'est bloqué — juste pas encore
+     introduit. Constaté en pratique le 02/09/2026 : 64 hiragana lisibles sur
+     un compte réel, tous en attente de leur carte d'écriture. */
+  const api = loadApp();
+  reviewSpaced(api, api.cards["h0"], 3); // lisible (goodReps>=2, stab>=1), écriture jamais touchée
+  api.app.tab = "cards";
+  api.app.filter = "all";
+  api.app.q = "";
+  const html = api.DeckCards(api.deck("hira"));
+  assert.ok(html.includes("en attente"), "un item lisible sans écriture entamée doit l'annoncer");
+});
