@@ -2186,6 +2186,23 @@ function maybeAutoPush() {
   lastAutoPushAt = now;
   runSync("push");
 }
+let lastAutoPullAt = 0;
+/* Le pull ne se déclenchait qu'à la connexion (onAuthStateChanged). Un appareil
+   resté ouvert plusieurs jours sans jamais se reconnecter poussait donc ses
+   propres réponses en continu (maybeAutoPush après chaque carte), mais ne
+   rapatriait jamais les progrès faits ailleurs entre-temps — mesuré en pratique
+   le 02/09/2026 : deux semaines d'écart entre un navigateur resté ouvert et un
+   téléphone utilisé quotidiennement. On rapatrie donc aussi au retour au
+   premier plan, avec un intervalle large : ce n'est pas une révision qui a
+   besoin d'être instantanée d'un appareil à l'autre, seulement de ne jamais
+   rester bloquée des semaines. */
+function maybeAutoPull() {
+  if (!syncHydrated || !syncReady() || !(app.sync && app.sync.auto)) return;
+  const now = Date.now();
+  if (now - lastAutoPullAt < 5 * 60 * 1000) return;
+  lastAutoPullAt = now;
+  runSync("pull");
+}
 
 /* ===================== ordonnanceur ===================== */
 const DAY = 864e5,
@@ -4926,10 +4943,12 @@ if (window.visualViewport)
   visualViewport.addEventListener("scroll", syncViewportHeightDebounced);
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") flushState();
+  else maybeAutoPull();
 });
 window.addEventListener("pagehide", flushState);
 window.addEventListener("beforeunload", flushState);
 setInterval(flushState, 60000);
+setInterval(maybeAutoPull, 5 * 60 * 1000);
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("./sw.js")

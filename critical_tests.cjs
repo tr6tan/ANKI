@@ -125,7 +125,7 @@ function loadApp(opts = {}) {
   context.globalThis = context;
   vm.createContext(context);
   const source = fs.readFileSync("tmp_script.js", "utf8");
-  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, WORDCTX, ensureLocalDataBelongsTo, emptyCard, saveState, Home, Editor, reviewTimingLabel, DeckCards, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
+  const expose = `\n;globalThis.__appTest = { app, cards, ITEMS, KIDX, DECKS, known, cardKnown, judge, toRomaji, compoundSpeech, rateFor, paddedSpeech, acceptedFor, kanaChoicesForSession, earNeighbours, learned, solid, learnedCount, solidCount, cardIdsFor, productionId, baseId, isProd, deckUnlockInfo, levelUnlockInfo, deck, grade, queueFor, startSession, validate, commit, nextCard, acceptedFor, dayKey, normalizeDailyState, localPayload, applyPayload, syncPokemonUnlocks, pokemonUnlockedByKana, validateDeckData, syncUserKey, MASTERY_REPS, DAILY_BUDGET, WORDCTX, ensureLocalDataBelongsTo, emptyCard, saveState, Home, Editor, reviewTimingLabel, DeckCards, maybeAutoPull, /* typeof accepte un identifiant non déclaré : c'est le seul moyen de prouver depuis l'intérieur du script qu'un symbole retiré l'est bien. */ retires: { DAILY_LOADS: typeof DAILY_LOADS === "undefined", dailyBudget: typeof dailyBudget === "undefined" } };`;
   vm.runInContext(source + expose, context, { filename: "tmp_script.js" });
   return Object.assign(context.__appTest, { fsrsCalls });
 }
@@ -1100,4 +1100,17 @@ test("une carte jamais révisée n'annonce pas deux fois qu'elle n'a pas commenc
   api.grade(neuve, true, 3000, false);
   assert.notEqual(neuve.due, null);
   assert.notEqual(api.reviewTimingLabel(neuve), "");
+});
+
+test("maybeAutoPull ne fait rien sans synchronisation configurée", () => {
+  /* Bug corrigé le 02/09/2026 : le pull automatique ne se déclenchait qu'à la
+     connexion. Un appareil resté ouvert plusieurs jours sans jamais se
+     reconnecter poussait ses propres réponses en continu, mais ne rapatriait
+     jamais les progrès faits ailleurs entre-temps — mesuré en pratique : deux
+     semaines d'écart entre un navigateur resté ouvert et un téléphone utilisé
+     quotidiennement. maybeAutoPull() comble ce trou, appelé au retour au
+     premier plan et périodiquement. Sans configuration sync (cas par défaut,
+     et celui de ce harnais de test), l'appel ne doit rien tenter ni planter. */
+  const api = loadApp();
+  assert.doesNotThrow(() => api.maybeAutoPull());
 });
