@@ -1118,18 +1118,18 @@
          face de production distincte, sinon un seul jeu. */
       .item-progress {
         display: inline-flex;
-        align-items: center;
-        gap: 8px;
+        flex-direction: column;
+        gap: 3px;
         margin-top: 3px;
       }
       .item-progress .dirs {
         display: flex;
-        gap: 3px;
+        align-items: center;
+        gap: 5px;
       }
       .item-progress .dir-label {
-        font-size: 10px;
+        display: flex;
         color: var(--ink-faint);
-        width: 10px;
       }
       .item-progress .cells {
         display: flex;

@@ -516,6 +516,14 @@ const speakerIcon = (size) =>
   `<svg width="${size || 16}" height="${size || 16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M18.36 5.64a9 9 0 0 1 0 12.72"></path></svg>`;
 const muteIcon = (size) =>
   `<svg width="${size || 16}" height="${size || 16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>`;
+/* Avancement par item (liste des cartes d'un deck) : icônes pour distinguer
+   lecture et écriture sans recourir à des lettres (L/É) qui demandaient à
+   deviner la convention. Style cohérent avec speakerIcon/muteIcon : traits
+   fins, currentColor, pas de remplissage. */
+const eyeIcon = (size) =>
+  `<svg width="${size || 12}" height="${size || 12}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+const penIcon = (size) =>
+  `<svg width="${size || 12}" height="${size || 12}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>`;
 function pickVoice() {
   if (!tts.ok) return;
   const voices = speechSynthesis.getVoices().filter((v) => /^ja/i.test(v.lang));
@@ -3204,7 +3212,7 @@ function DeckCards(dk) {
                 : entamee
                   ? `<span class="item-progress">${
                       prod
-                        ? `<span class="dirs"><span class="dir-label">L</span>${cells(cards[i.id].goodReps || 0)}</span><span class="dirs"><span class="dir-label">É</span>${
+                        ? `<span class="dirs"><span class="dir-label" title="Lecture">${eyeIcon(11)}</span>${cells(cards[i.id].goodReps || 0)}</span><span class="dirs"><span class="dir-label" title="Écriture">${penIcon(11)}</span>${
                             cards[prod].reps === 0 && learned(i.id)
                               ? `<span class="waiting">en attente</span>`
                               : cells(cards[prod].goodReps || 0)
